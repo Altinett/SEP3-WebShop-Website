@@ -1,0 +1,16 @@
+@page "/kurv"
+@using global::Shared
+@inject NavigationManager Nvm
+
+
+<Basket/>
+
+<div class="payment button" @onclick="OnClick">Betal</div>
+
+@code {
+
+    public void OnClick()
+    {
+        Nvm.NavigateTo("/form");
+    }
+}

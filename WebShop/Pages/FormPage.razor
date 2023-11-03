@@ -1,0 +1,33 @@
+@page "/form"
+@inject NavigationManager Nvm
+
+
+
+<form @onsubmit="Submit">
+  <label for="FirstName">Fornavn:</label><br>
+  <input type="text" id="FirstName" name="FirstName"><br>
+  <label for="LastName">Efternavn:</label><br>
+  <input type="text" id="LastName" name="LastName"><br>
+  <label for="Address">Adresse:</label><br>
+  <input type="text" id="Address" name="Address"><br>
+  <label for="ZipCode">Postnummer:</label><br>
+  <input type="text" id="ZipCode" name="ZipCode"><br>
+  <label for="PhoneNumber">Telefon nr.:</label><br>
+  <input type="text" id="PhoneNumber" name="PhoneNumber"><br>
+  <label for="Email">Email:</label><br>
+  <input type="text" id="Email" name="Email"><br><br>
+  <input type="submit" value="Bekræft">
+</form> 
+
+
+
+@code {
+
+  public void Submit()
+  {
+    //code here trust man
+    
+    Nvm.NavigateTo("/betaling");
+  }
+  
+}

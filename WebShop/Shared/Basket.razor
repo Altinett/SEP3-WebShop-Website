@@ -1,0 +1,53 @@
+@using global::Shared
+@using WebShop.Pages
+@inject NavigationManager Nvm
+
+<div class="basket">
+    <div class="top">
+        <Icon Name="cart"/>
+        Din kurv
+    </div>
+    <div class="contents">
+        @foreach (Product product in _BasketItems)
+        {
+            <GridItem
+                Id=@product.Id
+                Img=@product.Img
+                Title=@product.Title
+                Price=@product.Price
+                InStock=@product.InStock/>
+        }
+    </div>
+    <div class="basket-info">
+        <div class="total">@totalPrice</div>
+        <div class="checkout button" @onclick="OnClick">Check ud</div>
+    </div>
+</div>
+
+@code {
+    /*[Parameter] public RenderFragment ChildContent { get; set; }*/
+    
+    private List<Product> _BasketItems { get; set; }
+
+    private double totalPrice { get; set; }
+    
+    public void UpdateBasket()
+    {
+        BasketService basketService = BasketService.getInstance();
+        _BasketItems = basketService.GetBasketItems();
+        totalPrice = basketService.getBasketTotal();
+        StateHasChanged();
+    }
+
+    public void OnClick()
+    {
+        Nvm.NavigateTo("/kurv");
+    }
+
+    protected override Task OnInitializedAsync()
+    {
+        BasketService.getInstance().on("NewBasketItem", args => UpdateBasket());
+        UpdateBasket();
+        return base.OnInitializedAsync();
+    }
+}

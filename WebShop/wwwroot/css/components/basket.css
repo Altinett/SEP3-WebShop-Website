@@ -1,0 +1,94 @@
+
+.basket {
+    display: flex;
+    flex-direction: column;
+    width: 300px;
+    overflow: hidden;
+}
+.basket .top {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: .5rem;
+    width: 100%;
+    padding: .5rem;
+    font-size: 1.3rem;
+    background-color: rgba(255, 255, 255, .05);
+}
+.basket .top img,
+.basket .top svg {
+    width: 1.5rem;
+}
+.basket .contents {
+    display: flex;
+    flex-direction: column;
+    gap: .5rem;
+    flex: 1 1 auto;
+    margin: .5rem 0;
+    overflow: hidden;
+    overflow-y: auto;
+}
+.basket .grid-item {
+    overflow: unset;
+}
+.basket .grid-item .close {
+    position: absolute;
+    width: 1.5rem;
+    padding: .1rem;
+    top: 0;
+    right: 0;
+    background-color: var(--dark-2);
+    border-bottom-left-radius: var(--border-radius-3);
+    cursor: pointer;
+    transition: all .3s var(--bounce);
+}
+.basket .grid-item .close:hover {
+    width: 2rem;
+}
+
+
+.basket .basket-info {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: .5rem;
+    padding: 1rem .5rem;
+    background-color: rgba(255, 255, 255, .05);
+    backdrop-filter: blur(1px);
+}
+.basket .total {
+    font-size: 1.2rem;
+    font-weight: bold;
+}
+
+
+
+.product {
+    display: flex;
+    gap: 1rem;
+    width: 100%;
+    padding: 1rem;
+    margin: 5rem 0;
+    background-color: rgba(255, 255, 255, .08);
+    height: min-content;
+}
+.product img {
+    width: 400px;
+    border-radius: var(--border-radius-1);
+}
+.product-info {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+}
+.product-info .title {
+    font-size: 1.7rem;
+}
+.product .button {
+    width: max-content;
+}
+.group {
+    display: flex;
+    flex-direction: column;
+    gap: .5rem;
+}

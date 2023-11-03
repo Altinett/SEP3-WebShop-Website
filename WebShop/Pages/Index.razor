@@ -1,0 +1,47 @@
+﻿@page "/"
+@using global::Shared
+
+<Grid>
+    @foreach (Product product in products) {
+        <GridItem 
+            Id=@product.Id
+            Img=@product.Img
+            Title=@product.Title
+            Price=@product.Price
+            InStock=@product.InStock
+            />
+    }
+
+</Grid>
+<Basket />
+
+
+
+@code {
+
+    public List<Product> products = new () {
+        new Product(
+            "1", 
+            "https://i.ebayimg.com/images/g/h9UAAOSwpPNlLMxt/s-l500.jpg", 
+            "AMD Ryzen 5 5600X 6-core 12-thread Processor", 
+            98712.6, 
+            true
+            ),
+        new Product(
+            "2", 
+            "https://i.ebayimg.com/images/g/h9UAAOSwpPNlLMxt/s-l500.jpg", 
+            "AMD Ryzen 5 5600X 6-core 12-thread Processor", 
+            1528.6, 
+            true
+            ),
+        new Product(
+            "3", 
+            "https://i.ebayimg.com/images/g/h9UAAOSwpPNlLMxt/s-l500.jpg", 
+            "AMD Ryzen 5 5600X 6-core 12-thread Processor", 
+            3625.2, 
+            false
+            ),
+
+    };
+
+}

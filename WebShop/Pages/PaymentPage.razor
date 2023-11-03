@@ -1,0 +1,31 @@
+@page "/betaling"
+@inject NavigationManager Nvm
+
+
+
+<form @onsubmit="Submit">
+  <label for="FirstName">Fornavn:</label><br>
+  <input type="text" id="FirstName" name="FirstName"><br>
+  <label for="LastName">Efternavn:</label><br>
+  <input type="text" id="LastName" name="LastName"><br>
+  <label for="Kortnummer">Kortnummer:</label><br>
+  <input type="number" id="Kortnummer" name="Kortnummer"><br>
+  <label for="ExpirationDate">Udløbsdato:</label><br>
+  <input type="date" id="ExpirationDate" name="ExpirationDate"><br>
+  <label for="CVC">CVC:</label><br>
+  <input type="number" id="CVC" name="CVC"><br>
+  
+  
+  <input type="submit" value="Bekræft">
+</form> 
+
+
+
+@code {
+
+  public void Submit()
+  {
+    //code here trust man
+  }
+  
+}

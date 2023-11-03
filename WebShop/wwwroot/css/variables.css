@@ -1,0 +1,56 @@
+:root {
+    /* COLORS */
+    --black-1: rgb(3, 0, 5);
+
+    --dark-1: rgb(10, 12, 14);
+    --dark-2: rgb(19, 22, 25);
+    --dark-3: rgb(26, 29, 32);
+    --dark-4: rgb(35, 38, 41);
+    --dark-5: rgb(42, 45, 48);
+    --dark-6: rgb(51, 54, 57);
+
+    --offwhite: rgb(223, 223, 223);
+    --grey-1: rgb(138, 138, 138);
+
+    --purple-1: rgb(115, 3, 192);
+    --dark-purple-1: rgb(70, 1, 118);
+
+    --blue-1: rgb(8, 121, 252);
+    --blue-2: rgb(44, 82, 208);
+
+    --dark-blue-1: rgb(17, 0, 51);
+
+    --green-1: rgb(28, 202, 90);
+    --green-2: rgb(31, 145, 65);
+    --gold-1: rgb(255, 215, 0);
+
+    --orange-1: #FF8800;
+
+    --red-1: rgb(235, 64, 52);
+    --red-2: rgb(204, 1, 2);
+
+    --glow: var(--offwhite);
+    --glow-1: 0 0 5px var(--glow);
+
+    --accent-color: #fff;
+
+    /* CURVES */
+    --bounce: cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    --bounce-2: cubic-bezier(.47,1.64,.41,.8);
+    --long-bounce: cubic-bezier(0.48, 1.97, 0.5, 0.63);
+
+    --quick: cubic-bezier(0,.89,.35,.98);
+
+    /* MISCELLANEOUS */
+    --box-shadow-small: rgba(0, 0, 0, 0.1) 0 5px 10px;
+    --box-shadow-medium: rgba(0, 0, 0, 0.35) 0px 5px 15px;
+    --box-shadow-high: rgba(0, 0, 0, 0.25) 0px 54px 55px, rgba(0, 0, 0, 0.12) 0px -12px 30px, rgba(0, 0, 0, 0.12) 0px 4px 6px, rgba(0, 0, 0, 0.17) 0px 12px 13px, rgba(0, 0, 0, 0.09) 0px -3px 5px;
+    --border-radius-1: .1875rem;
+    --border-radius-2: .375rem;
+    --border-radius-2-child: .29rem;
+
+    --border-radius-3: .5625rem;
+    --border-radius-3-child: .51rem;
+
+    --border-radius-4: .75rem;
+}

@@ -1,0 +1,7 @@
+/* MAIN STYLINGS */
+@import "variables.css";
+@import "app.css";
+
+/* COMPONENTS */
+@import "components/grid.css";
+@import "components/basket.css";

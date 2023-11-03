@@ -1,0 +1,102 @@
+@page "/Admin"
+@using BlazorWasm.Services
+@inject IProductService ProductService
+
+<form @onsubmit="Add">
+    <h2> 
+        Tilføj en vare
+    </h2>
+
+    <label for="Name">Vare Navn:</label><br>
+    <input id="Name" placeholder="Vare Navn" type="text" @bind="Name"/> <br/>
+    <label for="Description">Beskrivelse:</label><br>
+    <input id="Description" placeholder="Beskrivelse" type="text" @bind="Description"/> 
+
+<br/><input type="checkbox" id="elektronik" value="1" @onchange="() => HandleCheckboxChange(1)"> <label for="elektronik">Elektronik</label><br />
+    <input type="checkbox" id="have" value="2" @onchange="() => HandleCheckboxChange(2)"> <label for="have">Have</label><br />
+    <input type="checkbox" id="indendørs" value="3" @onchange="() => HandleCheckboxChange(3)"> <label for="indendørs">Indendørs</label><br />
+    <input type="checkbox" id="Døden" value="4" @onchange="() => HandleCheckboxChange(4)"> <label for="Døden">Døden</label><br />
+
+    <label for="Price">Pris:</label><br>
+    <input id="Price" placeholder="Pris" type="number" @bind="Price" min="0"/> <br/>
+    <label for="Amount">Mængde:</label><br>
+    <input id="Amount" placeholder="Mængde" type="number" @bind="Amount" min="0"/> <br/>
+
+    <input type="submit" value="Tilføj">
+</form> 
+
+<form @onsubmit="Remove">
+    <h2> 
+        Fjern en vare
+    </h2>
+    <label for="id">id:</label>
+    <br>
+    <input type="number" id="FirstName" @bind="FjernId" name="FirstName"><br>
+
+    <input type="submit" value="Fjern">
+</form> 
+
+
+@code {
+    List<int> checkedValues = new List<int>();
+
+    void HandleCheckboxChange(int checkboxValue)
+    {
+        if (checkedValues.Contains(checkboxValue))
+        {
+            checkedValues.Remove(checkboxValue);
+        }
+        else
+        {
+            checkedValues.Add(checkboxValue);
+        }
+    }
+    
+    
+    private string Name, Description;
+    private int Category_id, Id;
+    private int? Price, Amount, FjernId;
+    
+    //private string MessageColor = "red";
+    //private bool Hide = true;
+    //private string? MessageLabel;
+    
+    private async Task Add()
+    {
+    //TODO code here to add a product.
+        Console.WriteLine(checkedValues);
+        Console.WriteLine(Name + " " + Description + " " + checkedValues + " " + Price + " " + Amount);
+        Console.WriteLine("DONE");
+        try
+        {
+            if (Price != null && Amount != null)
+            {
+                await ProductService.CreateProduct(Name, Description, checkedValues, Price ?? 0, Amount ?? 0);
+            }
+            //SuccessMessage("Successfully created user");
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine(e);
+            //ErrorMessage("Something went wrong creating a user");
+        }
+    }
+    
+    private async Task Remove() {
+        //TODO code here to remove a product.
+        try
+        {
+            if (FjernId != null)
+            {
+                await ProductService.RemoveProduct(FjernId ??0);
+            }
+    //SuccessMessage("Successfully created user");
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine(e);
+    //ErrorMessage("Something went wrong creating a user");
+        }
+    }
+
+}

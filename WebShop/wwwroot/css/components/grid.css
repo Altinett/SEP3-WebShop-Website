@@ -1,0 +1,121 @@
+/* GRID */
+.grid {
+    position: relative;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1rem;
+    width: 100%;
+    overflow: hidden;
+    overflow-y: auto;
+    height: min-content;
+}
+
+/* GRID ITEM */
+.grid-item {
+    display: flex;
+    flex-direction: column;
+    gap: .5rem;
+    overflow: hidden;
+    padding: .75rem;
+    background-color: rgba(255, 255, 255, .08);
+    backdrop-filter: blur(1px);
+    width: 100%;
+    height: min-content;
+}
+.grid-item img {
+    aspect-ratio: 1;
+    user-select: none;
+    object-fit: contain;
+    border-radius: var(--border-radius-1);
+}
+
+.grid-item .title {
+    font-size: 1.1rem;
+    display: flex;
+    word-break: break-all;
+    text-decoration: none;
+    /* text-overflow: ellipsis;
+    white-space: pre;
+    overflow: hidden;
+    overflow-x: auto; */
+}
+.grid-item .title:hover {
+    text-decoration: underline;
+}
+
+.grid-item .bottom {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+.price {
+    display: flex;
+    align-items: center;
+    font-weight: bold;
+    font-size: 1.2rem;
+}
+.in-stock {
+    color: var(--green-1);
+}
+.not-in-stock {
+    color: var(--red-1);
+}
+
+.adjust-amount {
+    display: flex;
+    align-items: center;
+    gap: .5rem;
+    border-radius: var(--border-radius-1);
+}
+.adjust-amount svg {
+    width: 1.3rem;
+    cursor: pointer;
+    padding: .1rem;
+    border: 2px solid rgba(255, 255, 255, .2);
+    border-radius: 50%;
+}
+.amount {
+    text-align: center;
+    padding: .2rem .3rem;
+    border: 2px solid rgba(255, 255, 255, .2);
+    border-radius: var(--border-radius-1);
+    background-color: transparent;
+    outline: none;
+    width: 2rem;
+    font-size: 1rem;
+}
+
+.amount::-webkit-outer-spin-button,
+.amount::-webkit-inner-spin-button {
+    appearance: none;
+}
+
+.adjust-amount svg:hover {
+    color: var(--blue-1);
+}
+
+
+.button {
+    display: flex;
+    align-items: center;
+    user-select: none;
+    cursor: pointer;
+    padding: .5rem;
+    background-color: var(--dark-6);
+    border-radius: var(--border-radius-1);
+    border: 1px solid transparent;
+    transition: all .2s var(--quick);
+    gap: .5rem;
+}
+.button img,
+.button svg {
+    width: 1.2rem;
+}
+.button:hover {
+    box-shadow: 0 0 5px var(--blue-1);
+    border: 1px solid var(--blue-1);
+    background-color: transparent;
+}
+.button:hover:active {
+    box-shadow: 0 0 15px var(--blue-1);
+}
