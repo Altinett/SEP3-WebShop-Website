@@ -10,15 +10,15 @@ public class ProductService : IProductService
     private readonly HttpClient client = new ();
 
 
-    public async Task CreateProduct(string name, string Description, List<int> checkedValues, int Price, int Amount)
+    public async Task CreateProduct(string name, string Description, List<int> category_ids, int Price, int Amount)
     {
         ProductCreationDto productCreationDto = new ProductCreationDto
         {
-            Name = name,
-            Description = Description,
-            CheckedValues = checkedValues,
-            Price = Price,
-            Amount = Amount
+            name = name,
+            description = Description,
+            categoryIds = category_ids,
+            price = Price,
+            amount = Amount
 
         };
         
@@ -40,6 +40,33 @@ public class ProductService : IProductService
     {
         HttpResponseMessage response = await client.PostAsync("http://localhost:8080/products/remove?id=" + Id, null);
 
+        string responseContent = await response.Content.ReadAsStringAsync();
+        Console.WriteLine(responseContent);
+
+        if (!response.IsSuccessStatusCode)
+        {
+            throw new Exception(responseContent);
+        }
+    }
+    
+    public async Task EditProduct(int id, string name, string Description, /*List<int> category_ids,*/ int Price, int Amount)
+    {
+        ProductEditingDto productEditingDto = new ProductEditingDto
+        {
+            id = id,
+            name = name,
+            description = Description,
+            /*categoryIds = category_ids,*/
+            price = Price,
+            amount = Amount
+
+        };
+        
+        string postAsJson = JsonConvert.SerializeObject(productEditingDto);
+        StringContent content = new StringContent(postAsJson, Encoding.UTF8, "application/json");
+        Console.WriteLine(postAsJson);
+        HttpResponseMessage response = await client.PostAsync("http://localhost:8080/products/edit", content);
+        
         string responseContent = await response.Content.ReadAsStringAsync();
         Console.WriteLine(responseContent);
 

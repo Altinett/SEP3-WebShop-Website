@@ -36,19 +36,45 @@
     <input type="submit" value="Fjern">
 </form> 
 
+<form @onsubmit="Edit">
+    <h2> 
+        Ændre vare
+    </h2>
+
+       <label for="id">Id:</label><br>
+       <input id="id" placeholder="id" type="number" @bind="Id" min="0"/> <br/>
+
+    <label for="Name">Vare Navn:</label><br>
+    <input id="Name" placeholder="Vare Navn" type="text" @bind="Name"/> <br/>
+    <label for="Description">Beskrivelse:</label><br>
+       <input id="Description" placeholder="Beskrivelse" type="text" @bind="Description"/> <br>
+<!--
+<br/><input type="checkbox" id="elektronik" value="1" @onchange="() => HandleCheckboxChange(1)"> <label for="elektronik">Elektronik</label><br />
+    <input type="checkbox" id="have" value="2" @onchange="() => HandleCheckboxChange(2)"> <label for="have">Have</label><br />
+    <input type="checkbox" id="indendørs" value="3" @onchange="() => HandleCheckboxChange(3)"> <label for="indendørs">Indendørs</label><br />
+    <input type="checkbox" id="Døden" value="4" @onchange="() => HandleCheckboxChange(4)"> <label for="Døden">Døden</label><br />-->
+
+    <label for="Price">Pris:</label><br>
+    <input id="Price" placeholder="Pris" type="number" @bind="Price" min="0"/> <br/>
+    <label for="Amount">Mængde:</label><br>
+    <input id="Amount" placeholder="Mængde" type="number" @bind="Amount" min="0"/> <br/>
+
+    <input type="submit" value="Ændre">
+</form> 
+
 
 @code {
-    List<int> checkedValues = new List<int>();
+    List<int> category_ids = new List<int>();
 
     void HandleCheckboxChange(int checkboxValue)
     {
-        if (checkedValues.Contains(checkboxValue))
+        if (category_ids.Contains(checkboxValue))
         {
-            checkedValues.Remove(checkboxValue);
+            category_ids.Remove(checkboxValue);
         }
         else
         {
-            checkedValues.Add(checkboxValue);
+            category_ids.Add(checkboxValue);
         }
     }
     
@@ -56,22 +82,21 @@
     private string Name, Description;
     private int Category_id, Id;
     private int? Price, Amount, FjernId;
-    
     //private string MessageColor = "red";
     //private bool Hide = true;
     //private string? MessageLabel;
     
     private async Task Add()
     {
-    //TODO code here to add a product.
-        Console.WriteLine(checkedValues);
-        Console.WriteLine(Name + " " + Description + " " + checkedValues + " " + Price + " " + Amount);
+
+        Console.WriteLine(category_ids);
+        Console.WriteLine(Name + " " + Description + " " + category_ids + " " + Price + " " + Amount);
         Console.WriteLine("DONE");
         try
         {
             if (Price != null && Amount != null)
             {
-                await ProductService.CreateProduct(Name, Description, checkedValues, Price ?? 0, Amount ?? 0);
+                await ProductService.CreateProduct(Name, Description, category_ids, Price ?? 0, Amount ?? 0);
             }
             //SuccessMessage("Successfully created user");
         }
@@ -83,12 +108,33 @@
     }
     
     private async Task Remove() {
-        //TODO code here to remove a product.
+
         try
         {
             if (FjernId != null)
             {
                 await ProductService.RemoveProduct(FjernId ??0);
+            }
+    //SuccessMessage("Successfully created user");
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine(e);
+    //ErrorMessage("Something went wrong creating a user");
+        }
+    }
+    
+    private async Task Edit()
+    {
+
+        Console.WriteLine(category_ids);
+        Console.WriteLine(Name + " " + Description + " " + category_ids + " " + Price + " " + Amount);
+        Console.WriteLine("DONE");
+        try
+        {
+            if (Price != null && Amount != null)
+            {
+                await ProductService.EditProduct(Id, Name, Description, /*category_ids,*/ Price ?? 0, Amount ?? 0);
             }
     //SuccessMessage("Successfully created user");
         }
