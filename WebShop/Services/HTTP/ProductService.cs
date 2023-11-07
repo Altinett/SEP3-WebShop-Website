@@ -38,7 +38,7 @@ public class ProductService : IProductService
 
     public async Task RemoveProduct(int Id)
     {
-        HttpResponseMessage response = await client.PostAsync("http://localhost:8080/products/remove?id=" + Id, null);
+        HttpResponseMessage response = await client.DeleteAsync("http://localhost:8080/products/remove?id=" + Id);
 
         string responseContent = await response.Content.ReadAsStringAsync();
         Console.WriteLine(responseContent);
