@@ -25,9 +25,22 @@ public class BasketService : Subject
     public void AddItem(Product item)
     {
         _basketItems.Add(item);
-        emit("NewBasketItem", item);
+        emit("Changed");
     }
 
+    public void RemoveItem(int id)
+    {
+        foreach (Product item in _basketItems)
+        {
+            if (id == item.Id)
+            {
+                _basketItems.Remove(item);
+                break;
+            }
+        }
+        emit("Changed");
+    }
+    
     public List<Product> GetBasketItems()
     {
         return _basketItems;

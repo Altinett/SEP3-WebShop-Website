@@ -15,7 +15,8 @@
                 Img=@product.Img
                 Title=@product.Title
                 Price=@product.Price
-                InStock=@product.InStock/>
+                InStock=@product.InStock
+                InBasket="true"/>
         }
     </div>
     <div class="basket-info">
@@ -46,7 +47,7 @@
 
     protected override Task OnInitializedAsync()
     {
-        BasketService.getInstance().on("NewBasketItem", args => UpdateBasket());
+        BasketService.getInstance().on("Changed", args => UpdateBasket());
         UpdateBasket();
         return base.OnInitializedAsync();
     }

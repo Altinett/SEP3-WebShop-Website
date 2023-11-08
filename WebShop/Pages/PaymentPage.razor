@@ -1,31 +1,46 @@
 @page "/betaling"
+@using System.Runtime.InteropServices.JavaScript
 @inject NavigationManager Nvm
 
 
-
 <form @onsubmit="Submit">
-  <label for="FirstName">Fornavn:</label><br>
-  <input type="text" id="FirstName" name="FirstName"><br>
-  <label for="LastName">Efternavn:</label><br>
-  <input type="text" id="LastName" name="LastName"><br>
   <label for="Kortnummer">Kortnummer:</label><br>
-  <input type="number" id="Kortnummer" name="Kortnummer"><br>
+  <input type="number" @bind="CardNumber" id="CardNumber" name="CardNumber" min="0"><br>
   <label for="ExpirationDate">Udløbsdato:</label><br>
-  <input type="date" id="ExpirationDate" name="ExpirationDate"><br>
+  <input type="date" @bind="ExpirationDate" id="ExpirationDate" name="ExpirationDate" min="<?php echo date('Y-m-d');?>"><br>
   <label for="CVC">CVC:</label><br>
-  <input type="number" id="CVC" name="CVC"><br>
+  <input type="number" @bind="CVC" id="CVC" name="CVC" min="0"><br>
   
   
   <input type="submit" value="Bekræft">
 </form> 
 
 
-
 @code {
-
+  
+  [Parameter] public int CardNumber { get; set; }
+  [Parameter] public DateOnly ExpirationDate { get; set; }
+  [Parameter] public int CVC { get; set; }
+  
   public void Submit()
   {
     //code here trust man
+    var instance = FormService.getInstance();
+    
+    
+    instance.CardNumber = CardNumber;
+    instance.ExpirationDate = ExpirationDate;
+    instance.CVC = CVC;
+
+
+    Console.WriteLine(CardNumber);
+    Console.WriteLine(CVC);
+    Console.WriteLine(ExpirationDate);
+    
+    
+    instance.sendToLogic();
+
+    Nvm.NavigateTo("/Kvittering");
+
   }
-  
 }

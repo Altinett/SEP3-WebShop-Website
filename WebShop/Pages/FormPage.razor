@@ -5,27 +5,42 @@
 
 <form @onsubmit="Submit">
   <label for="FirstName">Fornavn:</label><br>
-  <input type="text" id="FirstName" name="FirstName"><br>
+  <input type="text" @bind="FirstName" id="FirstName" name="FirstName"><br>
   <label for="LastName">Efternavn:</label><br>
-  <input type="text" id="LastName" name="LastName"><br>
+  <input type="text" @bind="LastName" id="LastName" name="LastName"><br>
   <label for="Address">Adresse:</label><br>
-  <input type="text" id="Address" name="Address"><br>
+  <input type="text" @bind="Address" id="Address" name="Address"><br>
   <label for="ZipCode">Postnummer:</label><br>
-  <input type="text" id="ZipCode" name="ZipCode"><br>
+  <input type="number" @bind="ZipCode" id="ZipCode" name="ZipCode" min="0"><br>
   <label for="PhoneNumber">Telefon nr.:</label><br>
-  <input type="text" id="PhoneNumber" name="PhoneNumber"><br>
+  <input type="number" @bind="PhoneNumber" id="PhoneNumber" name="PhoneNumber" min="0"><br>
   <label for="Email">Email:</label><br>
-  <input type="text" id="Email" name="Email"><br><br>
+  <input type="text" @bind="Email" id="Email" name="Email"><br><br>
   <input type="submit" value="Bekræft">
 </form> 
 
 
 
 @code {
+  
+  [Parameter] public string FirstName { get; set; }
+  [Parameter] public string LastName { get; set; }
+  [Parameter] public string Address { get; set; }
+  [Parameter] public int ZipCode { get; set; }
+  [Parameter] public int PhoneNumber { get; set; }
+  [Parameter] public string Email { get; set; } 
 
   public void Submit()
   {
     //code here trust man
+    var instance = FormService.getInstance();
+
+    instance.FirstName = FirstName;
+    instance.LastName = LastName;
+    instance.Address = Address;
+    instance.ZipCode = ZipCode;
+    instance.PhoneNumber = PhoneNumber;
+    instance.Email = Email;
     
     Nvm.NavigateTo("/betaling");
   }
