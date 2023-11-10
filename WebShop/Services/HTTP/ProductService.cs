@@ -1,6 +1,7 @@
 using System.Net.Http.Json;
 using System.Text;
 using Newtonsoft.Json;
+using Shared;
 using Shared.DTOs;
 
 namespace BlazorWasm.Services.Http;
@@ -70,6 +71,24 @@ public class ProductService : IProductService
         string responseContent = await response.Content.ReadAsStringAsync();
         Console.WriteLine(responseContent);
 
+        if (!response.IsSuccessStatusCode)
+        {
+            throw new Exception(responseContent);
+        }
+    }
+
+    public async Task<List<Product>> GetProducts()
+    {
+        Console.WriteLine("Get test");
+        //List<Product> products = new List<Product>();
+        //StringContent content = new StringContent(postAsJson, Encoding.UTF8, "application/json");
+        HttpResponseMessage response = await client.GetAsync("http://localhost:8080/products");
+        
+        string responseContent = await response.Content.ReadAsStringAsync();
+        Console.WriteLine(responseContent);
+        List<Product> products = JsonConvert.DeserializeObject<List<Product>>(responseContent);
+        Console.WriteLine(products);
+        return products;
         if (!response.IsSuccessStatusCode)
         {
             throw new Exception(responseContent);

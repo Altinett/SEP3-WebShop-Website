@@ -1,15 +1,19 @@
 ﻿@page "/"
 @using global::Shared
+@using BlazorWasm.Services.Http
+@using BlazorWasm.Services
+@inject IProductService ProductService
+
 
 <Grid>
-    @foreach (Product product in products) {
-        <GridItem 
+    @foreach (Product product in products)
+    {
+        <GridItem
             Id=@product.Id
             Img=@product.Img
-            Title=@product.Title
-            Price=@product.Price
-            InStock=@product.InStock
-            />
+            name=@product.name
+            price=@product.price
+            InStock=@product.InStock/>
     }
 
 </Grid>
@@ -19,7 +23,83 @@
 
 @code {
 
-    public List<Product> products = new () {
+    private List<Product> products = new List<Product>();
+
+    protected override async Task OnInitializedAsync()
+    {
+        Console.WriteLine("In init");
+        await Edit();
+    }
+
+    private async Task Edit()
+    {
+        Console.WriteLine("In edit");
+        try 
+        {
+            products = await ProductService.GetProducts();
+            Console.WriteLine("AUM BUM BUM");
+            foreach (var product in products)
+            {
+                Console.WriteLine("in foreach");
+
+                if (product.amount > 0)
+                    product.InStock = true;
+
+                Console.WriteLine(product.ToString());
+            }
+    //SuccessMessage("Successfully fetched products.");
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine(e);
+    //ErrorMessage("Something went wrong fetching the products.");
+        }
+    }
+
+    
+    //public List<Product> products;
+    /*public List<Product> products = new()
+    {
+
+    };*/
+    /*//
+    private async Task Edit()
+    {
+        try 
+        {
+            List<Product> products2 = await ProductService.GetProducts();
+            foreach (var VARIABLE in products2)
+            {
+                Console.WriteLine(VARIABLE.ToString());
+                if (VARIABLE != null)
+                new Product(VARIABLE);
+
+            }
+            
+    //SuccessMessage("Successfully created user");
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine(e);
+    //ErrorMessage("Something went wrong creating a user");
+        }
+    }
+
+    protected override void OnInitialized()
+    {
+        Edit();
+        base.OnInitialized();
+    }
+    
+*/
+    
+    
+    /*public List<Product> products = new()
+    {
+
+    //TODO make it show the products from the database
+        
+        
         new Product(
             1, 
             "https://i.ebayimg.com/images/g/h9UAAOSwpPNlLMxt/s-l500.jpg", 
@@ -42,6 +122,6 @@
             false
             ),
 
-    };
+    };*/
 
 }

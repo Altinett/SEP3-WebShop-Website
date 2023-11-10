@@ -3,9 +3,9 @@
 
 <div class="grid-item">
 	<img src="@Img" />
-	<a class="title" href="#">@Title</a>
+	<a class="title" href="#">@name</a>
 	<div class="bottom">
-		<div class="price">DKK @Price</div>
+		<div class="price">DKK @price</div>
 		@if (InStock) {
 			<div class="stock-status in-stock">På lager</div>
 		} else {
@@ -38,8 +38,8 @@
 @code {
 	[Parameter] public int Id { get; set; }
 	[Parameter] public string Img { get; set; }
-    [Parameter] public string Title { get; set; }
-	[Parameter] public double Price { get; set; }
+    [Parameter] public string name { get; set; }
+	[Parameter] public double price { get; set; }
 	[Parameter] public bool InStock { get; set; }
 	[Parameter] public bool? InBasket { get; set; } 
 
@@ -51,7 +51,7 @@
 	{
 		if (InStock)
 		{
-			BasketService.getInstance().AddItem(new Product(Id = Id, Img = Img, Title = Title, Price = Price, InStock = InStock));
+			BasketService.getInstance().AddItem(new Product(Id = Id, Img = Img, name = name, price = price, InStock = InStock));
 		}
 	}
 
