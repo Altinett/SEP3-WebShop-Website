@@ -23,9 +23,9 @@
 }
 
 .reProductInfo {
-    max-width: 300px;
-    width: 300px;
-    min-width: 300px;
+    max-width: 200px;
+    width: 200px;
+    min-width: 200px;
     display: flex;
     justify-content: space-between;
 }

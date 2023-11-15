@@ -69,78 +69,92 @@
 			    
 			    
 			    <!-- Products -->
+			    @{
+				    var groupedProducts = _BasketItems.GroupBy(p => p.Title);
+			    }
+
+			    @foreach (var group in groupedProducts)
+			    {
+				    var product = group.First(); // Take the first product in the group
+				    var totalAmount = group.Sum(p => 1);
+				    var totalPrice = getTotalPriceForProduct(product.Price, totalAmount);
+
+				    <div class="reInline">
+					    <div class="reProducts">
+						    <p>@(product.Title ?? "N/A")</p>
+						    <p class="reDescription">
+							    @product.description
+						    </p>
+					    </div>
+					    <div class="reProductInfo reInline">
+						    <p>
+							    @totalAmount
+						    </p>
+						    <p>
+							    @(product.Price)Dkk
+						    </p>
+						    <p>
+							    @(totalPrice)DKK
+						    </p>
+					    </div>
+				    </div>
+				    <hr>
+			    }
+			    <br>
 			    <div class="reInline">
 				    <div class="reProducts">
-					    <p>
-						    Test
-					    </p>
-					    <p class="reDescription">
-						    Beskrivelse 
-					    </p>
+					    <p>Sub Total</p>
 				    </div>
 				    <div class="reProductInfo reInline">
 					    <p>
-						    Antal
+                							    
 					    </p>
 					    <p>
-						    Pris pr.
+							                    
 					    </p>
 					    <p>
-						    Rel pris
+						    @(totalPrice)DKK
 					    </p>
 				    </div>
 			    </div>
+			    				    <div class="reInline">
+                					    <div class="reProducts">
+                						    <p>Tax</p>
+                					    </div>
+                					    <div class="reProductInfo reInline">
+                						    <p>
+                							    
+                						    </p>
+						                    <p>
+							                    
+						                    </p>
+                						    <p>
+                							    @(totalPrice * 0.25)DKK
+                						    </p>
+                					    </div>
+                				    </div>			    
+			    <hr>
+			    				    <div class="reInline">
+                					    <div class="reProducts">
+                						    <p>Total</p>
+                					    </div>
+                					    <div class="reProductInfo reInline">
+                						    <p>
+                							    
+                						    </p>
+						                    <p>
+							                    
+						                    </p>
+                						    <p>
+                							    @(totalPrice * 0.25 + totalPrice)DKK
+                						    </p>
+                					    </div>
+							        </div>		
 			    <hr>
 			    
-			     <div class="reInline">
-                				    <div class="reProducts">
-                					    <p>
-                						    Test
-                					    </p>
-                					    <p class="reDescription">
-                						    Beskrivelse 
-                					    </p>
-                				    </div>
-                				    <div class="reInline reProductInfo">
-                					    <p>
-                						    4
-                					    </p>
-                					    <p>
-                						    5
-                					    </p>
-                					    <p>
-                						    20
-                					    </p>
-                				    </div>
-                			    </div>
-                			    <hr>
-			    
 		    </div>
-		     <div class="reInline">
-            				    <div class="reProducts">
-            					    <p>
-            						    Test
-            					    </p>
-            					    <p class="reDescription">
-            						    Beskrivelse 
-            					    </p>
-            					</div>
-            				    <div class="reProductInfo reInline">
-            					    <p>
-            						    1
-            					    </p>
-            					    <p>
-            						    2
-            					    </p>
-            					    <p>
-            						    4
-            					    </p>
-            				    </div>
-            			    </div>
-                            <hr>			    
-            		    
-
-	    </div>
+	     </div>
+	      
     </div><!--End Invoice Mid-->
     
     <div id="bot">
@@ -198,11 +212,18 @@
 		return base.OnInitializedAsync();
 	}
 	
+	
 	public void UpdateBasket()
 	{
 		BasketService basketService = BasketService.getInstance();
 		_BasketItems = basketService.GetBasketItems();
 		totalPrice = basketService.getBasketTotal();
+		Console.WriteLine("BasketItemsInReceipt");
+		Console.WriteLine(_BasketItems.ToString());
+		foreach (var Product in _BasketItems)
+		{
+			Console.WriteLine(Product);
+		}
 		StateHasChanged();
 	}
 	
@@ -210,4 +231,9 @@
 	{
 		FormService instance = FormService.getInstance();
 	}
+	
+	private double? getTotalPriceForProduct(double price, int? amount)
+	{
+	return price * amount;
+    }
 }

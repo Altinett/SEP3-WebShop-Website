@@ -29,6 +29,16 @@ public class Product
 		Price = price;
 		InStock = inStock;
 	}
+	public Product(int id, string img, string title, double price, bool inStock, int? amount, String description)
+	{
+		Id = id;
+		Img = img;
+		Title = title;
+		Price = price;
+		InStock = inStock;
+		this.amount = amount;
+		this.description = description;
+	}
 
 	public Product(int id, string name, double price, int amount, List<int> categoryIds, string description)
 	{
