@@ -3,7 +3,10 @@
 
 <div class="grid-item">
 	<img src="@Img" />
-	<a class="title" href="#">@name</a>
+	<a class="title" href="#">@name</a>	
+	@if (InBasket == false)
+	{}
+	else{
 	<div class="bottom">
 		<div class="price">DKK @price</div>
 		@if (InStock) {
@@ -12,7 +15,7 @@
 			<div class="stock-status not-in-stock">Ikke på lager</div>
 		}
 	</div>
-	@if (InBasket != null)
+	@if (InBasket == true)
 	{
 		<div class="button" @onclick="RemoveFromBasket">
 			<Icon Name="basket" />
@@ -21,6 +24,10 @@
 			-->
 			Fjern fra kurv
 		</div>
+	}
+	else if (InBasket == false)
+	{
+		
 	}
 	else
 	{
@@ -31,7 +38,7 @@
 			-->
 			Læg i kurv
 		</div>
-	}
+	}}
 	
 </div>
 

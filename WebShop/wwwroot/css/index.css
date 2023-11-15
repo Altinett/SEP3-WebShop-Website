@@ -5,3 +5,6 @@
 /* COMPONENTS */
 @import "components/grid.css";
 @import "components/basket.css";
+
+/* PAGES */
+@import "pages/receipt.css";
