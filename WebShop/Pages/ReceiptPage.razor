@@ -15,30 +15,167 @@
     </center><!--End InvoiceTop-->
     
     <div id="mid">
-      <div class="info">
-        <h2>Contact Info</h2>
-	      <p>
-		      Name : @FirstName @LastName<br>
-		      Address : @Address, @ZipCode<br>
-		      Email : @Email<br>
-		      Phone : @PhoneNumber<br>
-	      </p>
-      </div>
+	
+	    <div class="info reInline">
+		    <div class="reBox">	<h2>Contact Info</h2>
+			    <p>
+				    Name : @FirstName @LastName<br>
+				    Address : @Address, @ZipCode<br>
+				    Email : @Email<br>
+				    Phone : @PhoneNumber<br>
+			    </p>
+		    </div>
+	    
+		    <div class="reBox">
+			    <h2>Company Info</h2>
+			    <p>
+				    Company name : Shadowshare inc <br>
+				    And more blablalblabalblablabla<br>
+				    lablablablblablablablablblalbalblbalb <br>
+				    blalbalb<br>
+				    blablablabla <br>
+			    </p>
+		    </div>
+	       
+		    <div class="reBox">
+			    <h2>Payment Info</h2> 
+			    <p>
+				    Ordernr. : @FormService.getInstance().orderId<br>
+				    Forfaldsdato : DD/MM/YY <br>
+				    Mængde : NaN DKK
+			    </p>
+		    </div>
+	    </div>
+	    
+	    <div>
+		    <div>
+			    <hr>
+			    <div class="reHeader">
+				    <p>
+					    Item
+				    </p>
+				    <div class="reProductInfo reInline">
+					    <p>
+						    Antal
+					    </p>
+					    <p>
+						    Pris pr.
+					    </p>
+					    <p>
+						    Rel pris
+					    </p>
+				    </div>
+			    </div>
+			    <hr>
+			    
+			    
+			    <!-- Products -->
+			    @{
+				    var groupedProducts = _BasketItems.GroupBy(p => p.Title);
+			    }
+
+			    @foreach (var group in groupedProducts)
+			    {
+				    var product = group.First(); // Take the first product in the group
+				    var totalAmount = group.Sum(p => 1);
+				    var totalPrice = getTotalPriceForProduct(product.Price, totalAmount);
+
+				    <div class="reInline">
+					    <div class="reProducts">
+						    <p>@(product.Title ?? "N/A")</p>
+						    <p class="reDescription">
+							    @product.description
+						    </p>
+					    </div>
+					    <div class="reProductInfo reInline">
+						    <p>
+							    @totalAmount
+						    </p>
+						    <p>
+							    @(product.Price)Dkk
+						    </p>
+						    <p>
+							    @(totalPrice)DKK
+						    </p>
+					    </div>
+				    </div>
+				    <hr>
+			    }
+			    <br>
+			    <div class="reInline">
+				    <div class="reProducts">
+					    <p>Sub Total</p>
+				    </div>
+				    <div class="reProductInfo reInline">
+					    <p>
+                							    
+					    </p>
+					    <p>
+							                    
+					    </p>
+					    <p>
+						    @(totalPrice)DKK
+					    </p>
+				    </div>
+			    </div>
+			    				    <div class="reInline">
+                					    <div class="reProducts">
+                						    <p>Tax</p>
+                					    </div>
+                					    <div class="reProductInfo reInline">
+                						    <p>
+                							    
+                						    </p>
+						                    <p>
+							                    
+						                    </p>
+                						    <p>
+                							    @(totalPrice * 0.25)DKK
+                						    </p>
+                					    </div>
+                				    </div>			    
+			    <hr>
+			    				    <div class="reInline">
+                					    <div class="reProducts">
+                						    <p>Total</p>
+                					    </div>
+                					    <div class="reProductInfo reInline">
+                						    <p>
+                							    
+                						    </p>
+						                    <p>
+							                    
+						                    </p>
+                						    <p>
+                							    @(totalPrice * 0.25 + totalPrice)DKK
+                						    </p>
+                					    </div>
+							        </div>		
+			    <hr>
+			    
+		    </div>
+	     </div>
+	      
     </div><!--End Invoice Mid-->
     
     <div id="bot">
-		<div class="contents">
-                @foreach (Product product in _BasketItems)
-                {
-                    <GridItem
-                        Id=@product.Id
-                        Img=@product.Img
-                        name=@product.name
-                        Price=@product.Price
-                        InStock=@product.InStock
-                        InBasket="true"/>
-                }
-            </div>
+	    <div class="contents">
+		    <!--
+		    @foreach (Product product in _BasketItems)
+		    {
+			    <GridItem
+				    Id=@product.Id
+				    Img=@product.Img
+				    name=@product.name
+				    Price=@product.Price
+				    InStock=@product.InStock
+				    InBasket="false"
+				    />
+		    }
+		    
+		     -->
+		    </div>
+		   
 	    
 		<div id="legalcopy">
 			<p class="legal"><strong>Thank you for your business!</strong>  Payment is expected within 31 days; please process this invoice within that time. There will be a 5% interest charge per month on late invoices. 
@@ -76,11 +213,18 @@
 		return base.OnInitializedAsync();
 	}
 	
+	
 	public void UpdateBasket()
 	{
 		BasketService basketService = BasketService.getInstance();
 		_BasketItems = basketService.GetBasketItems();
 		totalPrice = basketService.getBasketTotal();
+		Console.WriteLine("BasketItemsInReceipt");
+		Console.WriteLine(_BasketItems.ToString());
+		foreach (var Product in _BasketItems)
+		{
+			Console.WriteLine(Product);
+		}
 		StateHasChanged();
 	}
 	
@@ -88,4 +232,9 @@
 	{
 		FormService instance = FormService.getInstance();
 	}
+	
+	private double? getTotalPriceForProduct(double price, int? amount)
+	{
+	return price * amount;
+    }
 }

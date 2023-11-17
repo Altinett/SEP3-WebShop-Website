@@ -1,0 +1,31 @@
+.reInline {
+    display: flex;
+}
+.reBox{
+    margin: auto;
+}
+.reProducts{
+    display: flex;
+    flex-direction: column;
+    flex: 1 1 auto;
+}
+.reHeader {
+    display: flex;
+}
+.reHeader > p {
+    display: flex;
+    flex: 1 1 auto;
+}
+
+.reDescription{
+    opacity: .7;
+    font-size: small;
+}
+
+.reProductInfo {
+    max-width: 200px;
+    width: 200px;
+    min-width: 200px;
+    display: flex;
+    justify-content: space-between;
+}

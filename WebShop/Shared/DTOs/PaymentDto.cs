@@ -5,6 +5,7 @@ namespace WebShop.Shared.DTOs;
 public class PaymentDto
 {
     public List<int> productIds { get; init; }
+    public Dictionary<int, int> products { get; init; }
     public string firstname { get; init; }
     public string lastname { get; init; }
     public string address { get; init; }
