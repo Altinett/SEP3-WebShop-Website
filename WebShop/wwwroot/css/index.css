@@ -5,3 +5,8 @@
 /* COMPONENTS */
 @import "components/grid.css";
 @import "components/basket.css";
+@import "components/navbar.css";
+@import "components/categoryBox.css";
+
+/* PAGES */
+@import "pages/homepage.css";

@@ -1,22 +1,17 @@
 * {
-    box-sizing: border-box;
     margin: 0;
     padding: 0;
-    color: var(--offwhite);
-    font-family: "OCR A";
+    box-sizing: border-box;
+    font-family: "System", sans-serif;
 }
 body, html {
     display: flex;
-    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    gap: .5rem;
     width: 100%;
     height: 100vh;
-    background-color: var(--dark-1);
-    
-    --color: rgba(80, 80, 80, 0.15);
-    background-color: var(--dark-1);
-    background-image: linear-gradient(0deg, transparent 24%, var(--color) 25%, var(--color) 26%, transparent 27%,transparent 74%, var(--color) 75%, var(--color) 76%, transparent 77%,transparent),
-    linear-gradient(90deg, transparent 24%, var(--color) 25%, var(--color) 26%, transparent 27%,transparent 74%, var(--color) 75%, var(--color) 76%, transparent 77%,transparent);
-    background-size: 80px 80px;
+    background: var(--white);
 }
 
 ::-webkit-scrollbar {
@@ -28,11 +23,9 @@ body, html {
 }
 
 #app {
-    padding: .5rem;
     gap: 2rem;
     display: flex;
     width: 100%;
-    max-width: 1200px;
     height: 100%;
     overflow: hidden;
     overflow-y: auto;
@@ -42,4 +35,176 @@ body, html {
 input {
     background: transparent !important;
     border: 1px solid var(--dark-6) !important;
+}
+
+
+.primary-button,
+.secondary-button,
+.tertiary-button,
+.primary-icon-button,
+.secondary-icon-button,
+.tertiary-icon-button {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    user-select: none;
+    cursor: pointer;
+    transition: all .1s ease-in-out;
+    border: 1px solid transparent;
+    padding: .7rem 1rem;
+}
+.primary-button {
+    background: var(--accent);
+    color: var(--white);
+    font-weight: bold;
+    border-color: var(--accent);
+}
+.secondary-button {
+    color: var(--accent);
+    font-weight: bold;
+    border-color: var(--accent);
+}
+.tertiary-button {
+    color: var(--accent);
+}
+
+:where(.primary-button, .secondary-button):has(svg) {
+    gap: .35rem;
+}
+
+:where(.primary-button, .secondary-button) svg {
+    height: 1.2rem;
+    aspect-ratio: 1;
+}
+:where(.primary-button, .secondary-button) path {
+    stroke-width: 50;
+}
+
+.primary-button:hover,
+.secondary-button:hover,
+.primary-icon-button:hover,
+.secondary-icon-button:hover {
+    box-shadow: 0 0 5px var(--accent);
+}
+.primary-button:hover:active,
+.secondary-button:hover:active,
+.primary-icon-button:hover:active,
+.secondary-icon-button:hover:active {
+    box-shadow: 0 0 15px var(--accent);
+}
+.tertiary-button:hover {
+    text-decoration: underline;
+}
+
+/* ICON BUTTON  */
+.primary-icon-button,
+.secondary-icon-button,
+.tertiary-icon-button {
+    padding: .5rem;
+}
+.primary-icon-button {
+    border-color: var(--accent);
+    background: var(--accent);
+    color: var(--white);
+}
+.secondary-icon-button {
+    border-color: var(--accent);
+    color: var(--accent);
+}
+.tertiary-icon-button {
+    color: var(--accent);
+}
+:where(.primary-icon-button, .secondary-icon-button, .tertiary-icon-button) svg {
+    height: 1rem;
+    aspect-ratio: 1;
+}
+:where(.primary-icon-button, .secondary-icon-button, .tertiary-icon-button) path {
+    stroke-width: 50;
+}
+
+/* CARD */
+.card {
+    position: relative;
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    padding: .5rem;
+    overflow: hidden;
+    max-width: 750px;
+    background: #fff;
+    box-shadow: rgba(6, 24, 44, 0.2) 0px 0px 0px 2px, rgba(6, 24, 44, 0.65) 0px 4px 6px -1px, rgba(255, 255, 255, 0.08) 0px 1px 0px inset;
+}
+.card img {
+    height: 6.5rem;
+    aspect-ratio: 1;
+}
+.card .title {
+    display: flex;
+    font-size: 1.1rem;
+}
+.card .product-control {
+    display: flex;
+    align-items: center;
+    height: max-content;
+    padding: 0 1rem;
+}
+.card .product-control input::-webkit-outer-spin-button,
+.card .product-control input::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+.card .product-control input {
+    width: 3rem;
+    height: max-content;
+    font-size: 1.2rem;
+    text-align: center;
+    border: 1px solid var(--accent);
+    border-radius: .375rem;
+    outline: none;
+}
+.card .price {
+    display: flex;
+    text-wrap: nowrap;
+    min-width: min-content;
+    font-weight: bold;
+    font-size: 1.1rem;
+    padding: 0 1rem;
+}
+
+
+.round {
+    border-radius: var(--border-radius);
+}
+
+.column {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: .5rem;
+}
+.row {
+    display: flex;
+    align-items: center;
+    gap: .5rem;
+}
+
+.search {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 1px solid;
+}
+.search .icon {
+    aspect-ratio: 1;
+    height: 2rem;
+    padding: .5rem;
+}
+.search input {
+    width: 100%;
+    height: 100%;
+    font-size: 1rem;
+    border: none;
+    outline: none;
+    background: transparent;
+    padding-right: .5rem;
 }

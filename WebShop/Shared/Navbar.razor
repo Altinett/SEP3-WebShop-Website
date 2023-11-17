@@ -1,0 +1,57 @@
+@inject NavigationManager Nvm
+
+<div class="topnav">
+    <div class="secondary-button round" @onclick="OnCategoryCLick">
+        <div class="icon">
+            <svg xmlns="http://www.w3.org/2000/svg" class="ionicon" viewBox="0 0 512 512"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-miterlimit="10" stroke-width="32" d="M80 160h352M80 256h352M80 352h352"/></svg>
+        </div>
+        <a class="active">Alle kategorier</a>
+    </div>
+    
+    <form @onsubmit="OnSearch">
+        <label class="search round" for="search-input">
+            <input type="text" id="search-input" spellcheck="false" placeholder="Search">
+            <div class="icon" @onclick="OnSearch">
+                <svg xmlns="http://www.w3.org/2000/svg" class="ionicon" viewBox="0 0 512 512"><path d="M221.09 64a157.09 157.09 0 10157.09 157.09A157.1 157.1 0 00221.09 64z" fill="none" stroke="currentColor" stroke-miterlimit="10" stroke-width="32"/><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-miterlimit="10" stroke-width="32" d="M338.29 338.29L448 448"/></svg>
+            </div>
+        </label>
+    </form>
+    
+    
+    <a href="#test">Contact</a>
+    <a href="#test">About</a>
+
+    <div class="primary-button round" @onclick="OnCartClick">
+        <div class="icon">
+            <svg xmlns="http://www.w3.org/2000/svg" class="ionicon" viewBox="0 0 512 512"><path d="M68.4 192A20.38 20.38 0 0048 212.2a17.87 17.87 0 00.8 5.5L100.5 400a40.46 40.46 0 0039.1 29.5h232.8a40.88 40.88 0 0039.3-29.5l51.7-182.3.6-5.5a20.38 20.38 0 00-20.4-20.2H68.4zm193.32 160.07A42.07 42.07 0 11304 310a42.27 42.27 0 01-42.28 42.07z" fill="none" stroke="currentColor" stroke-linejoin="round" stroke-width="32"/><path fill="none" stroke="currentColor" stroke-linejoin="round" stroke-width="32" d="M160 192l96-128 96 128"/></svg>
+        </div>
+        <a class="active">indKøbskurv</a>
+    </div>
+
+</div>
+
+
+
+@code {
+
+    public void OnClicki()
+    {
+        Nvm.NavigateTo("/browse");
+    }
+
+    public void OnSearch()
+    {
+        Nvm.NavigateTo("/browse"); 
+    }
+    
+    public void OnCategoryCLick()
+    {
+        Nvm.NavigateTo("/browse"); 
+    }
+    
+    public void OnCartClick()
+    {
+        Nvm.NavigateTo("/kurv");
+    }
+
+}

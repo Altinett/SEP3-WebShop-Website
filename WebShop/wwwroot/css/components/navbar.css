@@ -1,0 +1,54 @@
+.topnav {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 1rem;
+    width: 100%;
+    max-width: 100%;
+    height: min-content;
+    padding: 1rem 5rem;
+    background-color: var(--black);
+}
+.topnav form {
+    width: 100%;
+    max-width: 800px;
+}
+.topnav .search {
+    width: 100%;
+    height: 100%;
+    background-color: var(--white);
+    padding: .5rem;
+    padding-left: 1.5rem;
+    cursor: text;
+}
+
+.topnav .secondary-button {
+    display: flex;
+    align-items: center;
+}
+
+a {
+    text-decoration: none;
+    color: white;
+    white-space: pre;
+}
+.topnav .search .icon {
+    user-select: none;
+    cursor: pointer;
+    display: flex;
+    justify-content: center;
+    background-color: var(--black);
+    color: var(--white);
+    border-radius: calc(var(--border-radius) - .5rem);
+    width: 60px;
+    border: 1px solid transparent;
+    transition: all .15s ease-in-out;
+}
+.topnav .search .icon:hover {
+    background-color: var(--white);
+    border-color: var(--black);
+    color: var(--black);
+}
+.topnav .search .icon svg {
+    height: 100%;
+}
