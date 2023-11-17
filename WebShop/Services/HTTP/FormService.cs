@@ -19,6 +19,7 @@ public class FormService
     public int CardNumber { get; set; }
     public DateOnly ExpirationDate { get; set; }
     public int CVC { get; set; }
+    public int orderId { get; set; }
     
     
     public static FormService getInstance()
@@ -53,10 +54,15 @@ public class FormService
         {
             ids.Add(item.Id);
         }
-            
+
+        Console.WriteLine("Before the PaymentDTO");
         PaymentDto dto = new PaymentDto
         {
             productIds = ids,
+            products = new Dictionary<int, int> {
+                {2, 4},
+                {1, 2}
+            },
             firstname = FirstName,
             lastname = LastName,
             address = Address,
@@ -67,15 +73,19 @@ public class FormService
             expirationdate = ExpirationDate,
             cvc = CVC
         };
+        Console.WriteLine("after The paymentDTO, aber before Json");
         
         string postAsJson = JsonConvert.SerializeObject(dto);
         StringContent content = new StringContent(postAsJson, Encoding.UTF8, "application/json");
         Console.WriteLine(postAsJson);
         HttpResponseMessage response = await client.PostAsync("http://localhost:8080/orders/order", content);
-        
+
         string responseContent = await response.Content.ReadAsStringAsync();
         Console.WriteLine("response:");
-        Console.WriteLine(responseContent);
+        dynamic data = JsonConvert.DeserializeObject(responseContent);
+        orderId = data.OrderId;
+
+        
         
         if (!response.IsSuccessStatusCode)
         {
