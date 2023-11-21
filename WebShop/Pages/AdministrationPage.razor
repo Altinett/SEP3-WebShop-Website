@@ -1,8 +1,13 @@
 @page "/Admin"
 @using BlazorWasm.Services
+@using System.Security.Claims
+@inject IAuthService authService
+@inject NavigationManager navMgr
 @inject IProductService ProductService
 
-<form @onsubmit="Add">
+@if (isLoggedIn)
+{
+    <form @onsubmit="Add">
     <h2> 
         Tilføj en vare
     </h2>
@@ -61,9 +66,38 @@
 
     <input type="submit" value="Ændre">
 </form> 
+<button class="btn btn-primary" @onclick="logout">Click me</button>
 
+}
+else
+{
+    <div>You are not logged in</div>
+}
 
 @code {
+    
+    [CascadingParameter]
+    public Task<AuthenticationState> AuthState { get; set; } = null!;
+
+    private string? name;
+    private string? id;
+    private IEnumerable<Claim>? userClaims;
+    private bool isLoggedIn;
+
+    protected override async Task OnInitializedAsync()
+    {
+        AuthenticationState authState = await AuthState;
+        ClaimsPrincipal user = authState.User;
+        isLoggedIn = user.Identity != null;
+        
+        if (!isLoggedIn) return;
+        
+        userClaims = user.Claims;
+        name = user.Identity!.Name!;
+        Claim idClaim = userClaims.FirstOrDefault(c => c.Type == "User ID");
+        id = idClaim?.Value;
+    }
+    
     List<int> category_ids = new List<int>();
 
     void HandleCheckboxChange(int checkboxValue)
@@ -77,7 +111,6 @@
             category_ids.Add(checkboxValue);
         }
     }
-    
     
     private string Name, Description;
     private int Category_id, Id;
@@ -143,6 +176,12 @@
             Console.WriteLine(e);
     //ErrorMessage("Something went wrong creating a user");
         }
+    }
+
+    private async Task logout()
+    {
+        await authService.LogoutAsync();
+        navMgr.NavigateTo("/login");
     }
 
 }
