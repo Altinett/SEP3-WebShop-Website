@@ -10,9 +10,9 @@
     <div class="contents">
         @foreach (Product product in _BasketItems)
         {
-            <GridItem
+            <GridItem 
                 Id=@product.Id
-                Img=@product.Img
+                Img=@product.Image
                 name=@product.name
                 Price=@product.Price
                 InStock=@product.InStock

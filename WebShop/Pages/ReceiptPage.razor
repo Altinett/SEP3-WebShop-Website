@@ -33,7 +33,7 @@
 				    Mere information<br>
 				    Ingen ide <br>
 				    Hel og lykke<br>
-				    lorios impus??? <br>
+				    lorem ipsum??? <br> 
 			    </p>
 		    </div>
 	       
@@ -71,7 +71,7 @@
 			    
 			    <!-- Products -->
 			    @{
-				    var groupedProducts = _BasketItems.GroupBy(p => p.Title);
+				    var groupedProducts = _BasketItems.GroupBy(p => p.name);
 			    }
 
 			    @foreach (var group in groupedProducts)
@@ -82,7 +82,7 @@
 
 				    <div class="reInline">
 					    <div class="reProducts">
-						    <p>@(product.Title ?? "N/A")</p>
+						    <p>@(product.name ?? "N/A")</p>
 						    <p class="reDescription">
 							    @product.description
 						    </p>
@@ -165,7 +165,7 @@
 		    {
 			    <GridItem
 				    Id=@product.Id
-				    Img=@product.Img
+				    Img=@product.Image
 				    name=@product.name
 				    Price=@product.Price
 				    InStock=@product.InStock
