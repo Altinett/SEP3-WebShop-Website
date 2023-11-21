@@ -14,31 +14,31 @@
       </div><!--End Info-->
     </center><!--End InvoiceTop-->
     
-    <div id="mid">
+    <div id="mid" class="rePadding">
 	
 	    <div class="info reInline">
-		    <div class="reBox">	<h2>Contact Info</h2>
+		    <div class="reBox">	<h2>Kunde Information:</h2>
 			    <p>
-				    Name : @FirstName @LastName<br>
-				    Address : @Address, @ZipCode<br>
+				    Navn : @FirstName @LastName<br>
+				    Adresse : @Address, @ZipCode<br>
 				    Email : @Email<br>
-				    Phone : @PhoneNumber<br>
+				    Telefon nr. : @PhoneNumber<br>
 			    </p>
 		    </div>
 	    
 		    <div class="reBox">
-			    <h2>Company Info</h2>
+			    <h2>Firma Information:</h2>
 			    <p>
-				    Company name : Shadowshare inc <br>
-				    And more blablalblabalblablabla<br>
-				    lablablablblablablablablblalbalblbalb <br>
-				    blalbalb<br>
-				    blablablabla <br>
+				    Firma navn : Shadowshare inc <br>
+				    Mere information<br>
+				    Ingen ide <br>
+				    Hel og lykke<br>
+				    lorios impus??? <br>
 			    </p>
 		    </div>
 	       
 		    <div class="reBox">
-			    <h2>Payment Info</h2> 
+			    <h2>Betalings Information:</h2> 
 			    <p>
 				    Ordernr. : @FormService.getInstance().orderId<br>
 				    Forfaldsdato : DD/MM/YY <br>
@@ -187,7 +187,7 @@
 
 
 @code {
-	
+	//TODO Remove the SubTotal and Tax we are most likely going to assume/have the tax be part of the product price
 	[Parameter] public string FirstName { get; set; }
 	[Parameter] public string LastName { get; set; }
 	[Parameter] public string Address { get; set; }
