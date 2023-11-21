@@ -36,7 +36,7 @@
   [Parameter] public DateOnly ExpirationDate { get; set; }
   [Parameter] public int CVC { get; set; }
   
-  public void Submit()
+  public async void Submit()
   {
     //code here trust man
     var instance = FormService.getInstance();
@@ -52,7 +52,7 @@
     Console.WriteLine(ExpirationDate);
     
     
-    instance.sendToLogic();
+    await instance.sendToLogic();
 
     Nvm.NavigateTo("/Kvittering");
 

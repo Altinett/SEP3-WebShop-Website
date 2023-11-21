@@ -197,9 +197,11 @@
 	
 	private List<Product> _BasketItems { get; set; }    
 	private double totalPrice { get; set; }
-	
 	protected override Task OnInitializedAsync()
 	{
+		Console.WriteLine("FS orderId in re");
+		Console.WriteLine(FormService.getInstance().orderId);
+		Console.WriteLine("After");
 		var instance = FormService.getInstance();
 		FirstName = instance.FirstName;
 		LastName = instance.LastName;
@@ -207,6 +209,9 @@
 		ZipCode = instance.ZipCode;
 		PhoneNumber = instance.PhoneNumber;
 		Email = instance.Email;
+		Console.WriteLine("FS orderId in re");
+		Console.WriteLine(FormService.getInstance().orderId);
+		Console.WriteLine("After");
 		
 		BasketService.getInstance();
 		UpdateBasket();
@@ -230,6 +235,7 @@
 	
 	public void test()
 	{
+		Console.WriteLine("Testing this test");
 		FormService instance = FormService.getInstance();
 	}
 	
