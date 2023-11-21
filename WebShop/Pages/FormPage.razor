@@ -1,27 +1,43 @@
 @page "/form"
 @inject NavigationManager Nvm
 
+<div class="forum-container">
+  <div class="forum-content">
+    <div class="forum-group">
+      <form @onsubmit="Submit">
+        <label for="FirstName">Fornavn:</label><br>
+        <div class="forum-input round">
+          <input type="text" @bind="FirstName" id="FirstName" name="FirstName">
+        </div><br>
+        <label for="LastName">Efternavn:</label><br>
+        <div class="forum-input round">
+          <input type="text" @bind="LastName" id="LastName" name="LastName">
+        </div><br>
+        <label for="Address">Adresse:</label><br>
+        <div class="forum-input round">
+          <input type="text" @bind="Address" id="Address" name="Address">
+        </div><br>
+        <label for="ZipCode">Postnummer:</label><br>
+        <div class="forum-input round">
+          <input type="number" @bind="ZipCode" id="ZipCode" name="ZipCode" min="0">
+        </div><br>
+        <label for="PhoneNumber">Telefon nr.:</label><br>
+        <div class="forum-input round">
+          <input type="number" @bind="PhoneNumber" id="PhoneNumber" name="PhoneNumber" min="0">
+        </div><br>
+        <label for="Email">Email:</label><br>
+        <div class="forum-input round">
+          <input type="text" @bind="Email" id="Email" name="Email">
+        </div><br><br>
+        
+        <div class="primary-button round" @onclick="Submit">Bekræft</div>
+      </form> 
+    </div>
+  </div>
+</div>
 
 
-<form @onsubmit="Submit">
-  <label for="FirstName">Fornavn:</label><br>
-  <input type="text" @bind="FirstName" id="FirstName" name="FirstName"><br>
-  <label for="LastName">Efternavn:</label><br>
-  <input type="text" @bind="LastName" id="LastName" name="LastName"><br>
-  <label for="Address">Adresse:</label><br>
-  <input type="text" @bind="Address" id="Address" name="Address"><br>
-  <label for="ZipCode">Postnummer:</label><br>
-  <input type="number" @bind="ZipCode" id="ZipCode" name="ZipCode" min="0"><br>
-  <label for="PhoneNumber">Telefon nr.:</label><br>
-  <input type="number" @bind="PhoneNumber" id="PhoneNumber" name="PhoneNumber" min="0"><br>
-  <label for="Email">Email:</label><br>
-  <input type="text" @bind="Email" id="Email" name="Email"><br><br>
-  <input type="submit" value="Bekræft">
-</form> 
-
-
-
-@code {
+     @code {
   
   [Parameter] public string FirstName { get; set; }
   [Parameter] public string LastName { get; set; }

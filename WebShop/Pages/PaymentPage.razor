@@ -2,18 +2,32 @@
 @using System.Runtime.InteropServices.JavaScript
 @inject NavigationManager Nvm
 
-
-<form @onsubmit="Submit">
-  <label for="Kortnummer">Kortnummer:</label><br>
-  <input type="number" @bind="CardNumber" id="CardNumber" name="CardNumber" min="0"><br>
-  <label for="ExpirationDate">Udløbsdato:</label><br>
-  <input type="date" @bind="ExpirationDate" id="ExpirationDate" name="ExpirationDate" min="<?php echo date('Y-m-d');?>"><br>
-  <label for="CVC">CVC:</label><br>
-  <input type="number" @bind="CVC" id="CVC" name="CVC" min="0"><br>
-  
-  
-  <input type="submit" value="Bekræft">
-</form> 
+<div class="forum-container">
+  <div class="forum-content">
+     <div class="forum-group">
+        <form @onsubmit="Submit">
+          <label for="Kortnummer">Kortnummer:</label><br>
+          <div class="forum-input round">
+            <input type="number" @bind="CardNumber" id="CardNumber" name="CardNumber" min="0">
+          </div><br>
+          <label for="ExpirationDate">Udløbsdato:</label><br>
+          <div class="forum-input round">
+            <input type="date" @bind="ExpirationDate" id="ExpirationDate" name="ExpirationDate" min="<?php echo date('Y-m-d');?>">
+          </div><br>
+          <label for="CVC">CVC:</label><br>
+          <div class="forum-input round">
+            <input type="number" @bind="CVC" id="CVC" name="CVC" min="0">
+          </div><br><br>
+          
+          <div class="forum-content">
+            <div class="secondary-button round forum-inline" @onclick="Previous">Tilbage</div>
+            <div class="primary-button round forum-inline" @onclick="Submit">Bekræft</div>
+          </div>
+          
+        </form>
+      </div>
+  </div>
+</div>
 
 
 @code {
@@ -42,5 +56,10 @@
 
     Nvm.NavigateTo("/Kvittering");
 
+  }
+
+  private void Previous()
+  {
+    Nvm.NavigateTo("/form");
   }
 }
