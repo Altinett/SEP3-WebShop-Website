@@ -29,3 +29,8 @@
     display: flex;
     justify-content: space-between;
 }
+
+.rePadding
+{
+    padding: 5px;
+}
