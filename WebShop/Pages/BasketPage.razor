@@ -9,7 +9,7 @@
 		</div>
 		Din indkøbskurv
 		<div class="bp-basket-amount">
-			(52 varer)
+			(@_BasketItems.Count varer)
 		</div>
 	</div>
 	<div class="bp-content">
@@ -17,10 +17,14 @@
 			<div class="bp-basket-content">
 				@foreach (Product product in _BasketItems)
                     {
-                        <BasketPageItem
+	                    <BasketPageItem
+		                    id="@product.Id"
                             Img=@product.Image
                             name=@product.name
-                            Price=@product.Price/>
+                            Price=@product.Price
+                            quantity=@product.quantity
+		                    onQuantityChanged="value => UpdateBasket()"
+		                    />
                     }
 			</div>
 		</div>
@@ -37,7 +41,7 @@
 			<div class="bp-items">
 				<div class="bp-space">
 					<div class="bp-title">Produkter</div>
-					<div class="bp-total">22570 kr</div>
+					<div class="bp-total">@totalPrice kr</div>
 				</div>
 				
 				<div class="bp-space">
@@ -49,7 +53,7 @@
 			<div class="bp-main-total">
 				<div class="bp-space">
 					<div class="bp-title">Total pris</div>
-					<div class="bp-total">22570 kr</div>
+					<div class="bp-total">@BasketService.getInstance().getBasketTotal() kr</div>
 				</div>
 				<div class="bp-total-info">(Inkl. moms)</div>
 			</div>
@@ -71,7 +75,7 @@
 
 
 @code {
-
+	
     public void OnClick()
     {
         Nvm.NavigateTo("/form");
