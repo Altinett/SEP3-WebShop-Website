@@ -93,4 +93,13 @@ public class FormService
             throw new Exception(responseContent);
         }
     }
+
+    public async Task<PaymentDto> GetFromLogic(string id)
+    {
+        HttpResponseMessage response = await client.GetAsync($"http://localhost:8080/orders/{id}");
+        string responseContent = await response.Content.ReadAsStringAsync();
+        Console.WriteLine(responseContent);
+        PaymentDto order = JsonConvert.DeserializeObject<PaymentDto>(responseContent);
+        return order;
+    }
 }

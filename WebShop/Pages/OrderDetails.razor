@@ -1,0 +1,78 @@
+@page "/Admin/{orderId}"
+@using System.Security.Claims
+@using WebShop.Shared.DTOs
+@inject NavigationManager navMgr
+
+@if (isLoggedIn)
+{
+ <div id="invoice-POS">
+    <center id="top">
+      <div class="logo"></div>
+      <div class="info"> 
+	      <h2>Order nummer: @orderId</h2>
+      </div><!--End Info-->
+    </center><!--End InvoiceTop-->
+    
+    <div id="mid" class="rePadding">
+	
+	    <div class="info reInline">
+		    <div class="reBox">	<h2>Kunde Information:</h2>
+			    <p>
+				    Navn : @dto.firstname @dto.lastname<br>
+				    Adresse : @dto.address, @dto.postcode<br>
+				    Email : @dto.email<br>
+				    Telefon nr. : @dto.phonenumber<br>
+			    </p>
+		    </div>
+	    </div>
+     <button class="btn btn-primary" @onclick="PrevPage">Tilbage</button>
+
+	      
+    </div><!--End Invoice Mid-->
+	 
+  </div><!--End Invoice-->
+}
+else
+{
+    <div>You are not logged in</div>
+}
+
+
+@code {
+    [Parameter]
+    public string orderId { get; set; }
+    [CascadingParameter]
+    public Task<AuthenticationState> AuthState { get; set; } = null!;
+
+    private string? name;
+    private string? id;
+    private IEnumerable<Claim>? userClaims;
+    private bool isLoggedIn;
+	private FormService instance;
+	private PaymentDto dto;
+
+
+    protected override async Task OnInitializedAsync()
+    {
+        AuthenticationState authState = await AuthState;
+        ClaimsPrincipal user = authState.User;
+        isLoggedIn = user.Identity != null;
+        
+        if (!isLoggedIn) return;
+        
+        userClaims = user.Claims;
+        name = user.Identity!.Name!;
+        Claim idClaim = userClaims.FirstOrDefault(c => c.Type == "User ID");
+        id = idClaim?.Value;
+
+	    
+	    instance = FormService.getInstance();
+	    dto = await instance.GetFromLogic(orderId);
+	    StateHasChanged();
+    }
+	
+	private async Task PrevPage()
+	{
+		navMgr.NavigateTo("/admin");
+	}
+}
