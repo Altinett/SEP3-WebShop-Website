@@ -66,7 +66,19 @@
 
     <input type="submit" value="Ændre">
 </form> 
-<button class="btn btn-primary" @onclick="logout">Click me</button>
+
+    <form @onsubmit="OrderDetail">
+        <h2> 
+            Se kundeordre
+        </h2>
+        <label for="id">id:</label>
+        <br>
+        <input type="number" id="FirstName" @bind="OrderId" name="FirstName"><br>
+
+        <input type="submit" value="Find ordre">
+    </form> 
+    
+<button class="btn btn-primary" @onclick="logout">Log ud</button>
 
 }
 else
@@ -114,7 +126,7 @@ else
     
     private string Name, Description;
     private int Category_id, Id;
-    private int? Price, Amount, FjernId;
+    private int? Price, Amount, FjernId, OrderId;
     //private string MessageColor = "red";
     //private bool Hide = true;
     //private string? MessageLabel;
@@ -176,6 +188,11 @@ else
             Console.WriteLine(e);
     //ErrorMessage("Something went wrong creating a user");
         }
+    }
+
+    private async Task OrderDetail()
+    {
+        navMgr.NavigateTo($"/admin/{OrderId}");
     }
 
     private async Task logout()
