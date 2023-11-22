@@ -50,7 +50,7 @@
 	[Parameter] public bool InStock { get; set; }
 	[Parameter] public bool? InBasket { get; set; } 
 	[Parameter] public int? amount { get; set; }
-	//[Parameter] public int quintity { get; set; }
+	[Parameter] public int quantity { get; set; }
 	[Parameter] public string description { get; set; }
 
 	public string PrettyPrice() {
@@ -61,7 +61,7 @@
 	{
 		if (InStock)
 		{
-			BasketService.getInstance().AddItem(new Product(Id = Id, Img = Img, name = name, price = price, InStock = InStock, amount = amount, description = description));
+			BasketService.getInstance().AddItem(new Product(Id = Id, Img = Img, name = name, price = price, InStock = InStock, amount = amount, description = description, quantity = quantity));
 		}
 	}
 

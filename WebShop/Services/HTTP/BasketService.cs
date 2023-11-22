@@ -24,7 +24,32 @@ public class BasketService : Subject
 
     public void AddItem(Product item)
     {
-        _basketItems.Add(item);
+        bool inList = false;
+
+        foreach (var product in _basketItems)
+        {
+            if (product.Id == item.Id)
+            {
+                // Product with the same ID already exists, increment the quantity
+                product.quantity += 1;
+                Console.WriteLine(product.quantity);
+                inList = true;
+                break; // No need to continue iterating once a match is found
+            }
+        }
+
+        if (!inList)
+        {
+            // Product is not in the basket, add it with quantity 1
+            Console.WriteLine("Inside L");
+            Console.WriteLine(item);
+            Console.WriteLine("Out again");
+            item.quantity += 1;
+            _basketItems.Add(item);
+        }
+
+        Console.WriteLine("We made it");
+
         emit("Changed");
     }
 
@@ -51,7 +76,7 @@ public class BasketService : Subject
         double totalPrice = 0;
         foreach (var variablProduct in _basketItems)
         {
-            totalPrice += variablProduct.Price;
+            totalPrice += variablProduct.Price * variablProduct.quantity;
         }
         return Math.Round(totalPrice,2);
     }

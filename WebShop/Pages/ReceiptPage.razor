@@ -77,8 +77,8 @@
 			    @foreach (var group in groupedProducts)
 			    {
 				    var product = group.First(); // Take the first product in the group
-				    var totalAmount = group.Sum(p => 1);
-				    var totalPrice = getTotalPriceForProduct(product.Price, totalAmount);
+				    //var totalAmount = group.Sum(p => 1);
+				    //var totalPrice = getTotalPriceForProduct(product.Price, totalAmount);
 
 				    <div class="reInline">
 					    <div class="reProducts">
@@ -89,13 +89,13 @@
 					    </div>
 					    <div class="reProductInfo reInline">
 						    <p>
-							    @totalAmount
+							    @product.quantity
 						    </p>
 						    <p>
 							    @(product.Price)Dkk
 						    </p>
 						    <p>
-							    @(totalPrice)DKK
+							    @(product.Price*product.quantity)DKK
 						    </p>
 					    </div>
 				    </div>

@@ -15,7 +15,7 @@ public class Product
 	public List<int>? categoryIds { get; set; }
 	public string? description { get; set; }
 	public bool InStock { get; set; }
-	//public int quantity { get; set; }
+	public int quantity { get; set; }
 
 	public Product()
 	{
@@ -32,7 +32,7 @@ public class Product
 	}
 	
 	//Constructor for the basket
-	public Product(int id, string img, string title, double price, bool inStock, int? amount, String description)
+	public Product(int id, string img, string title, double price, bool inStock, int? amount, String description, int quantity)
 	{
 		Id = id;
 		Image = img;
@@ -41,7 +41,7 @@ public class Product
 		InStock = inStock;
 		this.amount = amount;
 		this.description = description;
-		//this.quantity = quantity;
+		this.quantity = quantity;
 	}
 
 	public Product(int id, string name, double price, int amount, List<int> categoryIds, string description)
