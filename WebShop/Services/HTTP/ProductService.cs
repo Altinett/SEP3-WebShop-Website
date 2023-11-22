@@ -9,7 +9,17 @@ namespace BlazorWasm.Services.Http;
 public class ProductService : IProductService
 {
     private readonly HttpClient client = new ();
+    
+    private static ProductService instance;
 
+    public static ProductService getInstance()
+    {
+        if (instance == null)
+        {
+            instance = new ProductService();
+        }
+        return instance;
+    }
 
     public async Task CreateProduct(string name, string Description, List<int> category_ids, int Price, int Amount)
     {
@@ -83,6 +93,24 @@ public class ProductService : IProductService
         //List<Product> products = new List<Product>();
         //StringContent content = new StringContent(postAsJson, Encoding.UTF8, "application/json");
         HttpResponseMessage response = await client.GetAsync("http://localhost:8080/products");
+        
+        string responseContent = await response.Content.ReadAsStringAsync();
+        Console.WriteLine(responseContent);
+        List<Product> products = JsonConvert.DeserializeObject<List<Product>>(responseContent);
+        Console.WriteLine(products);
+        return products;
+        if (!response.IsSuccessStatusCode)
+        {
+            throw new Exception(responseContent);
+        }
+    }
+    
+    public async Task<List<Product>> GetProductsByOrderId(string id)
+    {
+        Console.WriteLine("Get test");
+        //List<Product> products = new List<Product>();
+        //StringContent content = new StringContent(postAsJson, Encoding.UTF8, "application/json");
+        HttpResponseMessage response = await client.GetAsync($"http://localhost:8080/products/fromOrder?id={id}");
         
         string responseContent = await response.Content.ReadAsStringAsync();
         Console.WriteLine(responseContent);

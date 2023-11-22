@@ -21,6 +21,10 @@ public class FormService
     public int CVC { get; set; }
     public int orderId { get; set; }
     
+    public int Total { get; set; }
+    
+    public string Date { get; set; }
+    
     
     public static FormService getInstance()
     {
@@ -71,7 +75,9 @@ public class FormService
             email = Email,
             cardnumber = CardNumber,
             expirationdate = ExpirationDate,
-            cvc = CVC
+            cvc = CVC,
+            total = Total,
+            date = Date
         };
         Console.WriteLine("after The paymentDTO, aber before Json");
         
@@ -85,7 +91,6 @@ public class FormService
         dynamic data = JsonConvert.DeserializeObject(responseContent);
         Console.WriteLine(data);
         orderId = data.orderId;
-
         
         
         if (!response.IsSuccessStatusCode)
