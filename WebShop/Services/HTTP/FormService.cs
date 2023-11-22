@@ -45,24 +45,37 @@ public class FormService
     
     public async Task sendToLogic()
     {
-        BasketService.getInstance().GetBasketItems();
+        BasketService basketService = BasketService.getInstance();
+        basketService.GetBasketItems();
 
         List<int> ids = new List<int>();
+        Dictionary<int, int> productsDictionary = new Dictionary<int, int>();
 
-
-        foreach (Product item in BasketService.getInstance().GetBasketItems())
+        foreach (Product item in basketService.GetBasketItems())
         {
             ids.Add(item.Id);
+
+            //if (productsDictionary.ContainsKey(item.Id))
+            //{
+                // Key already exists, update the quantity
+              //  productsDictionary[item.Id] += item.quantity;
+            //}
+            //else
+            //{
+                // Key doesn't exist, add it to the dictionary
+                productsDictionary.Add(item.Id, item.quantity);
+           // }
         }
 
         Console.WriteLine("Before the PaymentDTO");
         PaymentDto dto = new PaymentDto
         {
             productIds = ids,
-            products = new Dictionary<int, int> {
-                {2, 4},
-                {1, 2}
-            },
+            products = productsDictionary,
+            //products = new Dictionary<int, int> {
+                //{2, 4},
+                //{1, 2}
+            //},
             firstname = FirstName,
             lastname = LastName,
             address = Address,
