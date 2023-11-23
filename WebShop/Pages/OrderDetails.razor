@@ -32,7 +32,7 @@
         			    <h2>Betalings Information:</h2> 
         			    <p>
         				    Ordernr. : @orderId<br>
-        				    Oprettet : @DateTimeOffset.FromUnixTimeMilliseconds((long)Convert.ToDouble(dto.date)).LocalDateTime <br>
+        				    Oprettet : @DateTimeOffset.FromUnixTimeMilliseconds((long)Convert.ToDouble(dto.date)).LocalDateTime.ToString("yyyy-MM-dd HH:mm:ss.fff") <br>
         			    </p>
         		    </div>
         	    </div>
@@ -208,18 +208,14 @@ else
 		instance = FormService.getInstance();
 		dto = await instance.GetFromLogic(orderId);
 		instance2 = ProductService.getInstance();
-	// /products/fromOrder?id=
 		Console.WriteLine("Method await" + await instance2.GetProductsByOrderId(orderId));
 		List<Product> list = await instance2.GetProductsByOrderId(orderId);
 		_BasketItems = new List<Product>(list);
-		Console.WriteLine("PRODUCTSXD" + _BasketItems);
 		StateHasChanged();
 	}
 
 	private async Task PrevPage()
 	{
 		navMgr.NavigateTo("/admin");
-	}
-
 	}
 }

@@ -1,12 +1,21 @@
 @page "/Admin"
 @using BlazorWasm.Services
 @using System.Security.Claims
+@using WebShop.Shared.DTOs
 @inject IAuthService authService
 @inject NavigationManager navMgr
 @inject IProductService ProductService
 
 @if (isLoggedIn)
 {
+    <div>
+            <p>Logget ind som: @username ID: @id</p>
+            <P>@firstname</P>
+            <p>@lastname</p>
+            <p>@email</p>
+    </div>
+
+    
     <form @onsubmit="Add">
     <h2> 
         Tilføj en vare
@@ -78,7 +87,7 @@
         <input type="submit" value="Find ordre">
     </form> 
     
-<button class="btn btn-primary" @onclick="logout">Log ud</button>
+<button class="btn btn-primary" @onclick="Logout">Log ud</button>
 
 }
 else
@@ -91,10 +100,15 @@ else
     [CascadingParameter]
     public Task<AuthenticationState> AuthState { get; set; } = null!;
 
-    private string? name;
-    private string? id;
+    private string? firstname;
+    private string? lastname;
+    private string? username;
+    private string? email;
+    private int? id; 
     private IEnumerable<Claim>? userClaims;
     private bool isLoggedIn;
+    private UserDto? userDto;
+
 
     protected override async Task OnInitializedAsync()
     {
@@ -103,11 +117,13 @@ else
         isLoggedIn = user.Identity != null;
         
         if (!isLoggedIn) return;
-        
         userClaims = user.Claims;
-        name = user.Identity!.Name!;
-        Claim idClaim = userClaims.FirstOrDefault(c => c.Type == "User ID");
-        id = idClaim?.Value;
+        UserDto userCredentials = authService.GetUser();
+        firstname = userCredentials.firstname;
+        lastname = userCredentials.lastname;
+        username = userCredentials.username;
+        email = userCredentials.email;
+        id = userCredentials.id;
     }
     
     List<int> category_ids = new List<int>();
@@ -195,7 +211,7 @@ else
         navMgr.NavigateTo($"/admin/{OrderId}");
     }
 
-    private async Task logout()
+    private async Task Logout()
     {
         await authService.LogoutAsync();
         navMgr.NavigateTo("/login");
