@@ -7,163 +7,171 @@
 
 @if (isLoggedIn)
 {
- <div id="invoice-POS">
-    <center id="top">
-      <div class="logo"></div>
-      <div class="info"> 
-	      <h2>Order nummer: @orderId</h2>
-      </div><!--End Info-->
-    </center><!--End InvoiceTop-->
-    
-    <div id="mid" class="rePadding">
-	
-	    <div class="info reInline">
-		    <div class="reBox">	<h2>Kunde Information:</h2>
-			    <p>
-				    Navn : @dto.firstname @dto.lastname<br>
-				    Adresse : @dto.address, @dto.postcode<br>
-				    Email : @dto.email<br>
-				    Telefon nr. : @dto.phonenumber<br>
-			    </p>
-		    </div>
-	    </div>
-	    
-	    		    <div class="reBox">
-        			    <h2>Betalings Information:</h2> 
+	@if (dto != null)
+	{
+		 <div id="invoice-POS">
+            <center id="top">
+              <div class="logo"></div>
+              <div class="info"> 
+        	      <h2>Order nummer: @orderId</h2>
+              </div><!--End Info-->
+            </center><!--End InvoiceTop-->
+            
+            <div id="mid" class="rePadding">
+        	
+        	    <div class="info reInline">
+        		    <div class="reBox">	<h2>Kunde Information:</h2>
         			    <p>
-        				    Ordernr. : @orderId<br>
-        				    Oprettet : @DateTimeOffset.FromUnixTimeMilliseconds((long)Convert.ToDouble(dto.date)).LocalDateTime <br>
+        				    Navn : @dto.firstname @dto.lastname<br>
+        				    Adresse : @dto.address, @dto.postcode<br>
+        				    Email : @dto.email<br>
+        				    Telefon nr. : @dto.phonenumber<br>
         			    </p>
         		    </div>
         	    </div>
         	    
-        	    <div>
-        		    <div>
-        			    <hr>
-        			    <div class="reHeader">
-        				    <p>
-        					    Item
-        				    </p>
-        				    <div class="reProductInfo reInline">
-        					    <p>
-        						    Antal
-        					    </p>
-        					    <p>
-        						    Pris pr.
-        					    </p>
-        					    <p>
-        						    Rel pris
-        					    </p>
-        				    </div>
-        			    </div>
-        			    <hr>
-        			    
-        			    
-        			    <!-- Products -->
-        			    @{
-        				    var groupedProducts = _BasketItems.GroupBy(p => p.name);
-        			    }
+        	    		    <div class="reBox">
+                			    <h2>Betalings Information:</h2> 
+                			    <p>
+                				    Ordernr. : @orderId<br>
+                				    Oprettet : @DateTimeOffset.FromUnixTimeMilliseconds((long)Convert.ToDouble(dto.date)).LocalDateTime.ToString("yyyy-MM-dd HH:mm:ss.fff") <br>
+                			    </p>
+                		    </div>
+                	    </div>
+                	    
+                	    <div>
+                		    <div>
+                			    <hr>
+                			    <div class="reHeader">
+                				    <p>
+                					    Item
+                				    </p>
+                				    <div class="reProductInfo reInline">
+                					    <p>
+                						    Antal
+                					    </p>
+                					    <p>
+                						    Pris pr.
+                					    </p>
+                					    <p>
+                						    Rel pris
+                					    </p>
+                				    </div>
+                			    </div>
+                			    <hr>
+                			    
+                			    
+                			    <!-- Products -->
+                			    @{
+                				    var groupedProducts = _BasketItems.GroupBy(p => p.name);
+                			    }
+                
+                			    @foreach (var group in groupedProducts)
+                			    {
+                				    var product = group.First(); // Take the first product in the group
+                				    var totalAmount = group.Sum(p => 1);
+                
+                				    <div class="reInline">
+                					    <div class="reProducts">
+                						    <p>@(product.name ?? "N/A")</p>
+                						    <p class="reDescription">
+                							    @product.description
+                						    </p>
+                					    </div>
+                					    <div class="reProductInfo reInline">
+                						    <p>
+                							    @totalAmount
+                						    </p>
+                						    <p>
+                							    @(product.Price)Dkk
+                						    </p>
+                						    <p>
+                						    </p>
+                					    </div>
+                				    </div>
+                				    <hr>
+                			    }
+                			    <br>
+                			    <div class="reInline">
+                				    <div class="reProducts">
+                					    <p>Sub Total</p>
+                				    </div>
+                				    <div class="reProductInfo reInline">
+                					    <p>
+                                							    
+                					    </p>
+                					    <p>
+                							                    
+                					    </p>
+                					    <p>
+                					    </p>
+                				    </div>
+                			    </div>
+                			    				    <div class="reInline">
+                                					    <div class="reProducts">
+                                						    <p>Tax</p>
+                                					    </div>
+                                					    <div class="reProductInfo reInline">
+                                						    <p>
+                                							    
+                                						    </p>
+                						                    <p>
+                							                    
+                						                    </p>
+                                						    <p>
+                                						    </p>
+                                					    </div>
+                                				    </div>			    
+                			    <hr>
+                			    				    <div class="reInline">
+                                					    <div class="reProducts">
+                                						    <p>Total: @dto.total</p>
+                                					    </div>
+                                					    <div class="reProductInfo reInline">
+                                						    <p>
+                                							    
+                                						    </p>
+                						                    <p>
+                							                    
+                						                    </p>
+                                						    <p>
+                                						    </p>
+                                					    </div>
+                							        </div>		
+                			    <hr>
+                			    
+                		    </div>
+                	     </div>
+        	    
+        	    <div id="bot">
+                	    <div class="contents">
+                		    <!--
+                		    @foreach (Product product in _BasketItems)
+                		    {
+                			    <GridItem
+                				    Id=@product.Id
+                				    Img=@product.Image
+                				    name=@product.name
+                				    Price=@product.Price
+                				    InStock=@product.InStock
+                				    InBasket="false"
+                				    />
+                		    }
+                		    
+                		     -->
+                		    </div>
+        	    <button class="btn btn-primary" @onclick="PrevPage">Tilbage</button>
         
-        			    @foreach (var group in groupedProducts)
-        			    {
-        				    var product = group.First(); // Take the first product in the group
-        				    var totalAmount = group.Sum(p => 1);
+        		        </div><!--End Invoice Mid-->
         
-        				    <div class="reInline">
-        					    <div class="reProducts">
-        						    <p>@(product.name ?? "N/A")</p>
-        						    <p class="reDescription">
-        							    @product.description
-        						    </p>
-        					    </div>
-        					    <div class="reProductInfo reInline">
-        						    <p>
-        							    @totalAmount
-        						    </p>
-        						    <p>
-        							    @(product.Price)Dkk
-        						    </p>
-        						    <p>
-        						    </p>
-        					    </div>
-        				    </div>
-        				    <hr>
-        			    }
-        			    <br>
-        			    <div class="reInline">
-        				    <div class="reProducts">
-        					    <p>Sub Total</p>
-        				    </div>
-        				    <div class="reProductInfo reInline">
-        					    <p>
-                        							    
-        					    </p>
-        					    <p>
-        							                    
-        					    </p>
-        					    <p>
-        					    </p>
-        				    </div>
-        			    </div>
-        			    				    <div class="reInline">
-                        					    <div class="reProducts">
-                        						    <p>Tax</p>
-                        					    </div>
-                        					    <div class="reProductInfo reInline">
-                        						    <p>
-                        							    
-                        						    </p>
-        						                    <p>
-        							                    
-        						                    </p>
-                        						    <p>
-                        						    </p>
-                        					    </div>
-                        				    </div>			    
-        			    <hr>
-        			    				    <div class="reInline">
-                        					    <div class="reProducts">
-                        						    <p>Total: @dto.total</p>
-                        					    </div>
-                        					    <div class="reProductInfo reInline">
-                        						    <p>
-                        							    
-                        						    </p>
-        						                    <p>
-        							                    
-        						                    </p>
-                        						    <p>
-                        						    </p>
-                        					    </div>
-        							        </div>		
-        			    <hr>
-        			    
-        		    </div>
-        	     </div>
-	    
-	    <div id="bot">
-        	    <div class="contents">
-        		    <!--
-        		    @foreach (Product product in _BasketItems)
-        		    {
-        			    <GridItem
-        				    Id=@product.Id
-        				    Img=@product.Image
-        				    name=@product.name
-        				    Price=@product.Price
-        				    InStock=@product.InStock
-        				    InBasket="false"
-        				    />
-        		    }
-        		    
-        		     -->
-        		    </div>
-	    <button class="btn btn-primary" @onclick="PrevPage">Tilbage</button>
-
-		        </div><!--End Invoice Mid-->
-
-    </div><!--End Invoice Mid-->
-	
+            </div><!--End Invoice Mid-->
+        	
+	}
+	else
+	{
+		<div>No order found with ID: @orderId</div>
+		<button class="btn btn-primary" @onclick="PrevPage">Go Back</button>
+	}
 }
 else
 {
@@ -208,18 +216,14 @@ else
 		instance = FormService.getInstance();
 		dto = await instance.GetFromLogic(orderId);
 		instance2 = ProductService.getInstance();
-	// /products/fromOrder?id=
 		Console.WriteLine("Method await" + await instance2.GetProductsByOrderId(orderId));
 		List<Product> list = await instance2.GetProductsByOrderId(orderId);
 		_BasketItems = new List<Product>(list);
-		Console.WriteLine("PRODUCTSXD" + _BasketItems);
 		StateHasChanged();
 	}
 
 	private async Task PrevPage()
 	{
 		navMgr.NavigateTo("/admin");
-	}
-
 	}
 }

@@ -20,11 +20,7 @@ public class FormService
     public DateOnly ExpirationDate { get; set; }
     public int CVC { get; set; }
     public int orderId { get; set; }
-    
     public int Total { get; set; }
-    
-    public string Date { get; set; }
-    
     
     public static FormService getInstance()
     {
@@ -93,8 +89,7 @@ public class FormService
             cardnumber = CardNumber,
             expirationdate = ExpirationDate,
             cvc = CVC,
-            total = Total,
-            date = Date
+            total = Total
         };
         Console.WriteLine("after The paymentDTO, aber before Json");
         
