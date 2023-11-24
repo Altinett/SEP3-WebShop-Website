@@ -47,7 +47,6 @@ public class JwtAuthService : IAuthService
         {
             throw new Exception("Wrong user");
         }
-        
         string token = "eyJhbGciOiJIUzUxMiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJKV1RTZXJ2aWNlQWNjZXNzVG9rZW4iLCJqdGkiOiJlNTU3NDA5My1mOTljLTQ1ODAtYmM1Yy1mZWQzMGY2NzM3YjciLCJpYXQiOiIyMyBOb3YgMjMgMDkuMDAuNDgiLCJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9uYW1lIjoiTUxHIiwiaHR0cDovL3NjaGVtYXMubWljcm9zb2Z0LmNvbS93cy8yMDA4LzA2L2lkZW50aXR5L2NsYWltcy9yb2xlIjoiTWVtYmVyIiwiVXNlciBJRCI6IjYiLCJEaXNwbGF5TmFtZSI6Ik1hcmMiLCJFbWFpbCI6ImhhaGFAeGQuY29tIiwiQWdlIjoiMjciLCJEb21haW4iOiJ4ZC5jb20iLCJTZWN1cml0eUxldmVsIjoiMSIsImV4cCI6MTcwMDczMzY0OCwiaXNzIjoiSldUQXV0aGVudGljYXRpb25TZXJ2ZXIiLCJhdWQiOiJKV1RTZXJ2aWNlQmxhem9yV2FzbUNsaWVudCJ9.GXASqoSQfmbjVaNvvgsGmXhO10jk_vjj3pb_ZZG9Qzmfo1jKACh9G6ZcfGbVsfUAJpC5dPn9FLH3MIQGzjn8Ug";
         Jwt = token;
         
