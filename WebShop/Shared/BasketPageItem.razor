@@ -7,13 +7,13 @@
 		@name
 	</div>
 	<div class="bp-product-control">
-		<div class="tertiary-icon-button">
-			<svg xmlns="http://www.w3.org/2000/svg" @onclick="(Decrement)" class="ionicon" viewBox="0 0 512 512"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="32" d="M400 256H112"/></svg>
+		<div class="tertiary-icon-button" @onclick="Decrement">
+			<svg xmlns="http://www.w3.org/2000/svg" class="ionicon" viewBox="0 0 512 512"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="32" d="M400 256H112"/></svg>
 		</div>
 		<input type="number" min="1" value="@quantity">
 		
-		<div class="tertiary-icon-button">
-			<svg xmlns="http://www.w3.org/2000/svg" class="ionicon" @onclick="(Increment)" viewBox="0 0 512 512"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="32" d="M256 112v288M400 256H112"/></svg>
+		<div class="tertiary-icon-button" @onclick="Increment">
+			<svg xmlns="http://www.w3.org/2000/svg" class="ionicon" viewBox="0 0 512 512"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="32" d="M256 112v288M400 256H112"/></svg>
 		</div>
 
 	</div>
@@ -53,35 +53,12 @@
 
 	[Parameter]
 	public string description { get; set; }
-	
-	private void EqualsTheQuantitys()
-	{
-		Product product = BasketService.getInstance().GetBasketItems().FirstOrDefault(p => p.Id == Id);
-		if (product != null)
-		{
-			product.quantity = quantity;
-			StateHasChanged();
-		}
-	}
-	
-	private void Decrement()
-	{
-		quantity--;
-		EqualsTheQuantitys();
-		if (onQuantityChanged != null)
-		{
-			onQuantityChanged(quantity);
-		}
+
+	private void Decrement(){
+		BasketService.getInstance().RemoveItem(Id);
 	}
 
-	private void Increment()
-	{
-		quantity++;
-		EqualsTheQuantitys();
-		if (onQuantityChanged != null)
-		{
-			onQuantityChanged(quantity);
-		}
+	private void Increment(){
+		BasketService.getInstance().AddItem(Id);
 	}
-	
 }

@@ -15,13 +15,14 @@
 	<div class="bp-content">
 		<div class="bp-scroll-box">
 			<div class="bp-basket-content">
-				@foreach (Product product in _BasketItems)
+				@foreach (Product product in _BasketItems.Values)
                     {
 	                    <BasketPageItem
 		                    id="@product.Id"
                             Img=@product.Image
                             name=@product.name
                             Price=@product.Price
+		                    amount=@product.amount
                             quantity=@product.quantity
 		                    onQuantityChanged="value => UpdateBasket()"
 		                    />
@@ -81,7 +82,7 @@
         Nvm.NavigateTo("/form");
     }
 	
-	private List<Product> _BasketItems { get; set; }
+	private Dictionary<int, Product> _BasketItems { get; set; }
 
 	private double totalPrice { get; set; }
     

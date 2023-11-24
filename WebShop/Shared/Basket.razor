@@ -8,7 +8,7 @@
         Din kurv
     </div>
     <div class="contents">
-        @foreach (Product product in _BasketItems)
+        @foreach (var product in _BasketItems.Values)
         {
             <GridItem 
                 Id=@product.Id
@@ -28,7 +28,7 @@
 @code {
     /*[Parameter] public RenderFragment ChildContent { get; set; }*/
     
-    private List<Product> _BasketItems { get; set; }
+    private Dictionary<int, Product> _BasketItems { get; set; }
 
     private double totalPrice { get; set; }
     

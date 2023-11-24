@@ -26,7 +26,12 @@
     <input id="Price" placeholder="Pris" type="number" @bind="Price" min="0"/> <br/>
     <label for="Amount">Mængde:</label><br>
     <input id="Amount" placeholder="Mængde" type="number" @bind="Amount" min="0"/> <br/>
-
+    
+    <label for="Image">Billede:</label>
+    <InputFile OnChange="ImageUpload" id="Image" accept="image/jpeg, image/png"></InputFile>
+    <!--
+    <input id="Image" type="file" @bind="Image" accept="image/jpeg, image/png" />
+    -->
     <input type="submit" value="Tilføj">
 </form> 
 
@@ -125,11 +130,17 @@ else
     }
     
     private string Name, Description;
+    private IBrowserFile Image;
     private int Category_id, Id;
     private int? Price, Amount, FjernId, OrderId;
     //private string MessageColor = "red";
     //private bool Hide = true;
     //private string? MessageLabel;
+
+    private async Task ImageUpload(InputFileChangeEventArgs e)
+    {
+        Image = e.File;
+    }
     
     private async Task Add()
     {
@@ -141,7 +152,7 @@ else
         {
             if (Price != null && Amount != null)
             {
-                await ProductService.CreateProduct(Name, Description, category_ids, Price ?? 0, Amount ?? 0);
+                await ProductService.CreateProduct(Name, Description, category_ids, Price ?? 0, Amount ?? 0, Image);
             }
             //SuccessMessage("Successfully created user");
         }

@@ -34,7 +34,7 @@ public class FormService
         }
         return instance;
     }
-    //din mor
+    
     private FormService()
     {
         
@@ -50,11 +50,15 @@ public class FormService
     public async Task sendToLogic()
     {
         BasketService basketService = BasketService.getInstance();
-        basketService.GetBasketItems();
 
         List<int> ids = new List<int>();
         Dictionary<int, int> productsDictionary = new Dictionary<int, int>();
 
+        foreach (var entry in basketService.GetBasketItems())
+        {
+            ids.Add(entry.Value.Id);
+        }
+        /*
         foreach (Product item in basketService.GetBasketItems())
         {
             ids.Add(item.Id);
@@ -69,12 +73,12 @@ public class FormService
                 // Key doesn't exist, add it to the dictionary
                 productsDictionary.Add(item.Id, item.quantity);
            // }
-        }
+        }*/
 
         Console.WriteLine("Before the PaymentDTO");
         PaymentDto dto = new PaymentDto
         {
-            productIds = ids,
+            //productIds = ids,
             products = productsDictionary,
             //products = new Dictionary<int, int> {
                 //{2, 4},
