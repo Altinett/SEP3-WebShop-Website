@@ -15,6 +15,8 @@ public class Subject
 
     public void emit(String _event, params Object[] args)
     {
+        if (!Observers.ContainsKey(_event)) return;
+        
         foreach (Action<object[]> action in Observers[_event])
         {
             action(args);
