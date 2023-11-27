@@ -1,3 +1,5 @@
+@using WebShop.Services.HTTP
+@using BlazorWasm.Services.Http
 @inject NavigationManager Nvm
 
 <div class="topnav">
@@ -10,7 +12,7 @@
     
     <form @onsubmit="OnSearch">
         <label class="search round" for="search-input">
-            <input type="text" id="search-input" spellcheck="false" placeholder="Search">
+            <input @bind="searchQuery" type="text" id="search-input" spellcheck="false" placeholder="Search">
             <div class="icon" @onclick="OnSearch">
                 <svg xmlns="http://www.w3.org/2000/svg" class="ionicon" viewBox="0 0 512 512"><path d="M221.09 64a157.09 157.09 0 10157.09 157.09A157.1 157.1 0 00221.09 64z" fill="none" stroke="currentColor" stroke-miterlimit="10" stroke-width="32"/><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-miterlimit="10" stroke-width="32" d="M338.29 338.29L448 448"/></svg>
             </div>
@@ -33,6 +35,11 @@
 
 
 @code {
+    
+    [Parameter] public string searchQuery { get; set; }
+
+    private SearchService _searchService = SearchService.getInstance();
+    private ProductService _productService = ProductService.getInstance();
 
     public void OnClicki()
     {
@@ -41,7 +48,12 @@
 
     public void OnSearch()
     {
-        Nvm.NavigateTo("/browse"); 
+        // Set current search query to input field value and emit the search event
+        _searchService.SetCurrentQuery(searchQuery);
+        _searchService.emit("search", searchQuery);
+        
+        // Navigate to browse page and make sure the categories are the same when navigating
+        Nvm.NavigateTo("/browse/" + String.Join(",", _searchService.GetCurrentCategories()));
     }
     
     public void OnCategoryCLick()

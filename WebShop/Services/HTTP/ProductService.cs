@@ -124,6 +124,11 @@ public class ProductService : IProductService
         return products;
     }
     
+    public void SetProducts(List<Product> products)
+    {
+        ProductService.products = products;
+    }
+    
     public async Task<List<Product>> GetProductsByOrderId(string id)
     {
         Console.WriteLine("Get test");
