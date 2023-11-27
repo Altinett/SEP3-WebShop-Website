@@ -13,10 +13,9 @@
 	<div class="ho-content">
 		<div class="ho-box-group">
 			
-			@foreach (var category in categorys)
-			{
+			@foreach (var category in Categories) {
 				<CategoryBox
-					id =@category.id
+					id=@category.id
 					Img="https://images.unsplash.com/photo-1606131731446-5568d87113aa?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxzZWFyY2h8MXx8YnVyZ2Vyc3xlbnwwfHwwfHw%3D&auto=format&fit=crop&w=500&q=60"
 					title=@category.name
 					desc="this is a descriptor"/>
@@ -26,27 +25,20 @@
 </div>
 
 @code {
-	//public int? category = null;
-	private List<CategoryDto> categorys;
-	//private Dictionary<int,string> categoryDictionary;
-	//private List<Product> products = new();
-	//private ProductService _productService = ProductService.getInstance();
+	private List<CategoryDto> Categories = new();
 	private CategoryService _categoryService = CategoryService.getInstance();
 
 	protected override async Task OnInitializedAsync()
 	{
-		/*foreach (var category in categorys)
-		{
-			categoryDictionary.Add(category.id,category.name);
-		}*/
 		
 		try {
 			if (_categoryService.GetCategories() == null){
-				categorys = await _categoryService.UpdateCategory();
+				Categories = await _categoryService.UpdateCategory();
 			} else {
 				_categoryService.UpdateCategory();
-				categorys = _categoryService.GetCategories();
+				Categories = _categoryService.GetCategories();
 			}
+			StateHasChanged();
 		} catch (Exception e) {
 			Console.WriteLine(e);
 		}
