@@ -15,6 +15,7 @@ public class ProductService : IProductService
     private readonly HttpClient client = new ();
     
     private static ProductService instance;
+    private static List<Product> products;
     
     public static ProductService getInstance()
     {
@@ -103,8 +104,6 @@ public class ProductService : IProductService
         }
     }
 
-    private static List<Product> products;
-
     public async Task<List<Product>> UpdateProducts()
     {
         HttpResponseMessage response = await client.GetAsync("http://localhost:8080/products");
@@ -122,7 +121,7 @@ public class ProductService : IProductService
         return products;
     }
     
-    public async Task<List<Product>> GetProductsByOrderId(string id)
+    public async Task<List<Product?>> GetProductsByOrderId(string id)
     {
         Console.WriteLine("Get test");
         //List<Product> products = new List<Product>();

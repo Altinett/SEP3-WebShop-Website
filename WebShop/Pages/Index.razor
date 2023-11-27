@@ -2,7 +2,9 @@
 @using global::Shared
 @using BlazorWasm.Services.Http
 @using BlazorWasm.Services
-@inject IProductService ProductService
+@using WebShop.Services.HTTP
+@using WebShop.Shared.DTOs
+
 
 <div class="ho-container">
 	
@@ -11,36 +13,43 @@
 	<div class="ho-content">
 		<div class="ho-box-group">
 			
-			<CategoryBox
-				Img="https://images.unsplash.com/photo-1606131731446-5568d87113aa?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxzZWFyY2h8MXx8YnVyZ2Vyc3xlbnwwfHwwfHw%3D&auto=format&fit=crop&w=500&q=60"
-				title="Burger"
-				desc="this is a descriptor"/>
-
-			<CategoryBox
-				Img="https://images.unsplash.com/photo-1606131731446-5568d87113aa?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxzZWFyY2h8MXx8YnVyZ2Vyc3xlbnwwfHwwfHw%3D&auto=format&fit=crop&w=500&q=60"
-				title="RealTest"
-				desc="RealDesc"/>
-
-			<CategoryBox
-				img=""
-				title="box 3"
-				desc="descriptor 3"/>
-			
-			<CategoryBox
-				img=""
-				title="box 4"
-				desc="descriptor 4"/>
-			
-			<CategoryBox
-				img=""
-				title="box 5"
-				desc="descriptor 5"/>
-			
-			
-			<CategoryBox
-				img=""
-				title="box 6"
-				desc="descriptor 6"/>
+			@foreach (var category in categorys)
+			{
+				<CategoryBox
+					id =@category.id
+					Img="https://images.unsplash.com/photo-1606131731446-5568d87113aa?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxzZWFyY2h8MXx8YnVyZ2Vyc3xlbnwwfHwwfHw%3D&auto=format&fit=crop&w=500&q=60"
+					title=@category.name
+					desc="this is a descriptor"/>
+			}
 		</div>
 	</div>
 </div>
+
+@code {
+	//public int? category = null;
+	private List<CategoryDto> categorys;
+	//private Dictionary<int,string> categoryDictionary;
+	//private List<Product> products = new();
+	//private ProductService _productService = ProductService.getInstance();
+	private CategoryService _categoryService = CategoryService.getInstance();
+
+	protected override async Task OnInitializedAsync()
+	{
+		/*foreach (var category in categorys)
+		{
+			categoryDictionary.Add(category.id,category.name);
+		}*/
+		
+		try {
+			if (_categoryService.GetCategories() == null){
+				categorys = await _categoryService.UpdateCategory();
+			} else {
+				_categoryService.UpdateCategory();
+				categorys = _categoryService.GetCategories();
+			}
+		} catch (Exception e) {
+			Console.WriteLine(e);
+		}
+		
+	}
+}

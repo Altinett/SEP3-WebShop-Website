@@ -1,21 +1,28 @@
 @using global::Shared
 @using WebShop.Pages
+@using WebShop.Shared.DTOs
+@inject NavigationManager Nvm
 
 <div class="ho-category-box round" style="background-image: url(@Img)">
     <div class="ho-category-box-text" style="z-index: 2;">
         <p class="ho-category-title">@title</p>
         <p class="ho-category-desc">@desc</p>
     </div>
-    <div class="ho-overlay"></div>
+    <div class="ho-overlay" @onclick="(SelectedCategory)"></div>
 </div>
 
 
 
 @code {
     
+    [Parameter] public int id { get; set; }
     [Parameter] public string title { get; set; }
     [Parameter] public string desc { get; set; }
     [Parameter] public string Img { get; set; }
-    
+
+    private void SelectedCategory()
+    {
+        Nvm.NavigateTo("/browse/" + id); 
+    }
 
 }

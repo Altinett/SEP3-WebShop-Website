@@ -1,3 +1,4 @@
+@page "/browse/{categoryId?}"
 @page "/browse"
 @using global::Shared
 @using BlazorWasm.Services.Http
@@ -5,7 +6,7 @@
 
 
 <Grid>
-    @foreach (Product product in products)
+ @foreach (Product product in GetFilteredProducts())
     {
         <GridItem
             Id=@product.Id
@@ -16,13 +17,20 @@
             price=@product.Price
             InStock=@product.InStock/>
     }
+        
 
 </Grid>
 <Basket />
 
 @code {
+    //public int? category { get; set; }
+    //public int ca
     private List<Product> products = new();
     private ProductService _productService = ProductService.getInstance();
+    [Parameter] public string categoryId { get; set; }
+    [Inject] private NavigationManager NavigationManager { get; set; }
+    //private int categoryId;
+    private int category;
 
     protected override async Task OnInitializedAsync()
     {
@@ -33,8 +41,28 @@
                 _productService.UpdateProducts();
                 products = _productService.GetProducts();
             }
+            
+    // Get categoryId from the URL
+            if (int.TryParse(NavigationManager.Uri.Split("/").Last(), out category))
+            {
+    // Filter products based on the categoryId
+                products = GetFilteredProducts();
+            }
         } catch (Exception e) {
             Console.WriteLine(e);
+        }
+    }
+    private List<Product> GetFilteredProducts()
+    {
+        if (string.IsNullOrEmpty(categoryId))
+        {
+            return products;
+        }
+        else
+        {
+    // Filter products based on the categoryId
+            Console.WriteLine(categoryId);
+            return products.Where(p => p.categoryIds.Contains(int.Parse(categoryId))).ToList();
         }
     }
 }
