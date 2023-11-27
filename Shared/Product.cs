@@ -34,7 +34,7 @@ public class Product
 	}
 	
 	//Constructor for the basket
-	public Product(int id, string img, string title, double price, bool inStock, int? amount, String description, int quantity, bool flagged)
+	public Product(int id, string img, string title, double price, bool inStock, int? amount, String description, int quantity)
 	{
 		Id = id;
 		Image = img;
@@ -44,7 +44,6 @@ public class Product
 		this.amount = amount;
 		this.description = description;
 		this.quantity = quantity;
-		this.flagged = flagged;
 	}
 
 	public Product(int id, string name, double price, int amount, List<int> categoryIds, string description)
