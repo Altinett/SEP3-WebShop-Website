@@ -3,20 +3,21 @@
 @using System.Security.Claims
 @using global::Shared
 @using WebShop.Shared.DTOs
+@using System.Security.AccessControl
 @inject IAuthService authService
 @inject NavigationManager navMgr
 @inject IProductService ProductService
 
-{
+@if (true) {
     <div>
             <p>Logget ind som: @username ID: @id</p>
-            <P>@firstname</P>
+            <p>@firstname</p>
             <p>@lastname</p>
             <p>@email</p>
     </div>
 
     
-    <form @onsubmit="Add">
+    <form @onsubmit="AddProduct">
     <h2> 
         Tilføj en vare
     </h2>
@@ -57,31 +58,33 @@
     <input type="submit" value="Fjern">
 </form> 
 
-<form @onsubmit="Edit">
+<form @onsubmit="() => validProduct()">
     <h2> 
         Ændre vare
     </h2>
+    <label for="id">Id:</label><br>
+    <input id="id" placeholder="id" type="number" @bind="Id" min="0"/> <br/>
+    
+    @if (isValidProduct)
+    {
+        <label for="Name">Vare Navn:</label><br>
+        <input id="Name" placeholder="Vare Navn" type="text" @bind="Name"/> <br/>
+        <label for="Description">Beskrivelse:</label><br>
+        <input id="Description" placeholder="Beskrivelse" type="text" @bind="Description"/> <br>
 
-       <label for="id">Id:</label><br>
-       <input id="id" placeholder="id" type="number" @bind="Id" min="0"/> <br/>
-
-    <label for="Name">Vare Navn:</label><br>
-    <input id="Name" placeholder="Vare Navn" type="text" @bind="Name"/> <br/>
-    <label for="Description">Beskrivelse:</label><br>
-       <input id="Description" placeholder="Beskrivelse" type="text" @bind="Description"/> <br>
-<!--
-<br/><input type="checkbox" id="elektronik" value="1" @onchange="() => HandleCheckboxChange(1)"> <label for="elektronik">Elektronik</label><br />
-    <input type="checkbox" id="have" value="2" @onchange="() => HandleCheckboxChange(2)"> <label for="have">Have</label><br />
-    <input type="checkbox" id="indendørs" value="3" @onchange="() => HandleCheckboxChange(3)"> <label for="indendørs">Indendørs</label><br />
-    <input type="checkbox" id="Døden" value="4" @onchange="() => HandleCheckboxChange(4)"> <label for="Døden">Døden</label><br />-->
-
-    <label for="Price">Pris:</label><br>
-    <input id="Price" placeholder="Pris" type="number" @bind="Price" min="0"/> <br/>
-    <label for="Amount">Mængde:</label><br>
-    <input id="Amount" placeholder="Mængde" type="number" @bind="Amount" min="0"/> <br/>
-
-    <input type="submit" value="Ændre">
-</form> 
+        <label for="Price">Pris:</label><br>
+        <input id="Price" placeholder="Pris" type="number" @bind="Price" min="0"/> <br/>
+        <label for="Amount">Mængde:</label><br>
+        <input id="Amount" placeholder="Mængde" type="number" @bind="Amount" min="0"/> <br/>
+        <label for="Image">Billede:</label>
+        <InputFile OnChange="ImageUpload" id="Image" accept="image/jpeg, image/png"></InputFile>
+        <button type="button" @onclick="Edit">Ændre</button>
+    }
+    else
+    {
+        <input type="submit" value="Ændre">
+    }
+</form>
 
     <form @onsubmit="OrderDetail">
         <h2> 
@@ -127,7 +130,10 @@ else
     private bool isLoggedIn;
     private UserDto? userDto;
     private string statusLabel;
-    private IBrowserFile Image;
+    private IBrowserFile? Image;
+    private string savedImage;
+
+    private bool isValidProduct;
     
     private async Task ImageUpload(InputFileChangeEventArgs e)
     {
@@ -161,133 +167,168 @@ else
         {
             category_ids.Add(checkboxValue);
         }
+        Console.WriteLine("Added " + checkboxValue);
     }
     
     private string Name, Description;
     private int Category_id, Id;
-    private int? Price, Amount, FjernId, OrderId;
+    private int? Amount, FjernId, OrderId;
+    private double? Price;
     //private string MessageColor = "red";
     //private bool Hide = true;
     //private string? MessageLabel;
     
-    private async Task Add()
+    private async Task AddProduct()
     {
-        StateHasChanged();
         try
         {
-            if (string.IsNullOrWhiteSpace(Name) || string.IsNullOrWhiteSpace(Description))
-            {
-                statusLabel = ("Name and Description cannot be empty or whitespace.");
-            }
-            else if (Price == null || Amount == null)
-            {
-                statusLabel = ("Price and Amount cannot be null.");
-            }
-            else
-            {
-                await ProductService.CreateProduct(Name, Description, category_ids, Price.Value, Amount.Value, Image);
-                statusLabel = "Produkt oprettet"; 
-                
-                Name = "";
-                Description = "";
-                Price = null;
-                Amount = null;
-            }
-    // Optionally, you can check for character limits here
-
+            ValidateInput();
+            await ProductService.CreateProduct(Name, Description, category_ids, Price.Value, Amount.Value, Image);
+            ClearForm();
+            statusLabel = "Product created successfully";
         }
         catch (ArgumentException ex)
         {
-            statusLabel = ($"Argument exception: {ex.Message}");
-    // Handle or display the error as needed
-    // ErrorMessage(ex.Message);
+            statusLabel = $"Argument exception: {ex.Message}";
         }
         catch (Exception e)
         {
-            statusLabel = ($"Error: {e.Message}");
-    // Handle or display the error as needed
-    // ErrorMessage("Something went wrong creating a product");
+            statusLabel = $"Error: {e.Message}";
         }
+        await InvokeAsync(StateHasChanged); // Ensure UI is updated asynchronously
     }
+
+    private void ValidateInput()
+    {
+        if (string.IsNullOrWhiteSpace(Name) || string.IsNullOrWhiteSpace(Description))
+            throw new ArgumentException("Name and description are required.");
+
+        if ((Price == null || Amount == null) || (Price < 0 || Amount < 0))
+            throw new ArgumentException("Price and amount are required.");
+
+        if (category_ids == null || category_ids.Count == 0)
+        {
+            Console.WriteLine("MHM");
+            throw new ArgumentException("Select at least one category.");
+        }
+        
+        if (Image == null)
+            throw new ArgumentException("Image is required.");
+    }
+
+    private void ClearForm()
+    {
+        Name = "";
+        Description = "";
+        Price = null;
+        Amount = null;
+        Id = 0;
+    }
+
     
-    private async Task Remove() {
-        StateHasChanged();
+    private async Task Remove()
+    {
+        isValidProduct = false;
         try
         {
-            Console.WriteLine(ProductService.GetProductById(FjernId));
-            var product = ProductService.GetProductById(FjernId);
-            Product? product1 = await product;
-            
-            if (product1 == null)
+            if (FjernId == null || FjernId == 0)
+            {
+                statusLabel = "Indsæt et gyldigt id";
+                return;
+            }
+
+            var product = await ProductService.GetProductById(FjernId);
+
+            if (product == null)
             {
                 statusLabel = "Produktet findes ikke";
             }
-            else if (product1.flagged)
+            else if (product.flagged)
             {
-                statusLabel = "Allerede slettet";
+                statusLabel = "Produktet er allerede slettet";
             }
             else
             {
+                await ProductService.RemoveProduct(FjernId);
                 statusLabel = "Produkt fjernet";
             }
-            /*
-            if (FjernId != null)
-            {
-                string response = await ProductService.RemoveProduct(FjernId ?? 0);
-                statusLabel = response;
-                if (response.Equals("") || response == null)
-                {
-                    statusLabel = "Produktet findes ikke";
-                }
-                else
-                {
-                    statusLabel = "Produkt fjernet";
-                }
-            }
-            else
-            {
-                statusLabel = "Id feltet er tomt";
-            }
-            */
-    //SuccessMessage("Successfully created user");
+            FjernId = null;
         }
         catch (Exception e)
         {
             Console.WriteLine(e);
-    //ErrorMessage("Something went wrong creating a user");
+            statusLabel = $"Error: {e.Message}";
         }
+        finally
+        {
+            await InvokeAsync(StateHasChanged);
+        }
+    }
+
+    private async void validProduct()
+    {
+        if (Id <= 0)
+        {
+            statusLabel = "Indsæt et gyldigt id";
+            isValidProduct = false;
+            return;
+        }
+        Product product = await ProductService.GetProductById(Id);
+
+        if (product == null)
+        {
+            statusLabel = "Produktet findes ikke";
+            return;
+        }
+
+        if (product.flagged)
+        {
+            statusLabel = "Produktet er fjernet og kan derfor ikke ændres";
+            return;
+        }
+        Name = product.name;
+        Description = product.description;
+        Price = product.Price;
+        Amount = product.amount;
+        savedImage = product.Image;
+        isValidProduct = true;
+        
+        StateHasChanged();
     }
     
     private async Task Edit()
     {
-        StateHasChanged();
-        Console.WriteLine(category_ids);
-        Console.WriteLine(Name + " " + Description + " " + category_ids + " " + Price + " " + Amount);
-        Console.WriteLine("DONE");
         try
         {
-            
-            if (Price == null && Amount == null)
+            if (string.IsNullOrWhiteSpace(Name) || string.IsNullOrWhiteSpace(Description))
             {
-                statusLabel = "Prisen og mængden kan ikke være tom";
+                statusLabel = "Navnet og beskrivelsen kan ikke være tomme";
+                return;
             }
-            else if(Name.Equals("") || Name == null && Description.Equals("") || Description == null)
+
+            if (Price == null || Amount == null || Price < 0 || Amount < 0)
             {
-                statusLabel = "Navnet og prisen kan ikke være tom";
+                statusLabel = "Prisen og mængden skal være større end eller lig med 0";
+                return;
             }
-            else
-            {
-                await ProductService.EditProduct(Id, Name, Description, Price ?? 0, Amount ?? 0);
-                statusLabel = "Produkt ændret";
-            }
-    //SuccessMessage("Successfully created user");
+
+            await ProductService.EditProduct(Id, Name, Description, Price.Value, Amount.Value, Image, savedImage);
+            isValidProduct = false;
+            statusLabel = "Produkt ændret";
         }
         catch (Exception e)
         {
+    // Log the exception or handle it appropriately
             Console.WriteLine(e);
-    //ErrorMessage("Something went wrong creating a user");
+            statusLabel = $"Error: {e.Message}";
+        }
+        finally
+        {
+    // Update the UI asynchronously, regardless of success or failure
+            await InvokeAsync(StateHasChanged);
         }
     }
+
 
     private async Task OrderDetail()
     {
@@ -301,3 +342,4 @@ else
     }
 
 }
+
