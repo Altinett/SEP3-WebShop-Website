@@ -64,17 +64,19 @@ public class ProductService : IProductService
         }
     }
 
-    public async Task RemoveProduct(int Id)
+    public async Task<string> RemoveProduct(int Id)
     {
         HttpResponseMessage response = await client.DeleteAsync("http://localhost:8080/products/remove?id=" + Id);
 
         string responseContent = await response.Content.ReadAsStringAsync();
         Console.WriteLine(responseContent);
-
+        
         if (!response.IsSuccessStatusCode)
         {
             throw new Exception(responseContent);
         }
+
+        return responseContent;
     }
     
     public async Task EditProduct(int id, string name, string Description, /*List<int> category_ids,*/ int Price, int Amount)
@@ -103,6 +105,7 @@ public class ProductService : IProductService
             throw new Exception(responseContent);
         }
     }
+    
 
     public async Task<List<Product>> UpdateProducts()
     {
@@ -121,7 +124,7 @@ public class ProductService : IProductService
         return products;
     }
     
-    public async Task<List<Product?>> GetProductsByOrderId(string id)
+    public async Task<List<Product>> GetProductsByOrderId(string id)
     {
         Console.WriteLine("Get test");
         //List<Product> products = new List<Product>();
@@ -138,6 +141,15 @@ public class ProductService : IProductService
             throw new Exception(responseContent);
         }
         
+    }
+ 
+    public async Task<Product?> GetProductById(int? id)
+    {
+        HttpResponseMessage response = await client.GetAsync($"http://localhost:8080/products/{id}");
+        string responseContent = await response.Content.ReadAsStringAsync();
+        Product? product = JsonConvert.DeserializeObject<Product>(responseContent);
+        Console.WriteLine("Product: " + product);
+        return product;
     }
 
     public Boolean IsInStok(Product product)

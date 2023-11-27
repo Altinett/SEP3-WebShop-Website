@@ -1,12 +1,12 @@
 @page "/Admin"
 @using BlazorWasm.Services
 @using System.Security.Claims
+@using global::Shared
 @using WebShop.Shared.DTOs
 @inject IAuthService authService
 @inject NavigationManager navMgr
 @inject IProductService ProductService
 
-@if (isLoggedIn)
 {
     <div>
             <p>Logget ind som: @username ID: @id</p>
@@ -36,12 +36,14 @@
     <label for="Amount">Mængde:</label><br>
     <input id="Amount" placeholder="Mængde" type="number" @bind="Amount" min="0"/> <br/>
     
-    <label for="Image">Billede:</label>
-    <InputFile OnChange="ImageUpload" id="Image" accept="image/jpeg, image/png"></InputFile>
-    <!--
-    <input id="Image" type="file" @bind="Image" accept="image/jpeg, image/png" />
-    -->
+        <label for="Image">Billede:</label>
+        <InputFile OnChange="ImageUpload" id="Image" accept="image/jpeg, image/png"></InputFile>
+        <!--
+        <input id="Image" type="file" @bind="Image" accept="image/jpeg, image/png" />
+        -->
+    
     <input type="submit" value="Tilføj">
+
 </form> 
 
 <form @onsubmit="Remove">
@@ -92,7 +94,19 @@
         <input type="submit" value="Find ordre">
     </form> 
     
-<button class="btn btn-primary" @onclick="Logout">Log ud</button>
+    <button class="btn btn-primary" @onclick="Logout">Log ud</button>
+    
+    <div class="field">
+        @{
+            string labelColor = statusLabel != null && (statusLabel.Contains("Produkt oprettet") || 
+                                                        statusLabel.Contains("Produkt fjernet")  || 
+                                                        statusLabel.Contains("Produkt ændret")) 
+                ? "green" : "red";
+        }
+        <label style="color: @labelColor font-size: 400px;">
+            @statusLabel
+        </label>
+    </div>
 
 }
 else
@@ -110,10 +124,15 @@ else
     private string? username;
     private string? email;
     private int? id; 
-    private IEnumerable<Claim>? userClaims;
     private bool isLoggedIn;
     private UserDto? userDto;
-
+    private string statusLabel;
+    private IBrowserFile Image;
+    
+    private async Task ImageUpload(InputFileChangeEventArgs e)
+    {
+        Image = e.File;
+    }
 
     protected override async Task OnInitializedAsync()
     {
@@ -122,7 +141,6 @@ else
         isLoggedIn = user.Identity != null;
         
         if (!isLoggedIn) return;
-        userClaims = user.Claims;
         UserDto userCredentials = authService.GetUser();
         firstname = userCredentials.firstname;
         lastname = userCredentials.lastname;
@@ -146,47 +164,91 @@ else
     }
     
     private string Name, Description;
-    private IBrowserFile Image;
     private int Category_id, Id;
     private int? Price, Amount, FjernId, OrderId;
     //private string MessageColor = "red";
     //private bool Hide = true;
     //private string? MessageLabel;
-
-    private async Task ImageUpload(InputFileChangeEventArgs e)
-    {
-        Image = e.File;
-    }
     
     private async Task Add()
     {
-
-        Console.WriteLine(category_ids);
-        Console.WriteLine(Name + " " + Description + " " + category_ids + " " + Price + " " + Amount);
-        Console.WriteLine("DONE");
+        StateHasChanged();
         try
         {
-            if (Price != null && Amount != null)
+            if (string.IsNullOrWhiteSpace(Name) || string.IsNullOrWhiteSpace(Description))
             {
-                await ProductService.CreateProduct(Name, Description, category_ids, Price ?? 0, Amount ?? 0, Image);
+                statusLabel = ("Name and Description cannot be empty or whitespace.");
             }
-            //SuccessMessage("Successfully created user");
+            else if (Price == null || Amount == null)
+            {
+                statusLabel = ("Price and Amount cannot be null.");
+            }
+            else
+            {
+                await ProductService.CreateProduct(Name, Description, category_ids, Price.Value, Amount.Value, Image);
+                statusLabel = "Produkt oprettet"; 
+                
+                Name = "";
+                Description = "";
+                Price = null;
+                Amount = null;
+            }
+    // Optionally, you can check for character limits here
+
+        }
+        catch (ArgumentException ex)
+        {
+            statusLabel = ($"Argument exception: {ex.Message}");
+    // Handle or display the error as needed
+    // ErrorMessage(ex.Message);
         }
         catch (Exception e)
         {
-            Console.WriteLine(e);
-            //ErrorMessage("Something went wrong creating a user");
+            statusLabel = ($"Error: {e.Message}");
+    // Handle or display the error as needed
+    // ErrorMessage("Something went wrong creating a product");
         }
     }
     
     private async Task Remove() {
-
+        StateHasChanged();
         try
         {
+            Console.WriteLine(ProductService.GetProductById(FjernId));
+            var product = ProductService.GetProductById(FjernId);
+            Product? product1 = await product;
+            
+            if (product1 == null)
+            {
+                statusLabel = "Produktet findes ikke";
+            }
+            else if (product1.flagged)
+            {
+                statusLabel = "Allerede slettet";
+            }
+            else
+            {
+                statusLabel = "Produkt fjernet";
+            }
+            /*
             if (FjernId != null)
             {
-                await ProductService.RemoveProduct(FjernId ??0);
+                string response = await ProductService.RemoveProduct(FjernId ?? 0);
+                statusLabel = response;
+                if (response.Equals("") || response == null)
+                {
+                    statusLabel = "Produktet findes ikke";
+                }
+                else
+                {
+                    statusLabel = "Produkt fjernet";
+                }
             }
+            else
+            {
+                statusLabel = "Id feltet er tomt";
+            }
+            */
     //SuccessMessage("Successfully created user");
         }
         catch (Exception e)
@@ -198,15 +260,25 @@ else
     
     private async Task Edit()
     {
-
+        StateHasChanged();
         Console.WriteLine(category_ids);
         Console.WriteLine(Name + " " + Description + " " + category_ids + " " + Price + " " + Amount);
         Console.WriteLine("DONE");
         try
         {
-            if (Price != null && Amount != null)
+            
+            if (Price == null && Amount == null)
             {
-                await ProductService.EditProduct(Id, Name, Description, /*category_ids,*/ Price ?? 0, Amount ?? 0);
+                statusLabel = "Prisen og mængden kan ikke være tom";
+            }
+            else if(Name.Equals("") || Name == null && Description.Equals("") || Description == null)
+            {
+                statusLabel = "Navnet og prisen kan ikke være tom";
+            }
+            else
+            {
+                await ProductService.EditProduct(Id, Name, Description, Price ?? 0, Amount ?? 0);
+                statusLabel = "Produkt ændret";
             }
     //SuccessMessage("Successfully created user");
         }
