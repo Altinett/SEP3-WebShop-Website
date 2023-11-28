@@ -4,7 +4,6 @@
 @using global::Shared
 @using WebShop.Shared.DTOs
 @using WebShop.Services.HTTP
-@using System.Security.AccessControl
 @inject IAuthService authService
 @inject NavigationManager navMgr
 @inject IProductService ProductService
@@ -13,7 +12,7 @@
 
 <div class="admin-container">
     
-@if (true) {
+@if (isLoggedIn) {
     <div>
         <p>Logget ind som: @username ID: @id</p>
         <p>@firstname</p>
@@ -69,13 +68,11 @@
     <form @onsubmit="() => validProduct()">
         <h2>Ændre vare</h2>
         
-        <div class="group">
-            <label for="productId">id:</label>
-            <input id="productId" placeholder="id" type="number" @bind="Id" min="0"/>
-        </div>
-        
         @if (isValidProduct)
         {
+            <div class="group">
+                <label for="productId">id: @Id</label>
+            </div>
             <div class="group">
                 <label for="Name">Vare Navn:</label>
                 <input id="Name" placeholder="Vare Navn" type="text" @bind="Name"/> 
@@ -98,6 +95,10 @@
             </div>
             <button class="primary-button" type="button" @onclick="Edit">Ændre</button>
         } else {
+            <div class="group">
+                <label for="productId">id:</label>
+                <input id="productId" placeholder="id" type="number" @bind="Id" min="0"/>
+            </div>
             <input class="primary-button" type="submit" value="Ændre">
         }
     </form>
@@ -115,7 +116,7 @@
     }
     else
     {
-        <div>You are not logged in</div>
+        navMgr.NavigateTo("/login");
     }
 </div>
 
@@ -360,8 +361,6 @@
         await authService.LogoutAsync();
         navMgr.NavigateTo("/login");
     }
-    // TODO MAKE IT REDIRECT TO LOGIN PAGE IF NOT ALREADY LOGGED IN (/admin)
-    //TODO fix ændre produktet til ikke at kunde ændre ID
     //TODO muligt at ændre katagorier
 }
 
