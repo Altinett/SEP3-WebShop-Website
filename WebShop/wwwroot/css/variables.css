@@ -12,4 +12,13 @@
 
     --border-radius: 24px;
     --border-color: rgba(0, 0, 0, .15);
+
+    --lb-corner: polygon(0 0, 0 100%, 100% 100%, 100% 25%, 75% 0);
+    --ui-notch-amount: 2rem;
+    --ui-notch-hypotenuse: calc(22.627416px * var(--ui-notch-amount));
+    /*--ui-notch-path: polygon(0 0, 100% 0, 100% calc(100% - var(--ui-notch-amount) + 2px), calc(100% - var(--ui-notch-amount) + 2px) 100%, 0 100%); */
+
+    --ui-notch-path: polygon(0 0, calc(100% - var(--ui-notch-amount) + 2px) 0, 100% calc(var(--ui-notch-amount) + 2px) , 100% 100%, 0 100%);
+
+    /*--ui-notch-path: polygon(0 0, calc(100% - var(--ui-notch-amount) + 2px) 0, 100% calc(100% - var(--ui-notch-amount) + 2px) , 100% 100%, 0 100%); */
 }

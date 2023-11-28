@@ -1,10 +1,13 @@
 @using global::Shared
 @using WebShop.Pages
 
-<div class="grid-item">
+<div class="grid-container">
+	
+<div class="grid-item clipped">
 	<img src="data:image/png;base64, @Img" />
 	<!--<img src="@Img"/>-->
 	<a class="title" href="#">@name</a>
+	<div class="grid-content-line"></div>
 	@if (InBasket == false)
 	{
 	}
@@ -49,6 +52,7 @@
 		}
 	}
 
+</div>
 </div>
 
 @code {

@@ -23,11 +23,29 @@
     width: 100%;
     height: min-content;
 }
+
+.grid-container {
+    display: flex;
+    flex-direction: column;
+    gap: .5rem;
+    overflow: hidden;
+    background-color: var(--accent);
+    width: 100%;
+    height: min-content;
+    
+}
+
 .grid-item img {
     aspect-ratio: 1;
     user-select: none;
     object-fit: contain;
     border-radius: var(--border-radius-1);
+}
+
+.grid-item .grid-content-line {
+    height: .05rem;
+    width: 80%;
+    background-color: var(--accent);
 }
 
 .grid-item .title {
@@ -122,3 +140,19 @@
 .button:hover:active {
     box-shadow: 0 0 15px var(--blue-1);
 }
+
+.clipped {
+    clip-path: var(--ui-notch-path);
+}
+.clipped::before {
+    content: "";
+    position: absolute;
+    bottom: auto;
+    top: 5px;
+    right: -6px;
+    height: 3px;
+    width: var(--ui-notch-hypotenuse);
+    transform: rotate(45deg);
+    background-color: var(--border-color);
+}
+
