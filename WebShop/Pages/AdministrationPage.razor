@@ -3,6 +3,8 @@
 @using System.Security.Claims
 @using global::Shared
 @using WebShop.Shared.DTOs
+@using WebShop.Services.HTTP
+@using System.Security.AccessControl
 @inject IAuthService authService
 @inject NavigationManager navMgr
 @inject IProductService ProductService
@@ -19,6 +21,8 @@
         <p>@email</p>
         <button class="primary-button" @onclick="Logout">Log ud</button>
     </div>
+
+    
     <form @onsubmit="AddProduct">
         <h2>Tilføj en vare</h2>
         <div class="group">
@@ -29,22 +33,13 @@
             <label for="Description">Beskrivelse:</label>
             <input id="Description" placeholder="Beskrivelse" type="text" @bind="Description"/> 
         </div>
-        <div class="group">
-            <input type="checkbox" id="elektronik" value="1" @onchange="() => HandleCheckboxChange(1)">
-            <label for="elektronik">Elektronik</label>
-        </div>
-        <div class="group">
-            <input type="checkbox" id="have" value="2" @onchange="() => HandleCheckboxChange(2)">
-            <label for="have">Have</label>
-        </div>
-        <div class="group">
-            <input type="checkbox" id="indendørs" value="3" @onchange="() => HandleCheckboxChange(3)">
-            <label for="indendørs">Indendørs</label>
-        </div>
-        <div class="group">
-            <input type="checkbox" id="Døden" value="4" @onchange="() => HandleCheckboxChange(4)">
-            <label for="Døden">Døden</label>
-        </div>
+        @foreach (var category in categories)
+        {
+            <div class="group">
+                <input type="checkbox" id="@category.name" value="@category.id" @onchange="() => HandleCheckboxChange(1)">
+                <label for="@category.name">@category.name</label>
+            </div>
+        }
         <div class="group">
             <label for="Price">Pris:</label>
             <input id="Price" placeholder="Pris" type="number" @bind="Price" min="0" step="any"/>
@@ -58,7 +53,7 @@
             <InputFile OnChange="ImageUpload" id="Image" accept="image/jpeg, image/png"></InputFile>
         </div>
         <input class="primary-button" type="submit" value="Tilføj">
-    </form> 
+    </form>
 
     <form @onsubmit="Remove">
         <h2>Fjern en vare</h2>
@@ -133,6 +128,9 @@
     [CascadingParameter]
     public Task<AuthenticationState> AuthState { get; set; } = null!;
 
+    private List<CategoryDto> categories = new();
+    private CategoryService _categoryService = CategoryService.getInstance();
+    
     private string? firstname;
     private string? lastname;
     private string? username;
@@ -164,6 +162,17 @@
         username = userCredentials.username;
         email = userCredentials.email;
         id = userCredentials.id;
+        
+        try {
+            if (_categoryService.GetCategories() == null){
+                categories = await _categoryService.UpdateCategory();
+            } else {
+                _categoryService.UpdateCategory();
+                categories = _categoryService.GetCategories();
+            }
+        } catch (Exception e) {
+            Console.WriteLine(e);
+        }
     }
     
     List<int> category_ids = new List<int>();
