@@ -31,6 +31,14 @@ public class BasketService : Subject
         }
         return true;
     }
+    
+    public int? GetProductAmount(int id) {
+        foreach (var product in BasketItems.Values) {
+            if (product.Id != id) continue;
+            return product.amount;
+        }
+        return null;
+    }
 
     public async Task<bool> AddItem(int id)
     {
@@ -38,10 +46,12 @@ public class BasketService : Subject
         foreach (var product in _productService.GetProducts()) {
             if (product.Id != id) continue;
             BasketItems.TryAdd(product.Id, product);
+            //product.amount -= 1;
 
             Product basketProduct = BasketItems[product.Id];
             basketProduct.quantity += 1;
             basketProduct.amount -= 1;
+
             emit("Changed");
             return basketProduct.amount > 0; // No need to continue iterating once a match is found
         }

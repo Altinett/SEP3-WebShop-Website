@@ -7,11 +7,11 @@
       <form @onsubmit="Submit">
         <label for="FirstName">Fornavn:</label><br>
         <div class="forum-input round">
-          <input type="text" @bind="FirstName" id="FirstName" name="FirstName">
+          <input type="text" @bind="FirstName" id="FirstName" name="FirstName" @oninput="(e) => RemoveNumber(e, nameof(FirstName))">
         </div><br>
         <label for="LastName">Efternavn:</label><br>
         <div class="forum-input round">
-          <input type="text" @bind="LastName" id="LastName" name="LastName">
+          <input type="text" @bind="LastName" id="LastName" name="LastName" @oninput="(e) => RemoveNumber(e, nameof(LastName))">
         </div><br>
         <label for="Address">Adresse:</label><br>
         <div class="forum-input round">
@@ -37,7 +37,7 @@
 </div>
 
 
-     @code {
+@code {
   
   [Parameter] public string FirstName { get; set; }
   [Parameter] public string LastName { get; set; }
@@ -60,6 +60,18 @@
     
     Nvm.NavigateTo("/betaling");
   }
-  //TODO fix kreditkort nummer max størrelse
-       //TODO excpetion handling
+       
+       
+  private void RemoveNumber(ChangeEventArgs e, string InputName)
+  {
+    // Get the current input value
+    var inputValue = e.Value?.ToString();
+
+    // Remove numeric characters
+    var cleanedValue = new string(inputValue?.Where(char.IsLetter).ToArray());
+
+    // Update the corresponding property with the cleaned value
+    GetType().GetProperty(InputName)?.SetValue(this, cleanedValue);
+  }
+  
 }
