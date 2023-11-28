@@ -19,11 +19,7 @@ public class Product
 	
 	public bool flagged { get; set; }
 
-	public Product()
-	{
-		Image = "https://i.ebayimg.com/images/g/h9UAAOSwpPNlLMxt/s-l500.jpg";
-		//TODO Make it so that it gets a image from the database instead of this default.
-	}
+	public Product() { }
 	public Product(int id, string img, string title, double price, bool inStock)
 	{
 		Id = id;
