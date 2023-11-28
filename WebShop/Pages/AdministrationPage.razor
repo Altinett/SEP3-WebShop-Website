@@ -3,119 +3,130 @@
 @using System.Security.Claims
 @using global::Shared
 @using WebShop.Shared.DTOs
-@using System.Security.AccessControl
 @inject IAuthService authService
 @inject NavigationManager navMgr
 @inject IProductService ProductService
 
+@layout EmptyLayout
+
+<div class="admin-container">
+    
 @if (true) {
     <div>
-            <p>Logget ind som: @username ID: @id</p>
-            <p>@firstname</p>
-            <p>@lastname</p>
-            <p>@email</p>
+        <p>Logget ind som: @username ID: @id</p>
+        <p>@firstname</p>
+        <p>@lastname</p>
+        <p>@email</p>
+        <button class="primary-button" @onclick="Logout">Log ud</button>
     </div>
-
-    
     <form @onsubmit="AddProduct">
-    <h2> 
-        Tilføj en vare
-    </h2>
+        <h2>Tilføj en vare</h2>
+        <div class="group">
+            <label for="Name">Vare Navn:</label>
+            <input id="Name" placeholder="Vare Navn" type="text" @bind="Name"/> 
+        </div>
+        <div class="group">
+            <label for="Description">Beskrivelse:</label>
+            <input id="Description" placeholder="Beskrivelse" type="text" @bind="Description"/> 
+        </div>
+        <div class="group">
+            <input type="checkbox" id="elektronik" value="1" @onchange="() => HandleCheckboxChange(1)">
+            <label for="elektronik">Elektronik</label>
+        </div>
+        <div class="group">
+            <input type="checkbox" id="have" value="2" @onchange="() => HandleCheckboxChange(2)">
+            <label for="have">Have</label>
+        </div>
+        <div class="group">
+            <input type="checkbox" id="indendørs" value="3" @onchange="() => HandleCheckboxChange(3)">
+            <label for="indendørs">Indendørs</label>
+        </div>
+        <div class="group">
+            <input type="checkbox" id="Døden" value="4" @onchange="() => HandleCheckboxChange(4)">
+            <label for="Døden">Døden</label>
+        </div>
+        <div class="group">
+            <label for="Price">Pris:</label>
+            <input id="Price" placeholder="Pris" type="number" @bind="Price" min="0" step="any"/>
+        </div>
+        <div class="group">
+            <label for="Amount">Mængde:</label>
+            <input id="Amount" placeholder="Mængde" type="number" @bind="Amount" min="0"/>
+        </div>
+        <div class="group">
+            <label for="Image">Billede:</label>
+            <InputFile OnChange="ImageUpload" id="Image" accept="image/jpeg, image/png"></InputFile>
+        </div>
+        <input class="primary-button" type="submit" value="Tilføj">
+    </form> 
 
-    <label for="Name">Vare Navn:</label><br>
-    <input id="Name" placeholder="Vare Navn" type="text" @bind="Name"/> <br/>
-    <label for="Description">Beskrivelse:</label><br>
-    <input id="Description" placeholder="Beskrivelse" type="text" @bind="Description"/> 
+    <form @onsubmit="Remove">
+        <h2>Fjern en vare</h2>
+        
+        <div class="group">
+            <label for="productName">id:</label>
+            <input type="number" id="productName" @bind="FjernId">
+        </div>
 
-<br/><input type="checkbox" id="elektronik" value="1" @onchange="() => HandleCheckboxChange(1)"> <label for="elektronik">Elektronik</label><br />
-    <input type="checkbox" id="have" value="2" @onchange="() => HandleCheckboxChange(2)"> <label for="have">Have</label><br />
-    <input type="checkbox" id="indendørs" value="3" @onchange="() => HandleCheckboxChange(3)"> <label for="indendørs">Indendørs</label><br />
-    <input type="checkbox" id="Døden" value="4" @onchange="() => HandleCheckboxChange(4)"> <label for="Døden">Døden</label><br />
+        <input class="primary-button" type="submit" value="Fjern">
+    </form> 
 
-    <label for="Price">Pris:</label><br>
-    <input id="Price" placeholder="Pris" type="number" @bind="Price" min="0"/> <br/>
-    <label for="Amount">Mængde:</label><br>
-    <input id="Amount" placeholder="Mængde" type="number" @bind="Amount" min="0"/> <br/>
+    <form @onsubmit="() => validProduct()">
+        <h2>Ændre vare</h2>
+        
+        <div class="group">
+            <label for="productId">id:</label>
+            <input id="productId" placeholder="id" type="number" @bind="Id" min="0"/>
+        </div>
+        
+        @if (isValidProduct)
+        {
+            <div class="group">
+                <label for="Name">Vare Navn:</label>
+                <input id="Name" placeholder="Vare Navn" type="text" @bind="Name"/> 
+            </div>
+            <div class="group">
+                <label for="Description">Beskrivelse:</label>
+                <input id="Description" placeholder="Beskrivelse" type="text" @bind="Description"/>
+            </div>
+            <div class="group">
+                <label for="Price">Pris:</label>
+                <input id="Price" placeholder="Pris" type="number" @bind="Price" min="0" step="any"/>
+            </div>
+            <div class="group">
+                <label for="Amount">Mængde:</label>
+                <input id="Amount" placeholder="Mængde" type="number" @bind="Amount" min="0"/>
+            </div>
+            <div class="group">
+                <label for="Image">Billede:</label>
+                <InputFile OnChange="ImageUpload" id="Image" accept="image/jpeg, image/png"></InputFile>
+            </div>
+            <button class="primary-button" type="button" @onclick="Edit">Ændre</button>
+        } else {
+            <input class="primary-button" type="submit" value="Ændre">
+        }
+    </form>
+
+    <form @onsubmit="OrderDetail">
+        <h2>Se kundeordre</h2>
+        <div class="group">
+            <label for="id">id:</label>
+            <input type="number" id="FirstName" @bind="OrderId" name="FirstName" >
+        </div>
+
+        <input class="primary-button" type="submit" value="Find ordre">
+    </form> 
     
-        <label for="Image">Billede:</label>
-        <InputFile OnChange="ImageUpload" id="Image" accept="image/jpeg, image/png"></InputFile>
-        <!--
-        <input id="Image" type="file" @bind="Image" accept="image/jpeg, image/png" />
-        -->
     
-    <input type="submit" value="Tilføj">
-
-</form> 
-
-<form @onsubmit="Remove">
-    <h2> 
-        Fjern en vare
-    </h2>
-    <label for="id">id:</label>
-    <br>
-    <input type="number" id="FirstName" @bind="FjernId" name="FirstName"><br>
-
-    <input type="submit" value="Fjern">
-</form> 
-
-<form @onsubmit="() => validProduct()">
-    <h2> 
-        Ændre vare
-    </h2>
-    <label for="id">Id:</label><br>
-    <input id="id" placeholder="id" type="number" @bind="Id" min="0"/> <br/>
-    
-    @if (isValidProduct)
-    {
-        <label for="Name">Vare Navn:</label><br>
-        <input id="Name" placeholder="Vare Navn" type="text" @bind="Name"/> <br/>
-        <label for="Description">Beskrivelse:</label><br>
-        <input id="Description" placeholder="Beskrivelse" type="text" @bind="Description"/> <br>
-
-        <label for="Price">Pris:</label><br>
-        <input id="Price" placeholder="Pris" type="number" @bind="Price" min="0"/> <br/>
-        <label for="Amount">Mængde:</label><br>
-        <input id="Amount" placeholder="Mængde" type="number" @bind="Amount" min="0"/> <br/>
-        <label for="Image">Billede:</label>
-        <InputFile OnChange="ImageUpload" id="Image" accept="image/jpeg, image/png"></InputFile>
-        <button type="button" @onclick="Edit">Ændre</button>
+    <div class="message">
+        @statusLabel
+    </div>
     }
     else
     {
-        <input type="submit" value="Ændre">
+        <div>You are not logged in</div>
     }
-</form>
-
-    <form @onsubmit="OrderDetail">
-        <h2> 
-            Se kundeordre
-        </h2>
-        <label for="id">id:</label>
-        <br>
-        <input type="number" id="FirstName" @bind="OrderId" name="FirstName"><br>
-
-        <input type="submit" value="Find ordre">
-    </form> 
-    
-    <button class="btn btn-primary" @onclick="Logout">Log ud</button>
-    
-    <div class="field">
-        @{
-            string labelColor = statusLabel != null && (statusLabel.Contains("Produkt oprettet") || 
-                                                        statusLabel.Contains("Produkt fjernet")  || 
-                                                        statusLabel.Contains("Produkt ændret")) 
-                ? "green" : "red";
-        }
-        <label style="color: @labelColor font-size: 400px;">
-            @statusLabel
-        </label>
-    </div>
-
-}
-else
-{
-    <div>You are not logged in</div>
-}
+</div>
 
 @code {
     
