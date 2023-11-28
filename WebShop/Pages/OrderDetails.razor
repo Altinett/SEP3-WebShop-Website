@@ -202,9 +202,7 @@ else
 	public Task<AuthenticationState> AuthState { get; set; } = null!;
 
 	private List<Product> _BasketItems { get; set; }
-
-	private string? name;
-	private string? id;
+	
 	private IEnumerable<Claim>? userClaims;
 	private bool isLoggedIn;
 	private FormService instance;
@@ -223,11 +221,7 @@ else
 			isLoggedIn = user.Identity != null;
 
 			if (!isLoggedIn) return;
-
 			userClaims = user.Claims;
-			name = user.Identity!.Name!;
-			Claim idClaim = userClaims.FirstOrDefault(c => c.Type == "User ID");
-			id = idClaim?.Value;
 
 
 			instance = FormService.getInstance();

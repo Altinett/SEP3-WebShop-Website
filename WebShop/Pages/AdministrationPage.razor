@@ -36,7 +36,7 @@
         @foreach (var category in categories)
         {
             <div class="group">
-                <input type="checkbox" id="@category.name" value="@category.id" @onchange="() => HandleCheckboxChange(1)">
+                <input type="checkbox" id="@category.name" value="@category.id" @onchange="() => HandleCheckboxChange(category.id)">
                 <label for="@category.name">@category.name</label>
             </div>
         }
@@ -111,11 +111,7 @@
 
         <input class="primary-button" type="submit" value="Find ordre">
     </form> 
-    
-    
-    <div class="message">
-        @statusLabel
-    </div>
+    <div class="message">@statusLabel</div>
     }
     else
     {
@@ -155,14 +151,6 @@
         ClaimsPrincipal user = authState.User;
         isLoggedIn = user.Identity != null;
         
-        if (!isLoggedIn) return;
-        UserDto userCredentials = authService.GetUser();
-        firstname = userCredentials.firstname;
-        lastname = userCredentials.lastname;
-        username = userCredentials.username;
-        email = userCredentials.email;
-        id = userCredentials.id;
-        
         try {
             if (_categoryService.GetCategories() == null){
                 categories = await _categoryService.UpdateCategory();
@@ -173,6 +161,16 @@
         } catch (Exception e) {
             Console.WriteLine(e);
         }
+        
+        if (!isLoggedIn) return;
+        UserDto userCredentials = authService.GetUser();
+        firstname = userCredentials.firstname;
+        lastname = userCredentials.lastname;
+        username = userCredentials.username;
+        email = userCredentials.email;
+        id = userCredentials.id;
+        
+
     }
     
     List<int> category_ids = new List<int>();
@@ -222,9 +220,11 @@
     {
         if (string.IsNullOrWhiteSpace(Name) || string.IsNullOrWhiteSpace(Description))
             throw new ArgumentException("Name and description are required.");
-
-        if ((Price == null || Amount == null) || (Price < 0 || Amount < 0))
+        
+        if (Price == null || Amount == null || Price <= 0 || Amount <= 0)
+        {
             throw new ArgumentException("Price and amount are required.");
+        }
 
         if (category_ids == null || category_ids.Count == 0)
         {
@@ -326,7 +326,7 @@
                 return;
             }
 
-            if (Price == null || Amount == null || Price < 0 || Amount < 0)
+            if (Price == null || Amount == null || Price <= 0 || Amount <= 0)
             {
                 statusLabel = "Prisen og mængden skal være større end eller lig med 0";
                 return;
@@ -361,5 +361,7 @@
         navMgr.NavigateTo("/login");
     }
     // TODO MAKE IT REDIRECT TO LOGIN PAGE IF NOT ALREADY LOGGED IN (/admin)
+    //TODO fix ændre produktet til ikke at kunde ændre ID
+    //TODO muligt at ændre katagorier
 }
 
