@@ -17,7 +17,7 @@
 			<div class="price">DKK @price</div>
 			@if (InStock)
 			{
-				<div class="stock-status in-stock">På lager</div>
+				<div class="stock-status in-stock">@amount på lager</div>
 			}
 			else
 			{
@@ -75,7 +75,11 @@
 
 	protected override void OnInitialized()
 	{
+		int? amountcheck;
 		InStock = _basketService.InBasketStock(Id);
+		amountcheck = _basketService.GetProductAmount(Id);
+		if (amountcheck != null)
+			amount = amountcheck;
 		StateHasChanged();
 		base.OnInitialized();
 	}
@@ -85,6 +89,9 @@
 		if (InStock)
 		{
 			InStock = await _basketService.AddItem(Id);
+			amount -= 1;
+			StateHasChanged();
+
 		};
 	}
 
