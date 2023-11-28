@@ -2,6 +2,7 @@
 @using BlazorWasm.Services
 @using System.Security.Claims
 @using global::Shared
+@using WebShop.Services.HTTP
 @using WebShop.Shared.DTOs
 @inject IAuthService authService
 @inject NavigationManager navMgr
@@ -26,10 +27,12 @@
     <label for="Description">Beskrivelse:</label><br>
     <input id="Description" placeholder="Beskrivelse" type="text" @bind="Description"/> 
 
-<br/><input type="checkbox" id="elektronik" value="1" @onchange="() => HandleCheckboxChange(1)"> <label for="elektronik">Elektronik</label><br />
-    <input type="checkbox" id="have" value="2" @onchange="() => HandleCheckboxChange(2)"> <label for="have">Have</label><br />
-    <input type="checkbox" id="indendørs" value="3" @onchange="() => HandleCheckboxChange(3)"> <label for="indendørs">Indendørs</label><br />
-    <input type="checkbox" id="Døden" value="4" @onchange="() => HandleCheckboxChange(4)"> <label for="Døden">Døden</label><br />
+    <br/>
+    @foreach (var category in categories)
+    {
+        <input type="checkbox" id="@category.name" value="@category.id" @onchange="() => HandleCheckboxChange(1)"> <label for="@category.name">@category.name</label><br />
+    }
+    
 
     <label for="Price">Pris:</label><br>
     <input id="Price" placeholder="Pris" type="number" @bind="Price" min="0"/> <br/>
@@ -119,6 +122,9 @@ else
     [CascadingParameter]
     public Task<AuthenticationState> AuthState { get; set; } = null!;
 
+    private List<CategoryDto> categories = new();
+    private CategoryService _categoryService = CategoryService.getInstance();
+    
     private string? firstname;
     private string? lastname;
     private string? username;
@@ -147,6 +153,17 @@ else
         username = userCredentials.username;
         email = userCredentials.email;
         id = userCredentials.id;
+        
+        try {
+            if (_categoryService.GetCategories() == null){
+                categories = await _categoryService.UpdateCategory();
+            } else {
+                _categoryService.UpdateCategory();
+                categories = _categoryService.GetCategories();
+            }
+        } catch (Exception e) {
+            Console.WriteLine(e);
+        }
     }
     
     List<int> category_ids = new List<int>();
