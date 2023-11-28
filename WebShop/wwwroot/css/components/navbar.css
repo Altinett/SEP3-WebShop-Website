@@ -52,3 +52,9 @@ a {
 .topnav .search .icon svg {
     height: 100%;
 }
+
+@media print {
+    .topnav {
+        display: none;
+    }
+}
