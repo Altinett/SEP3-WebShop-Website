@@ -3,6 +3,8 @@
 @inject IAuthService authService
 @inject NavigationManager navMgr
 
+@layout EmptyLayout
+
 <AuthorizeView>
     <NotAuthorized>
         <form @onsubmit="LoginAsync">
