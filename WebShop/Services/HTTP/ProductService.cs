@@ -1,8 +1,4 @@
-using System.Net.Http.Json;
-using System.Net.Mime;
 using System.Text;
-using System.Drawing;
-using System.IO;
 using Microsoft.AspNetCore.Components.Forms;
 using Newtonsoft.Json;
 using Shared;
@@ -26,7 +22,7 @@ public class ProductService : IProductService
         return instance;
     }
 
-    public async Task CreateProduct(string name, string Description, List<int> category_ids, int Price, int Amount, IBrowserFile image)
+    public async Task CreateProduct(string name, string Description, List<int> category_ids, double Price, int Amount, IBrowserFile image)
     {
         string base64Image = await ConvertImageToBase64(image);
         
@@ -64,7 +60,7 @@ public class ProductService : IProductService
         }
     }
 
-    public async Task<string> RemoveProduct(int Id)
+    public async Task<string> RemoveProduct(int? Id)
     {
         HttpResponseMessage response = await client.DeleteAsync("http://localhost:8080/products/remove?id=" + Id);
 
@@ -79,8 +75,19 @@ public class ProductService : IProductService
         return responseContent;
     }
     
-    public async Task EditProduct(int id, string name, string Description, /*List<int> category_ids,*/ int Price, int Amount)
+    public async Task EditProduct(int id, string name, string Description, /*List<int> category_ids,*/ double Price, int Amount, IBrowserFile image, string savedImage)
     {
+        string base64Image;
+        if (image == null)
+        {
+            base64Image = savedImage;
+        }
+        else
+        {
+            base64Image = await ConvertImageToBase64(image);
+        }
+        
+
         ProductEditingDto productEditingDto = new ProductEditingDto
         {
             id = id,
@@ -88,8 +95,8 @@ public class ProductService : IProductService
             description = Description,
             /*categoryIds = category_ids,*/
             price = Price,
-            amount = Amount
-
+            amount = Amount,
+            image = base64Image
         };
         
         string postAsJson = JsonConvert.SerializeObject(productEditingDto);
@@ -122,6 +129,11 @@ public class ProductService : IProductService
     public List<Product> GetProducts()
     {
         return products;
+    }
+    
+    public void SetProducts(List<Product> products)
+    {
+        ProductService.products = products;
     }
     
     public async Task<List<Product>> GetProductsByOrderId(string id)

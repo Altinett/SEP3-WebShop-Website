@@ -52,7 +52,8 @@ public class FormService
 
         foreach (var entry in basketService.GetBasketItems())
         {
-            ids.Add(entry.Value.Id);
+            //ids.Add(entry.Value.Id);
+            productsDictionary.Add(entry.Key, entry.Value.quantity);
         }
         /*
         foreach (Product item in basketService.GetBasketItems())

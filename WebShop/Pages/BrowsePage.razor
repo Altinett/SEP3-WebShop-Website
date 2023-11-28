@@ -2,67 +2,68 @@
 @page "/browse"
 @using global::Shared
 @using BlazorWasm.Services.Http
+@using WebShop.Services.HTTP
 @using BlazorWasm.Services
+@inject NavigationManager NavigationManager
 
 
-<Grid>
- @foreach (Product product in GetFilteredProducts())
-    {
-        <GridItem
-            Id=@product.Id
-            Img=@product.Image
-            name=@product.name
-            amount=@product.amount
-            description=@product.description
-            price=@product.Price
-            InStock=@product.InStock/>
-    }
-        
+<div class="brp-container">
 
-</Grid>
-<Basket />
+    <div class="brp-content">
+        <Grid>
+            @foreach (Product product in products)
+            {
+                <GridItem
+                    Id=@product.Id
+                    Img=@product.Image
+                    name=@product.name
+                    amount=@product.amount
+                    description=@product.description
+                    price=@product.Price
+                    InStock=@product.InStock/>
+            }
+
+        </Grid>
+
+    </div>
+
+</div>
+
+
 
 @code {
-    //public int? category { get; set; }
-    //public int ca
     private List<Product> products = new();
     private ProductService _productService = ProductService.getInstance();
+    private SearchService _searchService = SearchService.getInstance();
+
     [Parameter] public string categoryId { get; set; }
-    [Inject] private NavigationManager NavigationManager { get; set; }
     //private int categoryId;
-    private int category;
+    private int Category;
 
     protected override async Task OnInitializedAsync()
     {
         try {
-            if (_productService.GetProducts() == null){
-                products = await _productService.UpdateProducts();
-            } else {
-                _productService.UpdateProducts();
-                products = _productService.GetProducts();
-            }
-            
-    // Get categoryId from the URL
-            if (int.TryParse(NavigationManager.Uri.Split("/").Last(), out category))
-            {
-    // Filter products based on the categoryId
-                products = GetFilteredProducts();
-            }
+            _searchService.on("search", e => {
+                UpdateProducts();
+            });
+            UpdateProducts();
         } catch (Exception e) {
             Console.WriteLine(e);
         }
     }
-    private List<Product> GetFilteredProducts()
+
+    private async Task UpdateProducts()
     {
-        if (string.IsNullOrEmpty(categoryId))
-        {
-            return products;
+        List<int> categories = new();
+        if (!string.IsNullOrEmpty(categoryId)) {
+            Category = int.Parse(categoryId);
+            if (Category != 0) {
+                categories.Add(Category);
+                _searchService.SetCurrentCategories(categories);
+            }
         }
-        else
-        {
-    // Filter products based on the categoryId
-            Console.WriteLine(categoryId);
-            return products.Where(p => p.categoryIds.Contains(int.Parse(categoryId))).ToList();
-        }
+        
+        products = await _searchService.Search();
+        StateHasChanged();
     }
 }

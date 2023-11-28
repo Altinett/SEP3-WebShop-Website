@@ -7,13 +7,14 @@
     width: 100%;
     overflow: hidden;
     overflow-y: auto;
-    height: min-content;
+    height: 100%;
 }
 
 /* GRID ITEM */
 .grid-item {
     display: flex;
     flex-direction: column;
+    border: 1px solid var(--border-color);
     gap: .5rem;
     overflow: hidden;
     padding: .75rem;
@@ -106,6 +107,7 @@
     border: 1px solid transparent;
     transition: all .2s var(--quick);
     gap: .5rem;
+    background-color: var(--accent);
 }
 .button img,
 .button svg {
@@ -114,7 +116,7 @@
 .button:hover {
     box-shadow: 0 0 5px var(--blue-1);
     border: 1px solid var(--blue-1);
-    background-color: transparent;
+    background-color: var(--accent);
 }
 .button:hover:active {
     box-shadow: 0 0 15px var(--blue-1);

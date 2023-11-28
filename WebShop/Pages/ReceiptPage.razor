@@ -2,7 +2,6 @@
 @using global::Shared
 @using System.ComponentModel.Design.Serialization
 @using System.Reflection.Emit
-@inject NavigationManager Nvm
 
 
  <div id="invoice-POS">
@@ -17,33 +16,23 @@
     <div id="mid" class="rePadding">
 	
 	    <div class="info reInline">
-		    <div class="reBox">	<h2>Kunde Information:</h2>
-			    <p>
-				    Navn : @FirstName @LastName<br>
-				    Adresse : @Address, @ZipCode<br>
-				    Email : @Email<br>
-				    Telefon nr. : @PhoneNumber<br>
-			    </p>
+		    <div class="reBox">	<h2>Kunde Information</h2>
+			    <p>Navn : @FirstName @LastName</p>
+			    <p>Adresse : @Address, @ZipCode</p>
+			    <p>Email : @Email</p>
+			    <p>Telefon nr. : @PhoneNumber</p>
 		    </div>
 	    
 		    <div class="reBox">
-			    <h2>Firma Information:</h2>
-			    <p>
-				    Firma navn : Shadowshare inc <br>
-				    Mere information<br>
-				    Ingen ide <br>
-				    Hel og lykke<br>
-				    lorem ipsum??? <br> 
-			    </p>
+			    <h2>Firma Information</h2>
+			    <p>Firma navn : Shadowshare inc</p>
+			    <p>Mere information</p>
 		    </div>
 	       
 		    <div class="reBox">
-			    <h2>Betalings Information:</h2> 
-			    <p>
-				    Ordernr. : @FormService.getInstance().orderId<br>
-				    Forfaldsdato : DD/MM/YY <br>
-				    Mængde : NaN DKK
-			    </p>
+			    <h2>Betalings Information</h2> 
+			    <p>Ordernr. : @FormService.getInstance().orderId</p>
+			    <p>Forfaldsdato : DD/MM/YY</p>
 		    </div>
 	    </div>
 	    
@@ -51,106 +40,62 @@
 		    <div>
 			    <hr>
 			    <div class="reHeader">
-				    <p>
-					    Item
-				    </p>
+				    <p>Item</p>
 				    <div class="reProductInfo reInline">
-					    <p>
-						    Antal
-					    </p>
-					    <p>
-						    Pris pr.
-					    </p>
-					    <p>
-						    Rel pris
-					    </p>
+					    <p>Antal</p>
+					    <p>Pris pr.</p>
+					    <p>Rel pris</p>
 				    </div>
 			    </div>
 			    <hr>
-			    
-			    
-			    <!-- Products -->
-			    @{
-				    var groupedProducts = _BasketItems.GroupBy(p => p.name);
-			    }
-
-			    @foreach (var group in groupedProducts)
-			    {
-				    var product = group.First(); // Take the first product in the group
-				    //var totalAmount = group.Sum(p => 1);
-				    //var totalPrice = getTotalPriceForProduct(product.Price, totalAmount);
-
-				    <div class="reInline">
+			    @foreach (Product Product in _basketService.GetBasketItems().Values) {
+					<div class="reInline">
 					    <div class="reProducts">
-						    <p>@(product.name ?? "N/A")</p>
+						    <p>@(Product.name ?? "N/A")</p>
 						    <p class="reDescription">
-							    @product.description
+							    @Product.description
 						    </p>
 					    </div>
 					    <div class="reProductInfo reInline">
-						    <p>
-							    @product.quantity
-						    </p>
-						    <p>
-							    @(product.Price)Dkk
-						    </p>
-						    <p>
-							    @(product.Price*product.quantity)DKK
-						    </p>
+						    <p>@Product.quantity</p>
+						    <p>@(Product.Price) kr.</p>
+						    <p>@(Product.Price*Product.quantity) kr.</p>
 					    </div>
 				    </div>
 				    <hr>
 			    }
-			    <br>
-			    <div class="reInline">
+				<br>
+				<div class="reInline">
 				    <div class="reProducts">
 					    <p>Sub Total</p>
 				    </div>
 				    <div class="reProductInfo reInline">
-					    <p>
-                							    
-					    </p>
-					    <p>
-							                    
-					    </p>
-					    <p>
-						    @(totalPrice)DKK
-					    </p>
+                	    <p></p>
+	                    <p></p>
+					    <p>@(TotalPrice * 0.75) kr.</p>
 				    </div>
 			    </div>
-			    				    <div class="reInline">
-                					    <div class="reProducts">
-                						    <p>Tax</p>
-                					    </div>
-                					    <div class="reProductInfo reInline">
-                						    <p>
-                							    
-                						    </p>
-						                    <p>
-							                    
-						                    </p>
-                						    <p>
-                							    @(totalPrice * 0.25)DKK
-                						    </p>
-                					    </div>
-                				    </div>			    
+		        <div class="reInline">
+                    <div class="reProducts">
+                	    <p>Tax</p>
+                    </div>
+                    <div class="reProductInfo reInline">
+                	    <p></p>
+	                    <p></p>
+                	    <p>@(TotalPrice * 0.25) kr.</p>
+                    </div>
+                </div>			    
 			    <hr>
-			    				    <div class="reInline">
-                					    <div class="reProducts">
-                						    <p>Total</p>
-                					    </div>
-                					    <div class="reProductInfo reInline">
-                						    <p>
-                							    
-                						    </p>
-						                    <p>
-							                    
-						                    </p>
-                						    <p>
-                							    @(totalPrice * 0.25 + totalPrice)DKK
-                						    </p>
-                					    </div>
-							        </div>		
+		        <div class="reInline">
+                    <div class="reProducts">
+                	    <p>Total</p>
+                    </div>
+                    <div class="reProductInfo reInline">
+                	    <p></p>
+	                    <p></p>
+                	    <p>@(TotalPrice) kr.</p>
+                    </div>
+		        </div>		
 			    <hr>
 			    
 		    </div>
@@ -159,24 +104,6 @@
     </div><!--End Invoice Mid-->
     
     <div id="bot">
-	    <div class="contents">
-		    <!--
-		    @foreach (Product product in _BasketItems)
-		    {
-			    <GridItem
-				    Id=@product.Id
-				    Img=@product.Image
-				    name=@product.name
-				    Price=@product.Price
-				    InStock=@product.InStock
-				    InBasket="false"
-				    />
-		    }
-		    
-		     -->
-		    </div>
-		   
-	    
 		<div id="legalcopy">
 			<p class="legal"><strong>Thank you for your business!</strong>  Payment is expected within 31 days; please process this invoice within that time. There will be a 5% interest charge per month on late invoices. 
 			</p>
@@ -187,61 +114,29 @@
 
 
 @code {
-	//TODO Remove the SubTotal and Tax we are most likely going to assume/have the tax be part of the product price
+	// TODO Translate to danish and SUBTOTAL skal være prisen føre moms og noget???
 	[Parameter] public string FirstName { get; set; }
 	[Parameter] public string LastName { get; set; }
 	[Parameter] public string Address { get; set; }
 	[Parameter] public int ZipCode { get; set; }
 	[Parameter] public int PhoneNumber { get; set; }
 	[Parameter] public string Email { get; set; } 
-	
-	private List<Product> _BasketItems { get; set; }    
-	private double totalPrice { get; set; }
+	 
+	private double TotalPrice { get; set; }
+	private BasketService _basketService = BasketService.getInstance();
+	private FormService _formService = FormService.getInstance();
 	protected override Task OnInitializedAsync()
 	{
-		Console.WriteLine("FS orderId in re");
-		Console.WriteLine(FormService.getInstance().orderId);
-		Console.WriteLine("After");
-		var instance = FormService.getInstance();
-		FirstName = instance.FirstName;
-		LastName = instance.LastName;
-		Address = instance.Address;
-		ZipCode = instance.ZipCode;
-		PhoneNumber = instance.PhoneNumber;
-		Email = instance.Email;
-		Console.WriteLine("FS orderId in re");
-		Console.WriteLine(FormService.getInstance().orderId);
-		Console.WriteLine("After");
+		FirstName = _formService.FirstName;
+		LastName = _formService.LastName;
+		Address = _formService.Address;
+		ZipCode = _formService.ZipCode;
+		PhoneNumber = _formService.PhoneNumber;
+		Email = _formService.Email;
 		
-		BasketService.getInstance();
-		UpdateBasket();
+		TotalPrice = _basketService.getBasketTotal();
+		StateHasChanged();
+		
 		return base.OnInitializedAsync();
 	}
-	
-	
-	public void UpdateBasket()
-	{
-		BasketService basketService = BasketService.getInstance();
-		/*
-		_BasketItems = basketService.GetBasketItems();
-		totalPrice = basketService.getBasketTotal();
-		Console.WriteLine("BasketItemsInReceipt");
-		Console.WriteLine(_BasketItems.ToString());
-		foreach (var Product in _BasketItems)
-		{
-			Console.WriteLine(Product);
-		}*/
-		StateHasChanged();
-	}
-	
-	public void test()
-	{
-		Console.WriteLine("Testing this test");
-		FormService instance = FormService.getInstance();
-	}
-	
-	private double? getTotalPriceForProduct(double price, int? amount)
-	{
-	return price * amount;
-    }
 }
