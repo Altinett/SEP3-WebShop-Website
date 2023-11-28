@@ -1,0 +1,45 @@
+.admin-container {
+    position: relative;
+    display: flex;
+    gap: .5rem;
+    flex-wrap: wrap;
+    padding: .5rem;
+    height: 100%;
+}
+
+.admin-container form {
+    padding: .5rem;
+    border: 1px solid var(--border-color);
+    display: flex;
+    flex-direction: column; 
+    flex: 1 1 auto;
+    gap: .5rem;
+    height: min-content;
+}
+
+.admin-container .primary-button {
+    padding: .4rem;
+}
+
+.admin-container input {
+    border: 1px solid var(--border-color);
+}
+.admin-container group {
+    display: flex;
+    gap: .5rem;
+}
+.admin-container .message {
+    position: fixed;
+    bottom: 0px;
+    left: 50%;
+    translate: -50% 0;
+    padding: .5rem;
+    background: rgba(0,0,0, 0.08);
+    backdrop-filter: blur(3px);
+    border: 1px solid var(--border-color);
+    border-top-left-radius: .5rem;
+    border-top-right-radius: .5rem;
+}
+.admin-container .message:empty {
+    padding: 0;
+}

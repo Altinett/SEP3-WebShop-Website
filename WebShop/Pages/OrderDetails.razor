@@ -5,8 +5,16 @@
 @using WebShop.Shared.DTOs
 @inject NavigationManager navMgr
 
+@layout EmptyLayout
+
 @if (isLoggedIn)
 {
+	@if (isLoading)
+	{
+		<p>Loading...</p>
+	}
+	else
+	{
 	@if (dto != null)
 	{
 		 <div id="invoice-POS">
@@ -66,31 +74,36 @@
                 				    var groupedProducts = _BasketItems.GroupBy(p => p.name);
                 			    }
                 
-                			    @foreach (var group in groupedProducts)
-                			    {
-                				    var product = group.First(); // Take the first product in the group
-                				    var totalAmount = group.Sum(p => 1);
-                
-                				    <div class="reInline">
-                					    <div class="reProducts">
-                						    <p>@(product.name ?? "N/A")</p>
-                						    <p class="reDescription">
-                							    @product.description
-                						    </p>
-                					    </div>
-                					    <div class="reProductInfo reInline">
-                						    <p>
-                							    @totalAmount
-                						    </p>
-                						    <p>
-                							    @(product.Price)Dkk
-                						    </p>
-                						    <p>
-                						    </p>
-                					    </div>
-                				    </div>
-                				    <hr>
-                			    }
+                			               @foreach (var product in dto.products)
+                                           {
+                                               var productId = product.Key;
+                                               var quantity = product.Value;
+                               
+                                               var productDetails = _BasketItems.FirstOrDefault(p => p.Id == productId);
+                               
+                                               if (productDetails != null)
+                                               {
+                                                   <div class="reInline">
+                                                       <div class="reProducts">
+                                                           <p>@(productDetails.name ?? "N/A")</p>
+                                                           <p class="reDescription">
+                                                               @productDetails.description
+                                                           </p>
+                                                       </div>
+                                                       <div class="reProductInfo reInline">
+                                                           <p>
+                                                               @quantity
+                                                           </p>
+                                                           <p>
+                                                               @(productDetails.Price)Dkk
+                                                           </p>
+                                                           <p>
+                                                           </p>
+                                                       </div>
+                                                   </div>
+                                                   <hr>
+                                               }
+                                           }
                 			    <br>
                 			    <div class="reInline">
                 				    <div class="reProducts">
@@ -173,6 +186,7 @@
 		<button class="btn btn-primary" @onclick="PrevPage">Go Back</button>
 	}
 }
+}
 else
 {
     <div>You are not logged in</div>
@@ -196,30 +210,44 @@ else
 	private FormService instance;
 	private PaymentDto dto;
 	private ProductService instance2;
+	private bool isLoading = true;
 
 
 
 	protected override async Task OnInitializedAsync()
 	{
-		AuthenticationState authState = await AuthState;
-		ClaimsPrincipal user = authState.User;
-		isLoggedIn = user.Identity != null;
+		try
+		{
+			AuthenticationState authState = await AuthState;
+			ClaimsPrincipal user = authState.User;
+			isLoggedIn = user.Identity != null;
 
-		if (!isLoggedIn) return;
+			if (!isLoggedIn) return;
 
-		userClaims = user.Claims;
-		name = user.Identity!.Name!;
-		Claim idClaim = userClaims.FirstOrDefault(c => c.Type == "User ID");
-		id = idClaim?.Value;
+			userClaims = user.Claims;
+			name = user.Identity!.Name!;
+			Claim idClaim = userClaims.FirstOrDefault(c => c.Type == "User ID");
+			id = idClaim?.Value;
 
 
-		instance = FormService.getInstance();
-		dto = await instance.GetFromLogic(orderId);
-		instance2 = ProductService.getInstance();
-		Console.WriteLine("Method await" + await instance2.GetProductsByOrderId(orderId));
-		List<Product> list = await instance2.GetProductsByOrderId(orderId);
-		_BasketItems = new List<Product>(list);
-		StateHasChanged();
+			instance = FormService.getInstance();
+			dto = await instance.GetFromLogic(orderId);
+			instance2 = ProductService.getInstance();
+			Console.WriteLine("Method await" + await instance2.GetProductsByOrderId(orderId));
+			List<Product> list = await instance2.GetProductsByOrderId(orderId);
+			_BasketItems = new List<Product>(list);
+			StateHasChanged();
+		}
+		catch (Exception e)
+		{
+			Console.WriteLine(e.Message);
+	// Handle the exception as needed
+		}
+		finally
+		{
+			isLoading = false; // Set loading state to false after data retrieval attempt
+			StateHasChanged();
+		}
 	}
 
 	private async Task PrevPage()
