@@ -3,13 +3,17 @@
 @inject NavigationManager Nvm
 
 <div class="topnav">
+    <div class="primary-icon-button round " @onclick="OnHomeClick" >
+        <svg xmlns="http://www.w3.org/2000/svg" class="ionicon" viewBox="0 0 512 512" fill="#fff" style="height: 1.8rem;"><path d="M416 174.74V48h-80v58.45L256 32 0 272h64v208h144V320h96v160h144V272h64l-96-97.26z" /></svg>
+
+    </div>
     <div class="secondary-button round" @onclick="OnCategoryCLick">
         <div class="icon">
             <svg xmlns="http://www.w3.org/2000/svg" class="ionicon" viewBox="0 0 512 512"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-miterlimit="10" stroke-width="32" d="M80 160h352M80 256h352M80 352h352"/></svg>
         </div>
         <a class="active">Alle kategorier</a>
     </div>
-    
+
     <form @onsubmit="OnSearch">
         <label class="search round" for="search-input">
             <input @bind="searchQuery" type="text" id="search-input" spellcheck="false" placeholder="Search">
@@ -18,8 +22,8 @@
             </div>
         </label>
     </form>
-    
-    
+
+
     <a href="#test">Contact</a>
     <a href="#test">About</a>
 
@@ -64,6 +68,11 @@
     public void OnCartClick()
     {
         Nvm.NavigateTo("/kurv");
+    }
+
+    public void OnHomeClick()
+    {
+        Nvm.NavigateTo("/");
     }
     
     //TODO når det lægges i kurven, vil det være rart at se antal vare i kurv.
