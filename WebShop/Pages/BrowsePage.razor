@@ -62,6 +62,10 @@
                 _searchService.SetCurrentCategories(categories);
             }
         }
+        else
+        {
+            _searchService.SetCurrentCategories(categories);
+        }
         
         products = await _searchService.Search();
         StateHasChanged();
