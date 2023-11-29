@@ -32,7 +32,36 @@ body, html {
     height: 100%;
     overflow: hidden;
 }
+#app:has(> .accessibility) {
+    font-size: 1.2rem;
+    font-weight: bold;
+    background: #444
+}
+#app:has(> .accessibility) .grid-item {
+    background: #00001a !important;
+    color: #fff !important;
+    font-size: 1.4rem;
+}
 
+#app:has(> .accessibility) .grid-item .title{
+    font-size: 1.5rem;
+}
+
+#app:has(> .accessibility) a{
+    color: white;
+}
+
+#app:has(> .accessibility) label{
+    color: white;
+}
+
+#app:has(> .accessibility) h3{
+    color: white;
+}
+
+#app:has(> .accessibility) p{
+    color: white;
+}
 
 /*
 input {
@@ -211,3 +240,4 @@ input {
     background: transparent;
     padding-right: .5rem;
 }
+
