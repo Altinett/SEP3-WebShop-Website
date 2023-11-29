@@ -16,7 +16,7 @@
         <svg xmlns="http://www.w3.org/2000/svg" class="ionicon" viewBox="0 0 512 512" fill="#fff" style="height: 1.8rem;"><path d="M416 174.74V48h-80v58.45L256 32 0 272h64v208h144V320h96v160h144V272h64l-96-97.26z"/></svg>
 
     </div>
-    <div class="secondary-button round" @onclick="OnCategoryCLick">
+    <div class="secondary-button round" @onclick="OnAllCategoriesClick">
         <div class="icon">
             <svg xmlns="http://www.w3.org/2000/svg" class="ionicon" viewBox="0 0 512 512"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-miterlimit="10" stroke-width="32" d="M80 160h352M80 256h352M80 352h352"/></svg>
         </div>
@@ -57,22 +57,21 @@
 
 @code {
     
-    [Parameter] public string searchQuery { get; set; }
 
     private SearchService _searchService = SearchService.getInstance();
     private ProductService _productService = ProductService.getInstance();
+
+    public string searchQuery = "";
 
     protected override Task OnInitializedAsync() {
         BasketService.getInstance().on("Changed", e =>
         {
             StateHasChanged();
         });
+        searchQuery = _searchService.GetCurrentQuery();
+        StateHasChanged();
+        
         return base.OnInitializedAsync();
-    }
-
-    public void OnClicki()
-    {
-        Nvm.NavigateTo("/browse");
     }
 
     public void OnSearch()
@@ -83,12 +82,21 @@
         
         // Navigate to browse page and make sure the categories are the same when navigating
         Nvm.NavigateTo("/browse/" + String.Join(",", _searchService.GetCurrentCategories()));
+        Reload();
     }
-    
-    public void OnCategoryCLick()
+
+    private void Reload()
     {
+        Nvm.NavigateTo("/temp");
         Nvm.NavigateTo("/browse"); 
     }
+
+    public void OnAllCategoriesClick()
+    {
+        _searchService.SetCurrentQuery("");
+        Reload();
+    }
+    
     
     public void OnCartClick()
     {
