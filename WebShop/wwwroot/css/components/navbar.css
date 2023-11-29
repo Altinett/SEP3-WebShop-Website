@@ -58,3 +58,14 @@ a {
         display: none;
     }
 }
+
+a {
+    cursor: pointer;
+    text-decoration: none; /* Remove underline by default */
+    color: white; /* Set the default text color */
+}
+
+/* Add styling when hovering over the link */
+a:hover {
+    text-decoration: underline; /* Underline on hover */
+}

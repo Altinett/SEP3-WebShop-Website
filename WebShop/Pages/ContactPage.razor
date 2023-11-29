@@ -1,0 +1,49 @@
+@page "/Contact"
+@inject IJSRuntime JSRuntime
+
+<h3>Send en mail til os!</h3>
+
+<form class="emailform" @onsubmit="OpenDefaultEmailClient">
+    <label>Subject:</label>
+    <input @bind="email.Subject" />
+    @if (subjectError)
+    {
+        <div class="error">Emnet kan ikke være tom</div>
+    }
+
+    <label>Body:</label>
+    <textarea @bind="email.Body"></textarea>
+    @if (bodyError)
+    {
+        <div class="error">Beskeden kan ikke være tom</div>
+    }
+
+    <button type="submit">Send mail</button>
+</form>
+
+@code {
+    private EmailModel email = new EmailModel();
+    private bool subjectError;
+    private bool bodyError;
+
+    private void OpenDefaultEmailClient()
+    {
+        subjectError = string.IsNullOrWhiteSpace(email.Subject);
+        bodyError = string.IsNullOrWhiteSpace(email.Body);
+
+        if (subjectError || bodyError)
+        {
+            return;
+        }
+
+        var mailtoLink = $"mailto:{email.To}?subject={Uri.EscapeDataString(email.Subject)}&body={Uri.EscapeDataString(email.Body)}";
+        JSRuntime.InvokeVoidAsync("open", mailtoLink);
+    }
+
+    private class EmailModel
+    {
+        public string To { get; } = "shadow@share.inc";
+        public string Subject { get; set; }
+        public string Body { get; set; }
+    }
+}
