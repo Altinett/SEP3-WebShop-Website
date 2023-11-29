@@ -27,7 +27,7 @@ public class BasketService : Subject
     public bool InBasketStock(int id) {
         foreach (var product in BasketItems.Values) {
             if (product.Id != id) continue;
-            return product.amount > 0;
+            return product.amount >= 0;
         }
         return true;
     }
@@ -38,6 +38,11 @@ public class BasketService : Subject
             return product.amount;
         }
         return null;
+    }
+    
+    public int? GetAmountInBasket()
+    {
+        return BasketItems.Values.Sum(product => product.quantity);
     }
 
     public async Task<bool> AddItem(int id)
