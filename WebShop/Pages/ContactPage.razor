@@ -4,21 +4,21 @@
 <h3>Send en mail til os!</h3>
 
 <form class="emailform" @onsubmit="OpenDefaultEmailClient">
-    <label>Subject:</label>
+    <label>Emne:</label>
     <input @bind="email.Subject" />
     @if (subjectError)
     {
         <div class="error">Emnet kan ikke være tom</div>
     }
 
-    <label>Body:</label>
+    <label>Besked:</label>
     <textarea @bind="email.Body"></textarea>
     @if (bodyError)
     {
         <div class="error">Beskeden kan ikke være tom</div>
     }
 
-    <button type="submit">Send mail</button>
+    <button class="primary-button" type="submit">Send mail</button>
 </form>
 
 @code {

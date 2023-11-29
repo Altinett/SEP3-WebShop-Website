@@ -35,34 +35,24 @@ body, html {
 #app:has(> .accessibility) {
     font-size: 1.2rem;
     font-weight: bold;
-    background: #444
+    background: #444;
+    --bg: #00001a !important;
+    --color: #fff !important;
+    --border-color: rgba(255, 255, 255, .15) !important;
+    color: var(--color);
 }
 #app:has(> .accessibility) .grid-item {
+    /*
     background: #00001a !important;
     color: #fff !important;
+    
+     */
     font-size: 1.4rem;
 }
 
 #app:has(> .accessibility) .grid-item .title{
     font-size: 1.5rem;
 }
-
-#app:has(> .accessibility) a{
-    color: white;
-}
-
-#app:has(> .accessibility) label{
-    color: white;
-}
-
-#app:has(> .accessibility) h3{
-    color: white;
-}
-
-#app:has(> .accessibility) p{
-    color: white;
-}
-
 /*
 input {
     background: transparent !important;
@@ -116,13 +106,13 @@ input {
 .secondary-button:hover,
 .primary-icon-button:hover,
 .secondary-icon-button:hover {
-    box-shadow: 0 0 5px var(--accent);
+    box-shadow: 0 0 10px var(--accent);
 }
 .primary-button:hover:active,
 .secondary-button:hover:active,
 .primary-icon-button:hover:active,
 .secondary-icon-button:hover:active {
-    box-shadow: 0 0 15px var(--accent);
+    box-shadow: 0 0 20px var(--accent);
 }
 .tertiary-button:hover {
     text-decoration: underline;

@@ -18,10 +18,11 @@
     gap: .5rem;
     overflow: hidden;
     padding: .75rem;
-    background-color: white;
+    background-color: var(--bg);
     backdrop-filter: blur(1px);
     width: 100%;
     height: min-content;
+    color: var(--color);
 }
 
 .grid-container {
@@ -52,12 +53,7 @@
     font-size: 1.1rem;
     display: flex;
     word-break: break-all;
-    color: var(--black)
-    /* text-decoration: none; */
-    /* text-overflow: ellipsis;
-    white-space: pre;
-    overflow: hidden;
-    overflow-x: auto; */
+    color: var(--color);
 }
 .grid-item .title:hover {
     text-decoration: underline;
@@ -132,6 +128,7 @@
 .button svg {
     width: 1.2rem;
 }
+/*
 .button:hover {
     box-shadow: 0 0 5px var(--blue-1);
     border: 1px solid var(--blue-1);
@@ -139,7 +136,7 @@
 }
 .button:hover:active {
     box-shadow: 0 0 15px var(--blue-1);
-}
+}*/
 
 .clipped {
     clip-path: var(--ui-notch-path);

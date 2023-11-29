@@ -164,8 +164,4 @@ public class ProductService : IProductService
         return product;
     }
 
-    public Boolean IsInStok(Product product)
-    {
-        return true;
-    }
 }

@@ -37,7 +37,7 @@
     border: 1px solid var(--border-color);
     height: max-content;
     flex: 1 1 auto;
-    background-color: #fff;
+    background-color: var(--bg);
 }
 
 .forum-input{

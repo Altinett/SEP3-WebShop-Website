@@ -27,15 +27,14 @@ public class BasketService : Subject
     public bool InBasketStock(int id) {
         foreach (var product in BasketItems.Values) {
             if (product.Id != id) continue;
-            return product.amount >= 0;
+            return product.amount > 0;
         }
         return true;
     }
     
     public int? GetProductAmount(int id) {
-        foreach (var product in BasketItems.Values) {
-            if (product.Id != id) continue;
-            return product.amount;
+        if (BasketItems.ContainsKey(id)) {
+            return BasketItems[id].amount;
         }
         return null;
     }
