@@ -12,8 +12,8 @@ public class PaymentDto
     public int postcode { get; init; }
     public int phonenumber { get; init; }
     public string email { get; init; } 
-    public int cardnumber { get; init; }
-    public DateOnly expirationdate { get; init; }
+    public string cardnumber { get; init; }
+    public DateTime expirationdate { get; init; }
     public int cvc { get; init; }
     public int total { get; init; }
     
