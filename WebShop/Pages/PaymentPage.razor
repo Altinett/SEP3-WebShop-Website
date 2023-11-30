@@ -8,7 +8,7 @@
         <form @onsubmit="Submit">
           <label for="Kortnummer">Kortnummer:</label><br>
           <div class="forum-input round">
-            <input type="number" @bind="CardNumber" id="CardNumber" name="CardNumber" min="0">
+            <input type="text" @bind="CardNumber" id="CardNumber" name="CardNumber" min="0">
           </div><br>
           <label for="ExpirationDate">Udløbsdato:</label><br>
           <div class="forum-input round">
@@ -18,7 +18,7 @@
           <div class="forum-input round">
             <input type="number" @bind="CVC" id="CVC" name="CVC" min="0">
           </div><br><br>
-          
+          <p class="validation-error">@ValidationMessage</p>
           <div class="forum-content">
             <div class="secondary-button round forum-inline" @onclick="Previous">Tilbage</div>
             <div class="primary-button round forum-inline" @onclick="Submit">Bekræft</div>
@@ -32,34 +32,86 @@
 
 @code {
   
-  [Parameter] public int CardNumber { get; set; }
-  [Parameter] public DateOnly ExpirationDate { get; set; }
+  [Parameter] public string CardNumber { get; set; }
+  [Parameter] public DateTime ExpirationDate { get; set; }
   [Parameter] public int CVC { get; set; }
+  private DateTime currentTime = DateTime.Today;
+  private string ValidationMessage = "";
+
+  private DateTime selectedDate;
+
+  protected override void OnInitialized()
+  {
+    ExpirationDate = DateTime.Today;
+    base.OnInitialized();
+  }
+
+  private long ConvertToUnixTimestamp(DateTime date)
+  {
+    return ((DateTimeOffset)date).ToUnixTimeMilliseconds();
+    /*
+    var unixEpoch = new DateTime(1970, 1, 1, 0, 0, 0, DateTimeKind.Utc);
+    return (long)(((DateTimeOffset)date).ToUnixTimeMilliseconds() - unixEpoch).TotalSeconds;
+    */
+  }
+  
   
   public async void Submit()
   {
     //code here trust man
-    var instance = FormService.getInstance();
+    if (IsFormValid())
+    {
+      var instance = FormService.getInstance();
     
     
-    instance.CardNumber = CardNumber;
-    instance.ExpirationDate = ExpirationDate;
-    instance.CVC = CVC;
+      instance.CardNumber = CardNumber;
+      instance.ExpirationDate = ExpirationDate;
+      instance.CVC = CVC;
+    
+    
+      await instance.sendToLogic();
 
+      Nvm.NavigateTo("/Kvittering");
+      BasketService.getInstance().RemoveAll();
 
-    Console.WriteLine(CardNumber);
-    Console.WriteLine(CVC);
-    Console.WriteLine(ExpirationDate);
-    
-    
-    await instance.sendToLogic();
-    
-    
-    Nvm.NavigateTo("/Kvittering");
-    BasketService.getInstance().RemoveAll();
-
-
+    }
   }
+  
+  private bool IsFormValid()
+  {
+  // Update the status message based on validation
+    ValidationMessage = "";
+
+    if (!IsValidCardNumber(CardNumber))
+    {
+      ValidationMessage = "Please enter a valid cardnumber. ";
+    }
+    
+    if (ConvertToUnixTimestamp(ExpirationDate) <= ConvertToUnixTimestamp(currentTime))
+    {
+      ValidationMessage = "Please enter a valid experationdate. ";
+    }
+
+    if (CVC <= 100 || CVC > 999)
+    {
+      ValidationMessage = "Please enter a valid CVC. ";
+    }
+
+  // Return true if all input fields are valid, otherwise return false
+    return string.IsNullOrEmpty(ValidationMessage);
+  }
+  
+  
+  private bool IsValidCardNumber(string cardNumber)
+  {
+    if (cardNumber == null)
+    {
+      return false;
+    }
+    var creditCardRegex = new System.Text.RegularExpressions.Regex(@"^\d{8,21}$");
+    return creditCardRegex.IsMatch(cardNumber);
+  }
+  
 
   private void Previous()
   {

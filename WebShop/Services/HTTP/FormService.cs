@@ -16,8 +16,8 @@ public class FormService
     public int ZipCode { get; set; }
     public int PhoneNumber { get; set; }
     public string Email { get; set; } 
-    public int CardNumber { get; set; }
-    public DateOnly ExpirationDate { get; set; }
+    public string CardNumber { get; set; }
+    public DateTime ExpirationDate { get; set; }
     public int CVC { get; set; }
     public int orderId { get; set; }
     public int Total { get; set; }

@@ -79,7 +79,10 @@
 	
     public void OnClick()
     {
-        Nvm.NavigateTo("/form");
+	    if (@_BasketItems.Count != 0)
+	    {
+		    Nvm.NavigateTo("/form");
+	    }
     }
 	
 	private Dictionary<int, Product> _BasketItems { get; set; }

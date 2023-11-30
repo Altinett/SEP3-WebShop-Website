@@ -1,4 +1,5 @@
 @page "/form"
+@using System.Text.RegularExpressions
 @inject NavigationManager Nvm
 
 <div class="forum-container">
@@ -27,9 +28,9 @@
                 </div><br>
                 <label for="Email">Email:</label><br>
                 <div class="forum-input round">
-                    <input type="text" @bind="Email" id="Email" name="Email">
+                    <input type="email" @bind="Email" id="Email" name="Email">
                 </div><br><br>
-                
+                <p class="validation-error">@ValidationMessage</p>
                 <!-- disable submit until "FormIsValid" is true -->
                 <div class="primary-button round" @onclick="Submit" disabled="@(!FormIsValid)">Bekræft</div>
             </form>
@@ -45,32 +46,112 @@
     [Parameter] public int ZipCode { get; set; }
     [Parameter] public int PhoneNumber { get; set; }
     [Parameter] public string Email { get; set; }
-
+    
     private bool FormIsValid = false;
+    private string ValidationMessage = "";
+    
+    private FormService _formService = FormService.getInstance();
+
+    protected override void OnInitialized()
+    {
+        FirstName = _formService.FirstName;
+        LastName = _formService.LastName;
+        Address = _formService.Address;
+        ZipCode = _formService.ZipCode;
+        PhoneNumber = _formService.PhoneNumber;
+        Email = _formService.Email;
+
+        base.OnInitialized();
+    }
 
     public void Submit()
     {
         // Check the validity of the form before submitting
         if (IsFormValid())
         {
-            var instance = FormService.getInstance();
-
-            instance.FirstName = FirstName;
-            instance.LastName = LastName;
-            instance.Address = Address;
-            instance.ZipCode = ZipCode;
-            instance.PhoneNumber = PhoneNumber;
-            instance.Email = Email;
+            _formService.FirstName = FirstName;
+            _formService.LastName = LastName;
+            _formService.Address = Address;
+            _formService.ZipCode = ZipCode;
+            _formService.PhoneNumber = PhoneNumber;
+            _formService.Email = Email;
 
             Nvm.NavigateTo("/betaling");
         }
     }
-
+    
     private bool IsFormValid()
     {
+        // Update the status message based on validation
+        ValidationMessage = "";
+
+        if (!IsValidName(FirstName))
+        {
+            ValidationMessage = "Please enter a valid first name. ";
+        }
+
+        if (!IsValidName(LastName))
+        {
+            ValidationMessage = "Please enter a valid last name. ";
+        }
+
+        if (string.IsNullOrEmpty(Address) || !IsValidAddress(Address))
+        {
+            ValidationMessage = "Please enter your address. ";
+        }
+
+        if (ZipCode <= 0 || ZipCode > 10000)
+        {
+            ValidationMessage = "Please enter a valid zip code. ";
+        }
+
+        if (PhoneNumber <= 10000000 || PhoneNumber > 99999999)
+        {
+            ValidationMessage = "Please enter a valid phone number. ";
+        }
+
+        if (!IsValidEmail(Email))
+        {
+            ValidationMessage = "Please enter a valid email address. ";
+        }
+
         // Return true if all input fields are valid, otherwise return false
-        return !string.IsNullOrEmpty(FirstName) && !string.IsNullOrEmpty(LastName) && !string.IsNullOrEmpty(Address) &&
-               ZipCode > 0 && PhoneNumber > 0 && !string.IsNullOrEmpty(Email);
+        return string.IsNullOrEmpty(ValidationMessage);
+    }
+
+    private bool IsValidName(string name)
+    {
+        // Add your validation logic for names
+        // For example, check if the name contains only letters
+        return !string.IsNullOrEmpty(name) && name.All(char.IsLetter);
+    }
+
+    private bool IsValidAddress(string address)
+    {
+        if (address == null)
+        {
+            return false;
+        }
+    // Add your validation logic for email addresses
+    // For example, you can use regular expressions to validate the email format
+    // Here's a simple example, but you might want to use a more robust solution
+        var emailRegex = new System.Text.RegularExpressions.Regex(@"^\d{1,3}.,.[a-zA-Z]+$");
+        return emailRegex.IsMatch(address);
+    }
+    
+    
+    
+    private bool IsValidEmail(string email)
+    {
+        if (email == null)
+        {
+            return false;
+        }
+    // Add your validation logic for email addresses
+        // For example, you can use regular expressions to validate the email format
+        // Here's a simple example, but you might want to use a more robust solution
+        var emailRegex = new System.Text.RegularExpressions.Regex(@"^[^@\s]+@[^@\s]+\.[^@\s]+$");
+        return emailRegex.IsMatch(email);
     }
 
     private void RemoveNumber(ChangeEventArgs e, string InputName)
@@ -87,5 +168,6 @@
         // Update the form validity when any input changes
         FormIsValid = IsFormValid();
     }
+}
 
 }
