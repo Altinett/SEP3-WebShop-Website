@@ -164,4 +164,15 @@ public class ProductService : IProductService
         return product;
     }
 
+    public Product LastReviewedProduct;
+
+    public void SetLastReviewedProduct(Product product)
+    {
+        LastReviewedProduct = product;
+    }
+
+    public Product GetLastReviewedProduct()
+    {
+        return LastReviewedProduct;
+    }
 }

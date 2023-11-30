@@ -53,8 +53,11 @@
     
     
     await instance.sendToLogic();
-
+    
+    
     Nvm.NavigateTo("/Kvittering");
+    BasketService.getInstance().RemoveAll();
+
 
   }
 

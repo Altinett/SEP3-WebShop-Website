@@ -74,6 +74,12 @@ public class BasketService : Subject
         }
         emit("Changed");
     }
+
+    public void RemoveAll()
+    {
+        BasketItems.Clear();
+        emit("Changed");
+    }
     
     public Dictionary<int, Product> GetBasketItems() {
         return BasketItems;

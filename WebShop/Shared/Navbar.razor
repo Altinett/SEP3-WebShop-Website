@@ -85,12 +85,13 @@
         
         // Navigate to browse page and make sure the categories are the same when navigating
         Nvm.NavigateTo("/browse/" + String.Join(",", _searchService.GetCurrentCategories()));
+        _searchService.emit("search", searchQuery);
         Reload();
     }
 
     private void Reload()
     {
-        Nvm.NavigateTo("/temp");
+        Nvm.NavigateTo("/");
         Nvm.NavigateTo("/browse"); 
     }
 
@@ -126,9 +127,5 @@
         _handicapService.ToggleAccessibility();
         Accessibility = _handicapService.AccessibilityEnabled();
     }
-    
-    
-    
-    //TODO når det lægges i kurven, vil det være rart at se antal vare i kurv.
 
 }
