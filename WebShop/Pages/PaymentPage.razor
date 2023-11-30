@@ -1,11 +1,11 @@
 @page "/betaling"
-@using System.Runtime.InteropServices.JavaScript
+@using WebShop.Services.HTTP
 @inject NavigationManager Nvm
 
 <div class="forum-container">
   <div class="forum-content">
      <div class="forum-group">
-        <form @onsubmit="Submit">
+        <form @onsubmit="ValidateForm">
           <label for="Kortnummer">Kortnummer:</label><br>
           <div class="forum-input round">
             <input type="text" @bind="CardNumber" id="CardNumber" name="CardNumber" min="0">
@@ -21,7 +21,7 @@
           <p class="validation-error">@ValidationMessage</p>
           <div class="forum-content">
             <div class="secondary-button round forum-inline" @onclick="Previous">Tilbage</div>
-            <div class="primary-button round forum-inline" @onclick="Submit">Bekræft</div>
+            <div class="primary-button round forum-inline" @onclick="ValidateForm">Bekræft</div>
           </div>
           
         </form>
@@ -35,83 +35,43 @@
   [Parameter] public string CardNumber { get; set; }
   [Parameter] public DateTime ExpirationDate { get; set; }
   [Parameter] public int CVC { get; set; }
-  private DateTime currentTime = DateTime.Today;
-  private string ValidationMessage = "";
-
   private DateTime selectedDate;
+  private string ValidationMessage = "";
+  private FormService _formService = FormService.getInstance();
 
+  
   protected override void OnInitialized()
   {
     ExpirationDate = DateTime.Today;
     base.OnInitialized();
   }
 
-  private long ConvertToUnixTimestamp(DateTime date)
-  {
-    return ((DateTimeOffset)date).ToUnixTimeMilliseconds();
-    /*
-    var unixEpoch = new DateTime(1970, 1, 1, 0, 0, 0, DateTimeKind.Utc);
-    return (long)(((DateTimeOffset)date).ToUnixTimeMilliseconds() - unixEpoch).TotalSeconds;
-    */
-  }
-  
-  
-  public async void Submit()
-  {
-    //code here trust man
-    if (IsFormValid())
-    {
-      var instance = FormService.getInstance();
-    
-    
-      instance.CardNumber = CardNumber;
-      instance.ExpirationDate = ExpirationDate;
-      instance.CVC = CVC;
-    
-    
-      await instance.sendToLogic();
-
-      Nvm.NavigateTo("/Kvittering");
-      BasketService.getInstance().RemoveAll();
-
-    }
-  }
-  
-  private bool IsFormValid()
+  private async void ValidateForm()
   {
   // Update the status message based on validation
     ValidationMessage = "";
-
-    if (!IsValidCardNumber(CardNumber))
-    {
-      ValidationMessage = "Please enter a valid cardnumber. ";
-    }
+    ValidationService validationService = ValidationService.GetInstance();
     
-    if (ConvertToUnixTimestamp(ExpirationDate) <= ConvertToUnixTimestamp(currentTime))
+    try
     {
-      ValidationMessage = "Please enter a valid experationdate. ";
+      _formService.CardNumber = validationService.ValidateCreditcard(CardNumber);
+      _formService.ExpirationDate = validationService.ValidateExperationDate(ExpirationDate);
+      _formService.CVC = validationService.ValidateCVC(CVC);
+      await _formService.sendToLogic();
+
+      Nvm.NavigateTo("/Kvittering");
+      BasketService.getInstance().RemoveAll();
+    }
+    catch (InvalidInputException e)
+    {
+      ValidationMessage = e.Message;
+    }
+    catch (Exception e)
+    {
+      Console.WriteLine(e.Message);
     }
 
-    if (CVC <= 100 || CVC > 999)
-    {
-      ValidationMessage = "Please enter a valid CVC. ";
-    }
-
-  // Return true if all input fields are valid, otherwise return false
-    return string.IsNullOrEmpty(ValidationMessage);
   }
-  
-  
-  private bool IsValidCardNumber(string cardNumber)
-  {
-    if (cardNumber == null)
-    {
-      return false;
-    }
-    var creditCardRegex = new System.Text.RegularExpressions.Regex(@"^\d{8,21}$");
-    return creditCardRegex.IsMatch(cardNumber);
-  }
-  
 
   private void Previous()
   {
