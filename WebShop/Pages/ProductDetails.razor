@@ -1,6 +1,7 @@
 @page "/product"
 @using global::Shared
 @using BlazorWasm.Services.Http
+@inject NavigationManager Nvm
 
 
 <!--<h3>ProductDetails</h3>-->
@@ -25,7 +26,14 @@
         </div>
         <div class="pdDivSide">
             <div class="pdStockText">
-                <p>@product.amount på lager</p>
+                			@if (product.amount <= 20)
+                			{
+			                    <p>@product.amount på lager</p>
+                			}
+                			else
+                			{
+                				<p>20+ på lager</p>
+                			}
             </div>
             <div class="price">
                 @product.Price DKK
@@ -46,15 +54,17 @@
         </div>
     
         </div>
-    
     }
+else
+{
+ Nvm.NavigateTo("/"); //TODO or we could make a 404 page???
+}
 
 
 
 
 
 @code {
-    //TODO make a go back icon for the back button
     [Parameter]public string productId { get; set; }
     [Parameter] public Product product { get; set; }
     /*
@@ -86,7 +96,7 @@
         
 
     // Now, you may want to handle the case where Product is null
-        //if (product == null) //TODO could make a 404 page???
+        //if (product == null) 
         /*    
         try {
             if (productService.GetProductById(int.Parse(productId)) == null){

@@ -18,7 +18,14 @@
 	{
 		<div class="bottom">
 			<div class="price">DKK @price</div>
-			<div class="stock-status in-stock">@amount på lager</div>
+			@if (amount <= 20)
+			{
+				<div class="stock-status in-stock">@amount på lager</div>
+			}
+			else
+			{
+				<div class="stock-status in-stock">20+ på lager</div>
+			}
 		</div>
 		@if (InBasket == true)
 		{

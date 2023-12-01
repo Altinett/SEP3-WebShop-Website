@@ -11,7 +11,7 @@
 		<div class="tertiary-icon-button" @onclick="Decrement">
 			<svg xmlns="http://www.w3.org/2000/svg" class="ionicon" viewBox="0 0 512 512"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="32" d="M400 256H112"/></svg>
 		</div>
-		<input type="number" min="1" value="@quantity">
+		<input type="number" min="1" value="@quantity"  readonly="readonly">
 		
 		<div class="tertiary-icon-button" @onclick="Increment">
 			<svg xmlns="http://www.w3.org/2000/svg" class="ionicon" viewBox="0 0 512 512"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="32" d="M256 112v288M400 256H112"/></svg>
@@ -24,7 +24,7 @@
 </div>
 
 @code {
-//TODO Make the textfield either work or make it so you can not type.
+//TODO fix all input fields when using availability
 	[Parameter]
 	public Action<int>? onQuantityChanged { get; set; }
 	

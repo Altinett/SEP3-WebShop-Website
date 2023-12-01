@@ -66,7 +66,7 @@
 				<br>
 				<div class="reInline">
 				    <div class="reProducts">
-					    <p>Sub Total</p>
+					    <p>Total før moms</p>
 				    </div>
 				    <div class="reProductInfo reInline">
                 	    <p></p>
@@ -76,7 +76,7 @@
 			    </div>
 		        <div class="reInline">
                     <div class="reProducts">
-                	    <p>Tax</p>
+                	    <p>Moms</p>
                     </div>
                     <div class="reProductInfo reInline">
                 	    <p></p>
@@ -113,7 +113,7 @@
 
 
 @code {
-	// TODO Translate to danish and SUBTOTAL skal være prisen føre moms og noget???
+	
 	[Parameter] public string FirstName { get; set; }
 	[Parameter] public string LastName { get; set; }
 	[Parameter] public string Address { get; set; }
@@ -139,6 +139,6 @@
 		return base.OnInitializedAsync();
 	}
 	
-	//TODO change amount in database when ordering products
+	
  
 }
