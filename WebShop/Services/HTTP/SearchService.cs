@@ -50,7 +50,7 @@ public class SearchService : Subject
     }
     public async Task<List<Product>> Search()
     {
-        HttpResponseMessage response = await client.GetAsync("http://localhost:8080/products?query=" + currentQuery + "&categories=" + String.Join(",", curretCategories));
+        HttpResponseMessage response = await client.GetAsync("http://localhost:8080/products?showFlagged=false&query=" + currentQuery + "&categories=" + String.Join(",", curretCategories));
         string responseContent = await response.Content.ReadAsStringAsync();
         products = JsonConvert.DeserializeObject<List<Product>>(responseContent);
         _productService.SetProducts(products);
