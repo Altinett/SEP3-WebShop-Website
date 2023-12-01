@@ -34,3 +34,9 @@
 {
     padding: 5px;
 }
+
+@media print {
+    .rePrint{
+        display: none; !important;
+    }
+}
