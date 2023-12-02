@@ -7,65 +7,43 @@
 @inject IBasketService BasketService
 @inject IProductService ProductService
 
-<div class="grid-container">
-	
-<div class="grid-item clipped" @onclick="_ => GoToDetails(Id)">
-	<img src="data:image/png;base64, @Img" />
-	<!--<img src="@Img"/>-->
-	<a class="title" >@name</a>
-	<div class="grid-content-line"></div>
-	@if (InBasket == false)
-	{
-	}
-	else
-	{
+<div class="grid-item-container">
+	<div class="grid-item clipped" @onclick="_ => GoToDetails()">
+		<img src="data:image/png;base64, @Img" />
+		<!--<img src="@Img"/>-->
+		<a class="title" >@Name</a>
+		<div class="grid-content-line"></div>
+		
 		<div class="bottom">
-			<div class="price">DKK @price</div>
-			@if (amount <= 20)
-			{
+			<div class="price">@Price kr</div>
+			@if (amount > 20) {
+				<div class="stock-status in-stock">20+ på lager</div>
+			} else {
 				<div class="stock-status in-stock">@amount på lager</div>
 			}
-			else
-			{
-				<div class="stock-status in-stock">20+ på lager</div>
-			}
 		</div>
-		@if (InBasket == true)
-		{
-			<div class="button" @onclick="RemoveFromBasket">
-				<Icon Name="basket"/>
-				<!--
-				<svg xmlns="http://www.w3.org/2000/svg" class="ionicon" viewBox="0 0 512 512"><path d="M68.4 192A20.38 20.38 0 0048 212.2a17.87 17.87 0 00.8 5.5L100.5 400a40.46 40.46 0 0039.1 29.5h232.8a40.88 40.88 0 0039.3-29.5l51.7-182.3.6-5.5a20.38 20.38 0 00-20.4-20.2H68.4zm193.32 160.07A42.07 42.07 0 11304 310a42.27 42.27 0 01-42.28 42.07z" fill="none" stroke="currentColor" stroke-linejoin="round" stroke-width="32"/><path fill="none" stroke="currentColor" stroke-linejoin="round" stroke-width="32" d="M160 192l96-128 96 128"/></svg>
-				-->
-				
-				<a>Fjern fra kurv</a>
-			</div>
-		}
-		else if (InBasket == false)
-		{
+		<div class="row">
+			@if (InBasket == true) {
+        		<div class="button secondary" @onclick="RemoveFromBasket">
+        			<Icon Name="basket"/>
+        			<a>Fjern fra kurv</a>
+        		</div>
+	        }
+        	<div class="button" @onclick="_ => AddToBasket()">
+        		<Icon Name="basket"/>
+        		<a>Læg i kurv</a>
+        	</div>
+		</div>
+	
 
-		}
-		else
-		{
-			<div class="button" @onclick="_ => AddToBasket()">
-				<Icon Name="basket"/>
-				<!--
-				<svg xmlns="http://www.w3.org/2000/svg" class="ionicon" viewBox="0 0 512 512"><path d="M68.4 192A20.38 20.38 0 0048 212.2a17.87 17.87 0 00.8 5.5L100.5 400a40.46 40.46 0 0039.1 29.5h232.8a40.88 40.88 0 0039.3-29.5l51.7-182.3.6-5.5a20.38 20.38 0 00-20.4-20.2H68.4zm193.32 160.07A42.07 42.07 0 11304 310a42.27 42.27 0 01-42.28 42.07z" fill="none" stroke="currentColor" stroke-linejoin="round" stroke-width="32"/><path fill="none" stroke="currentColor" stroke-linejoin="round" stroke-width="32" d="M160 192l96-128 96 128"/></svg>
-				-->
-				
-				<a>Læg i kurv</a>
-			</div>
-		}
-	}
-
-</div>
+	</div>
 </div>
 
 @code {
 	[Parameter] public int Id { get; set; }
 	[Parameter] public string Img { get; set; }
-    [Parameter] public string name { get; set; }
-	[Parameter] public double price { get; set; }
+    [Parameter] public string Name { get; set; }
+	[Parameter] public double Price { get; set; }
 	[Parameter] public bool InStock { get; set; }
 	[Parameter] public bool? InBasket { get; set; } 
 	[Parameter] public int? amount { get; set; }
@@ -83,44 +61,36 @@
 	protected override void OnInitialized()
 	{
 		product = (Product)context;
-		int? amountcheck;
-		InStock = BasketService.InBasketStock(Id);
-		amountcheck = BasketService.GetProductAmount(Id);
-		if (amountcheck != null)
-			amount = amountcheck;
+		
+		int? productAmount = BasketService.GetProductAmount(Id);
+		if (productAmount != null)
+			amount = productAmount;
 		InStock = amount > 0;
+		
 		StateHasChanged();
 		base.OnInitialized();
 	}
 
-	private async void AddToBasket()
-	{
+	private void AddToBasket() {
 		isButtonClick = true;
-		if (InStock)
-		{
-			InStock = await BasketService.AddItem(Id);
+		if (InStock) {
+			InStock = BasketService.AddItem(Id);
 			amount -= 1;
-			//product.amount--;
 			StateHasChanged();
 		};
 	}
 
-	private void RemoveFromBasket()
-	{
+	private void RemoveFromBasket() {
 		isButtonClick = true;
 		BasketService.RemoveItem(Id);
 	}
 
-	public void GoToDetails(int Id)
-	{
-		if (!isButtonClick)
-		{
+	public void GoToDetails() {
+		if (!isButtonClick) {
 			product.amount = amount;
 			ProductService.LastReviewedProduct = product;
 			Nvm.NavigateTo("/product");
-		}
-		else
-		{
+		} else {
 			isButtonClick = false;
 		}
 		

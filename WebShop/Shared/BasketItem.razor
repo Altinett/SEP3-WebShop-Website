@@ -4,38 +4,28 @@
 @inject IBasketService BasketService
 
 <div class="bp-card">
-	<img src="data:image/png;base64, @Img" />
-	<!-- <img src="https://i.ebayimg.com/images/g/EwUAAOSwqqdfoTH7/s-l1600.jpg"> -->
+	<img src="data:image/png;base64, @Image" />
 	<div class="bp-title">
-		@name
+		@Name
 	</div>
 	<div class="bp-product-control">
 		<div class="tertiary-icon-button" @onclick="_ => BasketService.RemoveItem(Id)">
 			<svg xmlns="http://www.w3.org/2000/svg" class="ionicon" viewBox="0 0 512 512"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="32" d="M400 256H112"/></svg>
 		</div>
-		<input type="number" min="1" value="@quantity"  readonly="readonly">
-		
+		<input type="number" min="1" value="@Quantity"  readonly>
 		<div class="tertiary-icon-button" @onclick="_ => BasketService.AddItem(Id)">
 			<svg xmlns="http://www.w3.org/2000/svg" class="ionicon" viewBox="0 0 512 512"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="32" d="M256 112v288M400 256H112"/></svg>
 		</div>
-
 	</div>
 	<div class="bp-price">
-		@(price * quantity)
+		@(Price * Quantity)
 	</div>
 </div>
 
 @code {
-//TODO fix all input fields when using availability
 	[Parameter] public int Id { get; set; }
-	[Parameter] public string Img { get; set; }
-	[Parameter] public string name { get; set; }
-	[Parameter] public double price { get; set; }
-	[Parameter] public bool InStock { get; set; }
-	[Parameter] public int quantity { get; set; }
-	[Parameter] public string description { get; set; }
-	
-	[Parameter] public Action<int>? onQuantityChanged { get; set; }
-	[Parameter] public bool? InBasket { get; set; }
-	[Parameter] public int? amount { get; set; }
+	[Parameter] public string Name { get; set; }
+	[Parameter] public int Quantity { get; set; }
+	[Parameter] public double Price { get; set; }
+	[Parameter] public string Image { get; set; }
 }

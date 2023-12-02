@@ -1,4 +1,4 @@
-@page "/Admin"
+@page "/admin"
 @using BlazorWasm.Services
 @using System.Security.Claims
 @using global::Shared
@@ -169,7 +169,7 @@
 
     }
     
-    List<int> category_ids = new List<int>();
+    List<int> category_ids = new();
 
     void HandleCheckboxChange(int checkboxValue)
     {

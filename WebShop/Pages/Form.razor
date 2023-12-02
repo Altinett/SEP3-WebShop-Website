@@ -1,49 +1,73 @@
 @page "/form"
-@using WebShop.Services.HTTP
 @using BlazorWasm.Services
 @using WebShop.Shared.Exceptions
+
 @inject NavigationManager NavigationManager
 @inject IValidationService ValidationService
 @inject IFormService FormService
 
-<div class="forum-container">
-    <div class="forum-content">
-        <div class="forum-group">
+<div class="form-container">
+    <div class="form-content">
+        <div class="form-group">
             <form @onsubmit="ValidateForm">
-                <label for="FirstName">Fornavn:</label><br>
-                <div class="forum-input round">
-                    <input type="text" @bind="FirstName" id="FirstName" name="FirstName" @oninput="e => RemoveNumber(e, nameof(FirstName))">
-                </div><br>
-                <label for="LastName">Efternavn:</label><br>
-                <div class="forum-input round">
-                    <input type="text" @bind="LastName" id="LastName" name="LastName" @oninput="e => RemoveNumber(e, nameof(LastName))">
-                </div><br>
-                <label for="Address">Adresse:</label><br>
-                <div class="forum-input round">
-                    <input type="text" @bind="Address" id="Address" name="Address">
-                </div><br>
-                <label for="ZipCode">Postnummer:</label><br>
-                <div class="forum-input round">
-                    <input type="number" @bind="ZipCode" id="ZipCode" name="ZipCode" min="0">
-                </div><br>
-                <label for="PhoneNumber">Telefon nr.:</label><br>
-                <div class="forum-input round">
-                    <input type="number" @bind="PhoneNumber" id="PhoneNumber" name="PhoneNumber" min="0">
-                </div><br>
-                <label for="Email">Email:</label><br>
-                <div class="forum-input round">
-                    <input type="email" @bind="Email" id="Email" name="Email">
-                </div><br><br>
+                <div class="form-row">
+                    <div class="form-pair">
+                        <label for="FirstName">Fornavn</label>
+                        <div class="form-input round">
+                            <input placeholder="Fornavn" type="text" @bind="FirstName" id="FirstName" name="FirstName">
+                        </div>
+                    </div>
+                    <div class="form-pair">
+                        <label for="LastName">Efternavn</label>
+                        <div class="form-input round">
+                            <input placeholder="Efternavn" type="text" @bind="LastName" id="LastName" name="LastName">
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="form-row">
+                    <div class="form-pair">
+                        <label for="Address">Addresse</label>
+                        <div class="form-input round">
+                            <input placeholder="Addresse" type="text" @bind="Address" id="Address" name="Address">
+                        </div>
+                    </div>
+                    <div class="form-pair">
+                        <label for="ZipCode">Postnummer</label>
+                        <div class="form-input round">
+                            <input type="number" @bind="ZipCode" id="ZipCode" name="ZipCode" min="0">
+                        </div>
+                    </div>
+                </div>
+
+
+                <div class="form-pair">
+                    <label for="PhoneNumber">Telefon nr.</label>
+                    <div class="form-input round">
+                        <input type="number" @bind="PhoneNumber" id="PhoneNumber" name="PhoneNumber" min="0">
+                    </div>
+                </div>
+                <div class="form-pair">
+                    <label for="Email">Email</label>
+                    <div class="form-input round">
+                        <input placeholder="Email" type="email" @bind="Email" id="Email" name="Email">
+                    </div>
+                </div>
+
+                <br>
                 <p class="validation-error">@ValidationMessage</p>
                 <!-- disable submit until "FormIsValid" is true -->
-                <div class="primary-button round" @onclick="ValidateForm" disabled="@(!FormIsValid)">Bekræft</div>
+                <div class="form-row">
+                	<div class="secondary-button round" @onclick="GoBack">Tilbage</div>
+                	<div class="primary-button round" @onclick="ValidateForm">Bekræft</div>
+                </div>
             </form>
         </div>
+        <OrderSummary ShowCheckout="false" />
     </div>
 </div>
 
 @code {
-
     public string FirstName { get; set; }
     public string LastName { get; set; }
     public string Address { get; set; }
@@ -53,6 +77,10 @@
     
     public bool FormIsValid = false;
     public string ValidationMessage = "";
+
+    private void GoBack() {
+        NavigationManager.NavigateTo("/basket");
+    }
 
     protected override void OnInitialized() {
         FirstName = FormService.FirstName;
@@ -82,17 +110,4 @@
             Console.WriteLine(e.Message);
         }
     }
-
-    private void RemoveNumber(ChangeEventArgs e, string inputName) {
-        // Get the current input value
-        var inputValue = e.Value?.ToString();
-
-        // Remove numeric characters
-        var cleanedValue = new string(inputValue?.Where(char.IsLetter).ToArray());
-
-        // Update the corresponding property with the cleaned value
-        GetType().GetProperty(inputName)?.SetValue(this, cleanedValue);
-    }
-}
-
 }

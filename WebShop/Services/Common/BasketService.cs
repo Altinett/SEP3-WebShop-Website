@@ -11,11 +11,15 @@ public class BasketService : Subject, IBasketService {
     }
 
     public bool InBasketStock(int id) {
-        foreach (var product in BasketItems.Values) {
-            if (product.Id != id) continue;
-            return product.amount > 0;
-        }
-        return true;
+        BasketItems.TryGetValue(id, out Product product);
+        if (product == null) return true;
+
+        return product.amount > 0;
+    }
+
+    public bool InBasket(int id) {
+        BasketItems.TryGetValue(id, out Product product);
+        return product != null;
     }
     
     public int? GetProductAmount(int id) {
@@ -30,10 +34,9 @@ public class BasketService : Subject, IBasketService {
         return BasketItems.Values.Sum(product => product.quantity);
     }
 
-    public async Task<bool> AddItem(int id)
-    {
+    public bool AddItem(int id) {
         if (!InBasketStock(id)) return false;
-        foreach (var product in ProductService.GetProducts()) {
+        foreach (Product product in ProductService.GetProducts()) {
             if (product.Id != id) continue;
             BasketItems.TryAdd(product.Id, product);
             //product.amount -= 1;
@@ -42,14 +45,14 @@ public class BasketService : Subject, IBasketService {
             basketProduct.quantity += 1;
             basketProduct.amount -= 1;
 
-            emit("Changed");
+            emit("BasketChanged");
+            emit("BasketProductAdded", id);
             return basketProduct.amount > 0; // No need to continue iterating once a match is found
         }
         return false;
     }
 
-    public void RemoveItem(int id)
-    {
+    public void RemoveItem(int id) {
         Product product = BasketItems[id];
         if (product.quantity <= 0) return;
         product.amount++;
@@ -58,16 +61,21 @@ public class BasketService : Subject, IBasketService {
         {
             BasketItems.Remove(id);
         }
-        emit("Changed");
+        emit("BasketChanged");
+        emit("BasketProductRemoved", id);
     }
 
     public void Clear() {
         BasketItems.Clear();
-        emit("Changed");
+        emit("BasketChanged");
     }
     
     public Dictionary<int, Product> GetBasketItems() {
         return BasketItems;
+    }
+
+    public Product GetBasketItem(int id) {
+        return BasketItems[id];
     }
 
     public double GetBasketTotal()
@@ -80,7 +88,6 @@ public class BasketService : Subject, IBasketService {
     }
 
     public void OnChanged(Action<Object[]> callback) {
-        on("Changed", callback);
+        on("BasketChanged", callback);
     }
-    
 }

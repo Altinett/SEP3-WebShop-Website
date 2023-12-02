@@ -35,29 +35,21 @@ body, html {
 #app:has(> .accessibility) {
     font-size: 1.2rem;
     font-weight: bold;
-    background: #444;
+    background: #223;
     --bg: #00001a !important;
     --color: #fff !important;
     --border-color: rgba(255, 255, 255, .15) !important;
     color: var(--color);
 }
 #app:has(> .accessibility) .grid-item {
-    /*
-    background: #00001a !important;
-    color: #fff !important;
-    
-     */
     font-size: 1.4rem;
 }
-
 #app:has(> .accessibility) .grid-item .title{
     font-size: 1.5rem;
 }
-/*
-input {
-    background: transparent !important;
-    border: 1px solid var(--dark-6) !important;
-}*/
+#app:has(> .accessibility) input[type="date"]::-webkit-calendar-picker-indicator {
+    filter: invert(1);
+}
 
 
 .primary-button,
@@ -136,7 +128,7 @@ input {
 .tertiary-icon-button {
     color: var(--accent);
 }
-:where(.primary-icon-button, .secondary-icon-button, .tertiary-icon-button) svg {
+:where(.primary-icon-button, .secondary-icon-button, .tertiary-icon-button) :where(svg, img) {
     height: 1rem;
     aspect-ratio: 1;
 }

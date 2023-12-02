@@ -7,53 +7,53 @@
 @inject IFormService FormService
 
 
-<div class="forum-container">
-	<div class="forum-content">
-		 <div class="forum-group">
+<div class="form-container">
+	<div class="form-content">
+		<div class="form-group">
 			<form @onsubmit="ValidateForm">
-				<label for="Kortnummer">Kortnummer:</label><br>
-				<div class="forum-input round">
-					<input type="text" @bind="CardNumber" id="CardNumber" name="CardNumber" min="0">
-				</div><br>
-				<label for="ExpirationDate">Udløbsdato:</label><br>
-				<div class="forum-input round">
-					<input type="date" @bind="ExpirationDate" id="ExpirationDate" name="ExpirationDate" min="<?php echo date('Y-m-d');?>">
-				</div><br>
-				<label for="CVC">CVC:</label><br>
-				<div class="forum-input round">
-					<input type="number" @bind="cvc" id="CVC" name="CVC" min="0">
-				</div><br><br>
+				<div class="form-pair">
+					<label for="Kortnummer">Kortnummer</label>
+	                <div class="form-input round">
+	                    <input type="text" @bind="CardNumber" id="CardNumber" name="CardNumber" min="0">
+	                </div>
+				</div>
+				<div class="form-pair">
+					<label for="ExpirationDate">Udløbsdato</label>
+                    <div class="form-input round">
+                    	<input type="date" @bind="ExpirationDate" id="ExpirationDate" name="ExpirationDate" min="<?php echo date('Y-m-d');?>">
+                    </div>
+				</div>
+				<div class="form-pair">
+					<label for="CVC">CVC</label>
+	                <div class="form-input round">
+	                    <input type="number" @bind="cvc" id="CVC" name="CVC" min="0">
+	                </div>
+				</div>
+				<br>
 				<p class="validation-error">@ValidationMessage</p>
-				<div class="forum-content">
-					<div class="secondary-button round forum-inline" @onclick="Previous">Tilbage</div>
-					<div class="primary-button round forum-inline" @onclick="ValidateForm">Bekræft</div>
+				<div class="form-row">
+					<div class="secondary-button round" @onclick="GoBack">Tilbage</div>
+					<div class="primary-button round" @onclick="ValidateForm">Bekræft</div>
 				</div>
 			</form>
 		</div>
+		<OrderSummary ShowCheckout="false" />
 	</div>
 </div>
 
 
 @code {
 	public string CardNumber { get; set; }
-	public DateTime ExpirationDate { get; set; }
+	public DateTime ExpirationDate { get; set; } = DateTime.Today;
 	public int cvc { get; set; }
 	
-	private DateTime selectedDate;
 	private string ValidationMessage = "";
 	
-	protected override void OnInitialized()
-	{
-		ExpirationDate = DateTime.Today;
-		base.OnInitialized();
-	}
 
-	private async void ValidateForm()
-	{
-	// Update the status message based on validation
+	private async void ValidateForm() {
 		ValidationMessage = "";
 		try {
-			FormService.CardNumber = ValidationService.ValidateCreditCard(CardNumber);
+			FormService.CardNumber = ValidationService.ValidateCardNumber(CardNumber);
 			FormService.ExpirationDate = ValidationService.ValidateExpirationDate(ExpirationDate);
 			FormService.CVC = ValidationService.ValidateCvc(cvc);
 			await FormService.SendForm();
@@ -64,10 +64,9 @@
 		} catch (Exception e) {
 			Console.WriteLine(e.Message);
 		}
-
 	}
 
-	private void Previous() {
+	private void GoBack() {
 		NavigationManager.NavigateTo("/form");
 	}
 }

@@ -1,5 +1,5 @@
 
-.brp-container {
+.br-container {
     display: flex;
     align-items: center;
     flex-direction: column;
@@ -9,7 +9,7 @@
     overflow-y: auto;
 }
 
-.brp-content {
+.br-content {
     display: flex;
     align-items: center;
     justify-content: center;

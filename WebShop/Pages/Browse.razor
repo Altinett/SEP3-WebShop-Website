@@ -5,8 +5,8 @@
 @inject ISearchService SearchService
 
 
-<div class="brp-container">
-    <div class="brp-content">
+<div class="br-container">
+    <div class="br-content">
         <Grid>
             @foreach (Product product in Products)
             {
@@ -27,7 +27,6 @@
 
 
 @code {
-    //Todo Hover a card it gets big (maybe as an overlay)
     [Parameter] public string CategoryId { get; set; } = "";
     private List<Product> Products = new();
 

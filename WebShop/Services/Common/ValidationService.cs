@@ -51,12 +51,12 @@ public class ValidationService : IValidationService {
         return email;
     }
 
-    public string ValidateCreditCard(string creditCard) {
+    public string ValidateCardNumber(string creditCard) {
         if (string.IsNullOrEmpty(creditCard)) {
-            Error("Kreditkort må ikke være tom");
+            Error("Kortnummer må ikke være tom");
         }
         if (!_creditCardRegex.IsMatch(creditCard)) {
-            Error("Kreditkort skal være mellem 8 og 21 cifre");
+            Error("Kortnummer skal være mellem 8 og 21 cifre");
         }
         return creditCard;
     }
@@ -78,10 +78,7 @@ public class ValidationService : IValidationService {
     private long ConvertToUnixTimestamp(DateTime date) {
         return ((DateTimeOffset)date).ToUnixTimeMilliseconds();
     }
-
     private void Error(string message) {
         throw new InvalidInputException(message);
     }
-
-
 }

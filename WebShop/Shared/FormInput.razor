@@ -1,0 +1,32 @@
+<div class="form-pair">
+    <label for="@Name">@Text:</label>
+    <div class="form-input round">
+        <input type="@Type" @bind="Value" id="@Name" name="@Name" @oninput="HandleInput">
+    </div>
+</div>
+
+
+@typeparam T
+@code {
+
+    [Parameter]
+    public T Value {
+        get => _value;
+        set {
+            _value = value;
+            ValueChanged.InvokeAsync(value);
+        }
+    }
+    [Parameter] public EventCallback<T> ValueChanged { get; set; }
+    private T _value;
+    
+    [Parameter] public string Name { get; set; }
+    [Parameter] public string Text { get; set; }
+    [Parameter] public string? Type { get; set; } = "text";
+    [Parameter] public Action<T>? OnInput { get; set; }
+
+    private void HandleInput() {
+        OnInput?.Invoke(Value);
+    }
+    
+}

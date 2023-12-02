@@ -6,7 +6,7 @@ public interface IValidationService {
 	int ValidateZipCode(int zipcode);
 	int ValidatePhoneNumber(int phoneNumber);
 	string ValidateEmail(string email);
-	string ValidateCreditCard(string creditCard);
+	string ValidateCardNumber(string creditCard);
 	int ValidateCvc(int cvc);
 	DateTime ValidateExpirationDate(DateTime expirationDate);
 }

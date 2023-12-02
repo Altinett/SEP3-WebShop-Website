@@ -30,7 +30,7 @@
     align-items: center;
 }
 
-a {
+.topnav a {
     text-decoration: none;
     color: white;
     white-space: pre;
@@ -56,76 +56,14 @@ a {
     height: 100%;
 }
 
-.BasketNumber{
+.basket-number {
     background-color: var(--white);
     color: var(--black);
     padding: 5px;
     margin-right: 5px;
-}
-/*
-.navButtonPadding{
-    padding: .7rem 1rem;
-    
+    font-size: .8rem;
 }
 
-.navButton{
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    user-select: none;
-    cursor: pointer;
-    transition: all .1s ease-in-out;
-    border: 1px solid transparent;
-    
-    background: var(--accent);
-    color: var(--white);
-    font-weight: bold;
-    border-color: var(--accent);
-}
-
-:where(.navButton):has(svg) {
-    gap: .35rem;
-}
-
-:where(.navButton) svg {
-    height: 1.2rem;
-    aspect-ratio: 1;
-}
-:where(.navButton) path {
-    stroke-width: 50;
-}
-
-.navButton:hover{
-    box-shadow: 0 0 5px var(--accent);
-}
-.navButton:hover:active{
-    box-shadow: 0 0 15px var(--accent);
-}
-
-.navButton:hover{
-    box-shadow: 0 0 5px var(--accent);
-}
-.navButton:hover:active{
-    box-shadow: 0 0 15px var(--accent);
-}
-
-.nav-icon-button {
-    padding: .5rem;
-}
-.nav-icon-button {
-    border-color: var(--accent);
-    background: var(--accent);
-    color: var(--white);
-}
-:where(.nav-icon-button) svg {
-    height: 1rem;
-    aspect-ratio: 1;
-}
-:where(.nav-icon-button) path {
-    stroke-width: 50;
-}
-
-*/
 @media print {
     .topnav {
         display: none;
@@ -134,8 +72,7 @@ a {
 
 a {
     cursor: pointer;
-    text-decoration: none; /* Remove underline by default */
-    color: white; /* Set the default text color */
+    text-decoration: none;
 }
 
 /* Add styling when hovering over the link */

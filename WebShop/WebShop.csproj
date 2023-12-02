@@ -33,8 +33,14 @@
 
 
 
-    </ItemGroup>
+    
 
+
+
+    </ItemGroup>
+    <ItemGroup>
+        <Folder Include="Shared\Components\" />
+    </ItemGroup>
 
 
 

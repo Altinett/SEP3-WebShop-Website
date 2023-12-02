@@ -4,15 +4,13 @@
 
 /* COMPONENTS */
 @import "components/grid.css";
-@import "components/basket.css";
 @import "components/navbar.css";
-@import "components/categoryBox.css";
 
 /* PAGES */
 @import "pages/home.css";
 @import "pages/receipt.css";
 @import "pages/basket.css";
-@import "pages/forum.css";
+@import "pages/form.css";
 @import "pages/browse.css";
 @import "pages/mainlayout.css";
 @import "pages/admin.css";
