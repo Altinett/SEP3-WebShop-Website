@@ -3,6 +3,9 @@
 @using BlazorWasm.Services.Http
 @inject NavigationManager Nvm
 @using BlazorWasm.Services.Http
+@using BlazorWasm.Services
+@inject IBasketService BasketService
+@inject IProductService ProductService
 
 <div class="grid-container">
 	
@@ -77,15 +80,12 @@
 	public string PrettyPrice() {
 		return "";
 	}
-	
-	private BasketService _basketService = BasketService.getInstance();
-
 	protected override void OnInitialized()
 	{
 		product = (Product)context;
 		int? amountcheck;
-		InStock = _basketService.InBasketStock(Id);
-		amountcheck = _basketService.GetProductAmount(Id);
+		InStock = BasketService.InBasketStock(Id);
+		amountcheck = BasketService.GetProductAmount(Id);
 		if (amountcheck != null)
 			amount = amountcheck;
 		InStock = amount > 0;
@@ -98,7 +98,7 @@
 		isButtonClick = true;
 		if (InStock)
 		{
-			InStock = await _basketService.AddItem(Id);
+			InStock = await BasketService.AddItem(Id);
 			amount -= 1;
 			//product.amount--;
 			StateHasChanged();
@@ -108,7 +108,7 @@
 	private void RemoveFromBasket()
 	{
 		isButtonClick = true;
-		BasketService.getInstance().RemoveItem(Id);
+		BasketService.RemoveItem(Id);
 	}
 
 	public void GoToDetails(int Id)
@@ -116,7 +116,7 @@
 		if (!isButtonClick)
 		{
 			product.amount = amount;
-			ProductService.getInstance().SetLastReviewedProduct(product);
+			ProductService.LastReviewedProduct = product;
 			Nvm.NavigateTo("/product");
 		}
 		else

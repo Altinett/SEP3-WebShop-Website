@@ -5,6 +5,6 @@ namespace BlazorWasm.Services;
 
 public interface ICategoryService
 {
-    public List<CategoryDto> GetCategories();
-    public Task<List<CategoryDto>> UpdateCategory();
+    List<CategoryDto> GetCategories();
+    Task<List<CategoryDto>> UpdateCategory();
 }

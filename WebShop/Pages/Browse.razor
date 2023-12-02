@@ -1,0 +1,61 @@
+@page "/browse/{CategoryId?}"
+@page "/browse"
+@using global::Shared
+@using BlazorWasm.Services
+@inject ISearchService SearchService
+
+
+<div class="brp-container">
+    <div class="brp-content">
+        <Grid>
+            @foreach (Product product in Products)
+            {
+                <GridItem
+                    context=@((object)product)
+                    Id=@product.Id
+                    Img=@product.Image
+                    name=@product.name
+                    amount=@product.amount
+                    description=@product.description
+                    price=@product.Price
+                    InStock=@product.InStock/>
+            }
+        </Grid>
+    </div>
+</div>
+
+
+
+@code {
+    //Todo Hover a card it gets big (maybe as an overlay)
+    [Parameter] public string CategoryId { get; set; } = "";
+    private List<Product> Products = new();
+
+    protected override async Task OnInitializedAsync() {
+        try {
+            UpdateProducts();
+        } catch (Exception e) {
+            Console.WriteLine(e);
+        }
+    }
+
+    private async Task UpdateProducts() {
+        List<int> categories = new();
+        if (!string.IsNullOrEmpty(CategoryId)) {
+            int category = int.Parse(CategoryId);
+            if (category != 0) {
+                categories.Add(category);
+                SearchService.Categories = categories;
+            }
+        } else {
+            SearchService.Categories = categories;
+        }
+        
+        if (Products.Count == 0) {
+            Products = await SearchService.Search();
+        } else {
+            Products = SearchService.Products;
+        }
+        StateHasChanged();
+    }
+}

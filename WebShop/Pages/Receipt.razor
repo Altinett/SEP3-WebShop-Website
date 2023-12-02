@@ -1,8 +1,9 @@
-@page "/Kvittering"
+@page "/Receipt"
 @using global::Shared
+@using BlazorWasm.Services
 @inject IJSRuntime JSRuntime
-@using System.ComponentModel.Design.Serialization
-@using System.Reflection.Emit
+@inject IBasketService BasketService
+@inject IFormService FormService
 
 <div id="invoice-POS">
     
@@ -31,7 +32,7 @@
 	       
 		    <div class="reBox">
 			    <h2>Betalings Information</h2> 
-			    <p>Ordernr. : @FormService.getInstance().orderId</p>
+			    <p>Ordernr. : @FormService.OrderId</p>
 			    <p>Betalingsdato : DD/MM/YY</p>
 		    </div>
 	    </div>
@@ -48,7 +49,7 @@
 				    </div>
 			    </div>
 			    <hr>
-			    @foreach (Product Product in _basketService.GetBasketItems().Values) {
+			    @foreach (Product Product in BasketService.GetBasketItems().Values) {
 					<div class="reInline">
 					    <div class="reProducts">
 						    <p>@(Product.name ?? "N/A")</p>
@@ -127,18 +128,17 @@
 	[Parameter] public string Email { get; set; } 
 	 
 	private double TotalPrice { get; set; }
-	private BasketService _basketService = BasketService.getInstance();
-	private FormService _formService = FormService.getInstance();
+	
 	protected override Task OnInitializedAsync()
 	{
-		FirstName = _formService.FirstName;
-		LastName = _formService.LastName;
-		Address = _formService.Address;
-		ZipCode = _formService.ZipCode;
-		PhoneNumber = _formService.PhoneNumber;
-		Email = _formService.Email;
+		FirstName = FormService.FirstName;
+		LastName = FormService.LastName;
+		Address = FormService.Address;
+		ZipCode = FormService.ZipCode;
+		PhoneNumber = FormService.PhoneNumber;
+		Email = FormService.Email;
 		
-		TotalPrice = _basketService.getBasketTotal();
+		TotalPrice = BasketService.GetBasketTotal();
 		StateHasChanged();
 		
 		return base.OnInitializedAsync();

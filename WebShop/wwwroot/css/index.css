@@ -9,14 +9,14 @@
 @import "components/categoryBox.css";
 
 /* PAGES */
-@import "pages/homepage.css";
+@import "pages/home.css";
 @import "pages/receipt.css";
-@import "pages/basketPage.css";
+@import "pages/basket.css";
 @import "pages/forum.css";
-@import "pages/browsePage.css";
-@import "pages/mainlayoutPage.css";
+@import "pages/browse.css";
+@import "pages/mainlayout.css";
 @import "pages/admin.css";
-@import "pages/contactPage.css";
-@import "pages/ProductDetails.css";
+@import "pages/contact.css";
+@import "pages/productdetails.css";
 
 /* TEST */

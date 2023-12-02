@@ -11,15 +11,15 @@
             <div class="card">
                 <h3>Please login</h3>
                 <div class="field">
-                    <input placeholder="Username" type="text" @bind="userName"/>
+                    <input placeholder="Username" type="text" @bind="Username"/>
                 </div>
                 <div class="field">
-                    <input placeholder="Password" type="password" @bind="password"/>
+                    <input placeholder="Password" type="password" @bind="Password"/>
                 </div>
-                @if (!string.IsNullOrEmpty(errorLabel)) {
+                @if (!string.IsNullOrEmpty(ErrorLabel)) {
                 <div class="field">
                     <label style="color: red">
-                        @errorLabel
+                        @ErrorLabel
                     </label>
                 </div>
                 }
@@ -38,22 +38,18 @@
 </AuthorizeView>
 
 @code {
-    private string userName;
-    private string password;
-    private string errorLabel;
+    private string Username;
+    private string Password;
+    private string ErrorLabel;
 
-    private async Task LoginAsync()
-    {
-        errorLabel = "";
-        try
-        {
-            await authService.LoginAsync(userName, password);
+    private async Task LoginAsync() {
+        ErrorLabel = "";
+        try {
+            await authService.LoginAsync(Username, Password);
             navMgr.NavigateTo("/admin");
-        }
-        catch (Exception e)
-        {
+        } catch (Exception e) {
             Console.WriteLine(e);
-            errorLabel = $"Error: {e.Message}";
+            ErrorLabel = $"Error: {e.Message}";
         }
     }
 }

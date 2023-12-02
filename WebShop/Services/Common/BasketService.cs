@@ -1,28 +1,14 @@
-using System.Runtime.InteropServices;
 using BlazorWasm.Services;
-using BlazorWasm.Services.Http;
 using Shared;
 namespace WebShop.Pages;
 
-public class BasketService : Subject
-{
+public class BasketService : Subject, IBasketService {
     private static Dictionary<int, Product> BasketItems = new();
 
-    private BasketService(): base()
-    {
-        
+    private readonly IProductService ProductService;
+    public BasketService(IProductService productService) {
+        ProductService = productService;
     }
-
-    private static BasketService instance;
-    public static BasketService getInstance() {
-        if (instance == null) {
-            instance = new BasketService();
-        }
-
-        return instance;
-    }
-
-    private IProductService _productService = ProductService.getInstance();
 
     public bool InBasketStock(int id) {
         foreach (var product in BasketItems.Values) {
@@ -47,7 +33,7 @@ public class BasketService : Subject
     public async Task<bool> AddItem(int id)
     {
         if (!InBasketStock(id)) return false;
-        foreach (var product in _productService.GetProducts()) {
+        foreach (var product in ProductService.GetProducts()) {
             if (product.Id != id) continue;
             BasketItems.TryAdd(product.Id, product);
             //product.amount -= 1;
@@ -75,8 +61,7 @@ public class BasketService : Subject
         emit("Changed");
     }
 
-    public void RemoveAll()
-    {
+    public void Clear() {
         BasketItems.Clear();
         emit("Changed");
     }
@@ -85,13 +70,17 @@ public class BasketService : Subject
         return BasketItems;
     }
 
-    public double getBasketTotal()
+    public double GetBasketTotal()
     {
         double totalPrice = 0;
         foreach (Product product in BasketItems.Values) {
             totalPrice += product.Price * product.quantity;
         }
         return Math.Round(totalPrice,2);
+    }
+
+    public void OnChanged(Action<Object[]> callback) {
+        on("Changed", callback);
     }
     
 }

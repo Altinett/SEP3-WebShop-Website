@@ -10,17 +10,9 @@ public class ProductService : IProductService
 {
     private readonly HttpClient client = new ();
     
-    private static ProductService instance;
-    private static List<Product> products;
-    
-    public static ProductService getInstance()
-    {
-        if (instance == null)
-        {
-            instance = new ProductService();
-        }
-        return instance;
-    }
+    public List<Product> Products { get; set; }
+    public Product LastReviewedProduct { get; set; }
+
 
     public async Task CreateProduct(string name, string Description, List<int> category_ids, double Price, int Amount, IBrowserFile image)
     {
@@ -100,7 +92,7 @@ public class ProductService : IProductService
         };
         
         string postAsJson = JsonConvert.SerializeObject(productEditingDto);
-        StringContent content = new StringContent(postAsJson, Encoding.UTF8, "application/json");
+        StringContent content = new(postAsJson, Encoding.UTF8, "application/json");
         Console.WriteLine(postAsJson);
         HttpResponseMessage response = await client.PostAsync("http://localhost:8080/products/edit", content);
         
@@ -118,22 +110,16 @@ public class ProductService : IProductService
     {
         HttpResponseMessage response = await client.GetAsync("http://localhost:8080/products");
         string responseContent = await response.Content.ReadAsStringAsync();
-        products = JsonConvert.DeserializeObject<List<Product>>(responseContent);
-        return products;
+        Products = JsonConvert.DeserializeObject<List<Product>>(responseContent);
+        return Products;
         if (!response.IsSuccessStatusCode)
         {
             throw new Exception(responseContent);
         }
     }
 
-    public List<Product> GetProducts()
-    {
-        return products;
-    }
-    
-    public void SetProducts(List<Product> products)
-    {
-        ProductService.products = products;
+    public List<Product> GetProducts() {
+        return Products;
     }
     
     public async Task<List<Product>> GetProductsByOrderId(string id)
@@ -162,17 +148,5 @@ public class ProductService : IProductService
         Product? product = JsonConvert.DeserializeObject<Product>(responseContent);
         Console.WriteLine("Product: " + product);
         return product;
-    }
-
-    public Product LastReviewedProduct;
-
-    public void SetLastReviewedProduct(Product product)
-    {
-        LastReviewedProduct = product;
-    }
-
-    public Product GetLastReviewedProduct()
-    {
-        return LastReviewedProduct;
     }
 }

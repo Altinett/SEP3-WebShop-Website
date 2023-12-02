@@ -1,63 +1,60 @@
 @page "/product"
 @using global::Shared
 @using BlazorWasm.Services.Http
-@inject NavigationManager Nvm
+@using BlazorWasm.Services
+@inject NavigationManager NavigationManager
+@inject IBasketService BasketService
+@inject IProductService ProductService
 
 
 <!--<h3>ProductDetails</h3>-->
-@if (product != null)
-{
+@if (product != null) {
     <div class="pdSuperDiv">
-                <div class="secondary-button round pdButton" onclick="history.back()">
-                    <Icon Name="return"/>
-                    <!--
-                    <svg xmlns="http://www.w3.org/2000/svg" class="ionicon" viewBox="0 0 512 512"><path d="M68.4 192A20.38 20.38 0 0048 212.2a17.87 17.87 0 00.8 5.5L100.5 400a40.46 40.46 0 0039.1 29.5h232.8a40.88 40.88 0 0039.3-29.5l51.7-182.3.6-5.5a20.38 20.38 0 00-20.4-20.2H68.4zm193.32 160.07A42.07 42.07 0 11304 310a42.27 42.27 0 01-42.28 42.07z" fill="none" stroke="currentColor" stroke-linejoin="round" stroke-width="32"/><path fill="none" stroke="currentColor" stroke-linejoin="round" stroke-width="32" d="M160 192l96-128 96 128"/></svg>
-                    -->
-                    <div>Gå tilbage</div>
-                </div>
-<div>
-    <h1>@product.name</h1>
-    <div class="pdPurpleLine"></div>
-    <div class="reInline pdBackDiv">
+        <div class="secondary-button round pdButton" onclick="history.back()">
+            <Icon Name="return"/>
+            <div>Gå tilbage</div>
+        </div>
         <div>
-            <div>
-                <img class="pdImage" src="data:image/png;base64, @product.Image"/>
+            <h1>@product.name</h1>
+            <div class="pdPurpleLine"></div>
+            <div class="reInline pdBackDiv">
+                <div>
+                    <div>
+                        <img class="pdImage" src="data:image/png;base64, @product.Image"/>
+                    </div>
+                </div>
+                <div class="pdDivSide">
+                    <div class="pdStockText">
+                        @if (product.amount <= 20) {
+                            <p>@product.amount på lager</p>
+                        }
+                        else {
+                            <p>20+ på lager</p>
+                        }
+                    </div>
+                    <div class="price">
+                        @product.Price DKK
+                    </div>
+                    <div class="primary-button round pdButton pdButtonBuy" @onclick="AddToBasket">
+                        <Icon Name="basket"/>
+                        <!--
+                        <svg xmlns="http://www.w3.org/2000/svg" class="ionicon" viewBox="0 0 512 512"><path d="M68.4 192A20.38 20.38 0 0048 212.2a17.87 17.87 0 00.8 5.5L100.5 400a40.46 40.46 0 0039.1 29.5h232.8a40.88 40.88 0 0039.3-29.5l51.7-182.3.6-5.5a20.38 20.38 0 00-20.4-20.2H68.4zm193.32 160.07A42.07 42.07 0 11304 310a42.27 42.27 0 01-42.28 42.07z" fill="none" stroke="currentColor" stroke-linejoin="round" stroke-width="32"/><path fill="none" stroke="currentColor" stroke-linejoin="round" stroke-width="32" d="M160 192l96-128 96 128"/></svg>
+                        -->
+                        <div>Læg i kurv</div>
+                    </div>
+                </div>
             </div>
         </div>
-        <div class="pdDivSide">
-            <div class="pdStockText">
-                			@if (product.amount <= 20)
-                			{
-			                    <p>@product.amount på lager</p>
-                			}
-                			else
-                			{
-                				<p>20+ på lager</p>
-                			}
-            </div>
-            <div class="price">
-                @product.Price DKK
-            </div>
-            <div class="primary-button round pdButton pdButtonBuy" @onclick="AddToBasket">
-                    <Icon Name="basket"/>
-                <!--
-                <svg xmlns="http://www.w3.org/2000/svg" class="ionicon" viewBox="0 0 512 512"><path d="M68.4 192A20.38 20.38 0 0048 212.2a17.87 17.87 0 00.8 5.5L100.5 400a40.46 40.46 0 0039.1 29.5h232.8a40.88 40.88 0 0039.3-29.5l51.7-182.3.6-5.5a20.38 20.38 0 00-20.4-20.2H68.4zm193.32 160.07A42.07 42.07 0 11304 310a42.27 42.27 0 01-42.28 42.07z" fill="none" stroke="currentColor" stroke-linejoin="round" stroke-width="32"/><path fill="none" stroke="currentColor" stroke-linejoin="round" stroke-width="32" d="M160 192l96-128 96 128"/></svg>
-                -->
-                <div>Læg i kurv</div>
-            </div>
-        </div>
-    </div>
-</div>
         <div class="pdDescription">
             <h2>Produkt Beskrivelse</h2>
             <p> @product.description</p>
         </div>
     
-        </div>
-    }
+    </div>
+}
 else
 {
- Nvm.NavigateTo("/"); //TODO or we could make a 404 page???
+    NavigationManager.NavigateTo("/"); //TODO or we could make a 404 page???
 }
 
 
@@ -79,16 +76,14 @@ else
     [Parameter] public string description { get; set; }
     */
     private List<Product> products = new();
-    private ProductService productService = ProductService.getInstance();
-    private BasketService _basketService = BasketService.getInstance();
 
     protected override async Task OnInitializedAsync()
     {
         //product = productService.GetProductById(int.Parse(productId);
-        product = productService.GetLastReviewedProduct();
+        product = ProductService.LastReviewedProduct;
         
         //Changed it because of it saying there could be a null point exception
-        int? amount =  _basketService.GetProductAmount(product.Id);
+        int? amount =  BasketService.GetProductAmount(product.Id);
         if (amount != null)
         product.amount = amount;
         //product = await productService.GetProductById(int.Parse(productId));
@@ -125,7 +120,7 @@ else
             int? amount = product.amount;
             Console.WriteLine("Inside before");
             Console.WriteLine(product.InStock);
-            product.InStock = await _basketService.AddItem(product.Id);
+            product.InStock = await BasketService.AddItem(product.Id);
             product.amount = amount == product.amount ? product.amount - 1 : product.amount;
             Console.WriteLine("Inside after");
             Console.WriteLine(product.InStock);

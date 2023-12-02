@@ -5,16 +5,14 @@
 
 <form class="emailform" @onsubmit="OpenDefaultEmailClient">
     <label>Emne:</label>
-    <input @bind="email.Subject" />
-    @if (subjectError)
-    {
+    <input @bind="Email.Subject" />
+    @if (subjectError) {
         <div class="error">Emnet kan ikke være tom</div>
     }
 
     <label>Besked:</label>
-    <textarea @bind="email.Body"></textarea>
-    @if (bodyError)
-    {
+    <textarea @bind="Email.Body"></textarea>
+    @if (bodyError) {
         <div class="error">Beskeden kan ikke være tom</div>
     }
 
@@ -26,27 +24,24 @@
 </form>
 
 @code {
-    private EmailModel email = new EmailModel();
+    private EmailModel Email = new();
     private bool subjectError;
     private bool bodyError;
 
-    private void OpenDefaultEmailClient()
-    {
-        subjectError = string.IsNullOrWhiteSpace(email.Subject);
-        bodyError = string.IsNullOrWhiteSpace(email.Body);
+    private void OpenDefaultEmailClient() {
+        subjectError = string.IsNullOrWhiteSpace(Email.Subject);
+        bodyError = string.IsNullOrWhiteSpace(Email.Body);
 
-        if (subjectError || bodyError)
-        {
+        if (subjectError || bodyError) {
             return;
         }
 
-        var mailtoLink = $"mailto:{email.To}?subject={Uri.EscapeDataString(email.Subject)}&body={Uri.EscapeDataString(email.Body)}";
+        var mailtoLink = $"mailto:{Email.To}?subject={Uri.EscapeDataString(Email.Subject)}&body={Uri.EscapeDataString(Email.Body)}";
         JSRuntime.InvokeVoidAsync("open", mailtoLink);
     }
 
-    private class EmailModel
-    {
-        public string To { get; } = "shadow@share.inc";
+    private class EmailModel {
+        public string To = "shadow@share.inc";
         public string Subject { get; set; }
         public string Body { get; set; }
     }

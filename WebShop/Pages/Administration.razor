@@ -5,8 +5,9 @@
 @using WebShop.Shared.DTOs
 @using WebShop.Services.HTTP
 @inject IAuthService authService
-@inject NavigationManager navMgr
+@inject NavigationManager NavigationManager
 @inject IProductService ProductService
+@inject ICategoryService CategoryService
 
 @layout EmptyLayout
 
@@ -116,7 +117,7 @@
     }
     else
     {
-        navMgr.NavigateTo("/login");
+        NavigationManager.NavigateTo("/login");
     }
 </div>
 
@@ -126,7 +127,6 @@
     public Task<AuthenticationState> AuthState { get; set; } = null!;
 
     private List<CategoryDto> categories = new();
-    private CategoryService _categoryService = CategoryService.getInstance();
     
     private string? firstname;
     private string? lastname;
@@ -153,12 +153,7 @@
         isLoggedIn = user.Identity != null;
         
         try {
-            if (_categoryService.GetCategories() == null){
-                categories = await _categoryService.UpdateCategory();
-            } else {
-                _categoryService.UpdateCategory();
-                categories = _categoryService.GetCategories();
-            }
+            categories = await CategoryService.UpdateCategory();
         } catch (Exception e) {
             Console.WriteLine(e);
         }
@@ -237,8 +232,7 @@
             throw new ArgumentException("Image is required.");
     }
 
-    private void ClearForm()
-    {
+    private void ClearForm() {
         Name = "";
         Description = "";
         Price = null;
@@ -247,63 +241,48 @@
     }
 
     
-    private async Task Remove()
-    {
+    private async Task Remove() {
         isValidProduct = false;
-        try
-        {
-            if (FjernId == null || FjernId == 0)
-            {
+        try {
+            if (FjernId == null || FjernId == 0) {
                 statusLabel = "Indsæt et gyldigt id";
                 return;
             }
 
             var product = await ProductService.GetProductById(FjernId);
 
-            if (product == null)
-            {
+            if (product == null) {
                 statusLabel = "Produktet findes ikke";
-            }
-            else if (product.flagged)
-            {
+            } else if (product.flagged) {
                 statusLabel = "Produktet er allerede slettet";
-            }
-            else
-            {
+            } else {
                 await ProductService.RemoveProduct(FjernId);
                 statusLabel = "Produkt fjernet";
             }
             FjernId = null;
-        }
-        catch (Exception e)
-        {
+        } catch (Exception e) {
             Console.WriteLine(e);
             statusLabel = $"Error: {e.Message}";
-        }
-        finally
-        {
+        } finally {
             await InvokeAsync(StateHasChanged);
         }
     }
 
     private async void validProduct()
     {
-        if (Id <= 0)
-        {
+        if (Id <= 0) {
             statusLabel = "Indsæt et gyldigt id";
             isValidProduct = false;
             return;
         }
         Product product = await ProductService.GetProductById(Id);
 
-        if (product == null)
-        {
+        if (product == null) {
             statusLabel = "Produktet findes ikke";
             return;
         }
 
-        if (product.flagged)
-        {
+        if (product.flagged) {
             statusLabel = "Produktet er fjernet og kan derfor ikke ændres";
             return;
         }
@@ -317,18 +296,14 @@
         StateHasChanged();
     }
     
-    private async Task Edit()
-    {
-        try
-        {
-            if (string.IsNullOrWhiteSpace(Name) || string.IsNullOrWhiteSpace(Description))
-            {
+    private async Task Edit() {
+        try {
+            if (string.IsNullOrWhiteSpace(Name) || string.IsNullOrWhiteSpace(Description)) {
                 statusLabel = "Navnet og beskrivelsen kan ikke være tomme";
                 return;
             }
 
-            if (Price == null || Amount == null || Price <= 0 || Amount <= 0)
-            {
+            if (Price == null || Amount == null || Price <= 0 || Amount <= 0) {
                 statusLabel = "Prisen og mængden skal være større end eller lig med 0";
                 return;
             }
@@ -336,30 +311,22 @@
             await ProductService.EditProduct(Id, Name, Description, Price.Value, Amount.Value, Image, savedImage);
             isValidProduct = false;
             statusLabel = "Produkt ændret";
-        }
-        catch (Exception e)
-        {
-    // Log the exception or handle it appropriately
+        } catch (Exception e) {
             Console.WriteLine(e);
             statusLabel = $"Error: {e.Message}";
-        }
-        finally
-        {
-    // Update the UI asynchronously, regardless of success or failure
+        } finally {
             await InvokeAsync(StateHasChanged);
         }
     }
 
 
-    private async Task OrderDetail()
-    {
-        navMgr.NavigateTo($"/admin/{OrderId}");
+    private async Task OrderDetail() {
+        NavigationManager.NavigateTo($"/admin/{OrderId}");
     }
 
-    private async Task Logout()
-    {
+    private async Task Logout() {
         await authService.LogoutAsync();
-        navMgr.NavigateTo("/login");
+        NavigationManager.NavigateTo("/login");
     }
     //TODO muligt at ændre katagorier
 }

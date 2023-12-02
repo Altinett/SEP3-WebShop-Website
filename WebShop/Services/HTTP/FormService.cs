@@ -1,14 +1,14 @@
 using System.Runtime.InteropServices.JavaScript;
 using System.Text;
+using BlazorWasm.Services;
 using Newtonsoft.Json;
 using Shared;
 using WebShop.Shared.DTOs;
 
 namespace WebShop.Pages;
 
-public class FormService
+public class FormService : IFormService
 {
-    private static FormService instance;
 
     public string FirstName { get; set; }
     public string LastName { get; set; }
@@ -19,68 +19,30 @@ public class FormService
     public string CardNumber { get; set; }
     public DateTime ExpirationDate { get; set; }
     public int CVC { get; set; }
-    public int orderId { get; set; }
+    public int OrderId { get; set; }
     public int Total { get; set; }
-    
-    public static FormService getInstance()
-    {
-        if (instance == null)
-        {
-            instance = new FormService();
-        }
-        return instance;
-    }
-    
-    private FormService()
-    {
-        
-    }
 
-    private void getFormValues()
-    {
+    private void getFormValues() {
         
+    }
+    
+    private IBasketService BasketService;
+
+    public FormService(IBasketService basketService) {
+        BasketService = basketService;
     }
 
     private readonly HttpClient client = new ();
     
-    public async Task sendToLogic()
-    {
-        BasketService basketService = BasketService.getInstance();
+    public async Task SendForm() {
+        Dictionary<int, int> products = new();
 
-        List<int> ids = new List<int>();
-        Dictionary<int, int> productsDictionary = new Dictionary<int, int>();
-
-        foreach (var entry in basketService.GetBasketItems())
-        {
-            //ids.Add(entry.Value.Id);
-            productsDictionary.Add(entry.Key, entry.Value.quantity);
+        foreach (var entry in BasketService.GetBasketItems()) {
+            products.Add(entry.Key, entry.Value.quantity);
         }
-        /*
-        foreach (Product item in basketService.GetBasketItems())
-        {
-            ids.Add(item.Id);
 
-            //if (productsDictionary.ContainsKey(item.Id))
-            //{
-                // Key already exists, update the quantity
-              //  productsDictionary[item.Id] += item.quantity;
-            //}
-            //else
-            //{
-                // Key doesn't exist, add it to the dictionary
-                productsDictionary.Add(item.Id, item.quantity);
-           // }
-        }*/
-
-        Console.WriteLine("Before the PaymentDTO");
-        PaymentDto dto = new PaymentDto
-        {
-            //productIds = ids,
-            products = productsDictionary,
-            //products = new Dictionary<int, int> {
-                //{2, 4},
-                //{1, 2}
-            //},
+        PaymentDto paymentDto = new() {
+            products = products,
             firstname = FirstName,
             lastname = LastName,
             address = Address,
@@ -92,27 +54,23 @@ public class FormService
             cvc = CVC,
             total = Total
         };
-        Console.WriteLine("after The paymentDTO, aber before Json");
         
-        string postAsJson = JsonConvert.SerializeObject(dto);
-        StringContent content = new StringContent(postAsJson, Encoding.UTF8, "application/json");
-        Console.WriteLine(postAsJson);
+        // Convert DTO to JSON UTF8 string and post to ordering endpoint 
+        string postAsJson = JsonConvert.SerializeObject(paymentDto);
+        StringContent content = new(postAsJson, Encoding.UTF8, "application/json");
         HttpResponseMessage response = await client.PostAsync("http://localhost:8080/orders/order", content);
 
+        // Convert response to object
         string responseContent = await response.Content.ReadAsStringAsync();
-        Console.WriteLine("response:");
         dynamic data = JsonConvert.DeserializeObject(responseContent);
-        Console.WriteLine(data);
-        orderId = data.orderId;
+        OrderId = data.orderId;
         
-        
-        if (!response.IsSuccessStatusCode)
-        {
+        if (!response.IsSuccessStatusCode) {
             throw new Exception(responseContent);
         }
     }
 
-    public async Task<PaymentDto> GetFromLogic(string id)
+    public async Task<PaymentDto> GetOrder(string id)
     {
         HttpResponseMessage response = await client.GetAsync($"http://localhost:8080/orders/{id}");
         string responseContent = await response.Content.ReadAsStringAsync();

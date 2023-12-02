@@ -1,6 +1,8 @@
 @using global::Shared
 @using WebShop.Pages
-@inject NavigationManager Nvm
+@using BlazorWasm.Services
+@inject NavigationManager NavigationManager
+@inject IBasketService BasketService
 
 <div class="basket">
     <div class="top">
@@ -32,22 +34,18 @@
 
     private double totalPrice { get; set; }
     
-    public void UpdateBasket()
-    {
-        BasketService basketService = BasketService.getInstance();
-        _BasketItems = basketService.GetBasketItems();
-        totalPrice = basketService.getBasketTotal();
+    public void UpdateBasket() {
+        _BasketItems = BasketService.GetBasketItems();
+        totalPrice = BasketService.GetBasketTotal();
         StateHasChanged();
     }
 
-    public void OnClick()
-    {
-        Nvm.NavigateTo("/kurv");
+    public void OnClick() {
+        NavigationManager.NavigateTo("/basket");
     }
 
-    protected override Task OnInitializedAsync()
-    {
-        BasketService.getInstance().on("Changed", args => UpdateBasket());
+    protected override Task OnInitializedAsync() {
+        BasketService.OnChanged(_ => UpdateBasket());
         UpdateBasket();
         return base.OnInitializedAsync();
     }

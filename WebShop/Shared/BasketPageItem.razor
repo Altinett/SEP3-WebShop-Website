@@ -1,5 +1,7 @@
 @using global::Shared
 @using WebShop.Pages
+@using BlazorWasm.Services
+@inject IBasketService BasketService
 
 <div class="bp-card">
 	<img src="data:image/png;base64, @Img" />
@@ -8,12 +10,12 @@
 		@name
 	</div>
 	<div class="bp-product-control">
-		<div class="tertiary-icon-button" @onclick="Decrement">
+		<div class="tertiary-icon-button" @onclick="_ => BasketService.RemoveItem(Id)">
 			<svg xmlns="http://www.w3.org/2000/svg" class="ionicon" viewBox="0 0 512 512"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="32" d="M400 256H112"/></svg>
 		</div>
 		<input type="number" min="1" value="@quantity"  readonly="readonly">
 		
-		<div class="tertiary-icon-button" @onclick="Increment">
+		<div class="tertiary-icon-button" @onclick="_ => BasketService.AddItem(Id)">
 			<svg xmlns="http://www.w3.org/2000/svg" class="ionicon" viewBox="0 0 512 512"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="32" d="M256 112v288M400 256H112"/></svg>
 		</div>
 
@@ -25,41 +27,15 @@
 
 @code {
 //TODO fix all input fields when using availability
-	[Parameter]
-	public Action<int>? onQuantityChanged { get; set; }
+	[Parameter] public int Id { get; set; }
+	[Parameter] public string Img { get; set; }
+	[Parameter] public string name { get; set; }
+	[Parameter] public double price { get; set; }
+	[Parameter] public bool InStock { get; set; }
+	[Parameter] public int quantity { get; set; }
+	[Parameter] public string description { get; set; }
 	
-	[Parameter]
-	public int Id { get; set; }
-
-	[Parameter]
-	public string Img { get; set; }
-
-	[Parameter]
-	public string name { get; set; }
-
-	[Parameter]
-	public double price { get; set; }
-
-	[Parameter]
-	public bool InStock { get; set; }
-
-	[Parameter]
-	public bool? InBasket { get; set; }
-
-	[Parameter]
-	public int? amount { get; set; }
-
-	[Parameter]
-	public int quantity { get; set; }
-
-	[Parameter]
-	public string description { get; set; }
-
-	private void Decrement(){
-		BasketService.getInstance().RemoveItem(Id);
-	}
-
-	private void Increment(){
-		BasketService.getInstance().AddItem(Id);
-	}
+	[Parameter] public Action<int>? onQuantityChanged { get; set; }
+	[Parameter] public bool? InBasket { get; set; }
+	[Parameter] public int? amount { get; set; }
 }

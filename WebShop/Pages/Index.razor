@@ -1,13 +1,11 @@
 ﻿@page "/"
-@using WebShop.Services.HTTP
 @using WebShop.Shared.DTOs
-
+@using BlazorWasm.Services
+@inject ICategoryService CategoryService
 
 <div class="ho-container">
-	
 	<div class="ho-content">
 		<div class="ho-box-group">
-			
 			@foreach (var category in Categories) {
 				<CategoryBox
 					id=@category.id
@@ -21,8 +19,7 @@
 
 @code {
 	private List<CategoryDto> Categories = new();
-	private CategoryService _categoryService = CategoryService.getInstance();
-	private List<string> ImageUrls = new List<string> {
+	private List<string> ImageUrls = new() {
 		"https://images.unsplash.com/photo-1498049794561-7780e7231661?q=80&w=1770&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
 		"https://images.unsplash.com/photo-1489987707025-afc232f7ea0f?q=80&w=1770&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
 		"https://plus.unsplash.com/premium_photo-1676321046262-4978a752fb15?q=80&w=1771&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
@@ -31,33 +28,20 @@
 		"https://images.unsplash.com/photo-1601654253194-260e0b6984f9?q=80&w=1999&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
 	// Add more image URLs as needed
 	};
-	private int currentImageUrlIndex = 0;
 
-	protected override async Task OnInitializedAsync()
-	{
-		
+	protected override async Task OnInitializedAsync() {
 		try {
-			if (_categoryService.GetCategories() == null){
-				Categories = await _categoryService.UpdateCategory();
-			} else {
-				_categoryService.UpdateCategory();
-				Categories = _categoryService.GetCategories();
-			}
+			Categories = await CategoryService.UpdateCategory();
 			StateHasChanged();
 		} catch (Exception e) {
 			Console.WriteLine(e);
 		}
-		
 	}
 	
-	private string GetNextImageUrl()
-	{
-	// Get the next image URL in order
-		string imageUrl = ImageUrls[currentImageUrlIndex];
-        
-	// Increment the index or reset to 0 if it reaches the end
-		currentImageUrlIndex = (currentImageUrlIndex + 1) % ImageUrls.Count;
-        
+	private int ImageIndex;
+	private string GetNextImageUrl() {
+		string imageUrl = ImageUrls[ImageIndex];
+		ImageIndex = (ImageIndex + 1) % ImageUrls.Count;
 		return imageUrl;
 	}
 }

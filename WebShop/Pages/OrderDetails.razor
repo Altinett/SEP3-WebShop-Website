@@ -1,195 +1,184 @@
 @page "/Admin/{orderId}"
 @using System.Security.Claims
+@using BlazorWasm.Services
 @using BlazorWasm.Services.Http
 @using global::Shared
 @using WebShop.Shared.DTOs
-@inject NavigationManager navMgr
+@inject NavigationManager NavigationManager
+@inject IFormService FormService
+@inject IProductService ProductService
 
 @layout EmptyLayout
 
-@if (isLoggedIn)
-{
-	@if (isLoading)
-	{
+@if (isLoggedIn) {
+	@if (isLoading) {
 		<p>Loading...</p>
-	}
-	else
-	{
-	@if (dto != null)
-	{
-		 <div id="invoice-POS">
-            <center id="top">
-              <div class="logo"></div>
-              <div class="info"> 
-        	      <h2>Order nummer: @orderId</h2>
-              </div><!--End Info-->
-            </center><!--End InvoiceTop-->
-            
-            <div id="mid" class="rePadding">
-        	
-        	    <div class="info reInline">
-        		    <div class="reBox">	<h2>Kunde Information:</h2>
-        			    <p>
-        				    Navn : @dto.firstname @dto.lastname<br>
-        				    Adresse : @dto.address, @dto.postcode<br>
-        				    Email : @dto.email<br>
-        				    Telefon nr. : @dto.phonenumber<br>
-        			    </p>
-        		    </div>
-        	    </div>
-        	    
-        	    		    <div class="reBox">
-                			    <h2>Betalings Information:</h2> 
-                			    <p>
-                				    Ordernr. : @orderId<br>
-                				    Oprettet : @DateTimeOffset.FromUnixTimeMilliseconds((long)Convert.ToDouble(dto.date)).LocalDateTime.ToString("yyyy-MM-dd HH:mm:ss.fff") <br>
-                			    </p>
-                		    </div>
-                	    </div>
-                	    
-                	    <div>
-                		    <div>
-                			    <hr>
-                			    <div class="reHeader">
-                				    <p>
-                					    Item
-                				    </p>
-                				    <div class="reProductInfo reInline">
-                					    <p>
-                						    Antal
-                					    </p>
-                					    <p>
-                						    Pris pr.
-                					    </p>
-                					    <p>
-                						    Rel pris
-                					    </p>
-                				    </div>
-                			    </div>
-                			    <hr>
-                			    
-                			    
-                			    <!-- Products -->
-                			    @{
-                				    var groupedProducts = _BasketItems.GroupBy(p => p.name);
+	} else {
+		@if (dto != null) {
+			 <div id="invoice-POS">
+				 <center id="top">
+					 <div class="logo"></div>
+					 <div class="info">
+						 <h2>Order nummer: @orderId</h2>
+					 </div><!--End Info-->
+				 </center><!--End InvoiceTop-->
+	            
+				 <div id="mid" class="rePadding">
+					 <div class="info reInline">
+						 <div class="reBox">	<h2>Kunde Information:</h2>
+							 <p>
+								 Navn : @dto.firstname @dto.lastname<br>
+								 Adresse : @dto.address, @dto.postcode<br>
+								 Email : @dto.email<br>
+								 Telefon nr. : @dto.phonenumber<br>
+							 </p>
+						 </div>
+					 </div>
+					 <div class="reBox">
+						 <h2>Betalings Information:</h2> 
+						 <p>
+							 Ordernr. : @orderId<br>
+							 Oprettet : @DateTimeOffset.FromUnixTimeMilliseconds((long)Convert.ToDouble(dto.date)).LocalDateTime.ToString("yyyy-MM-dd HH:mm:ss.fff") <br>
+						 </p>
+					 </div>
+				 </div>
+				 <div>
+					 <div>
+						 <hr>
+						 <div class="reHeader">
+							 <p>
+								 Item
+							 </p>
+							 <div class="reProductInfo reInline">
+								 <p>
+									 Antal
+								 </p>
+								 <p>
+									 Pris pr.
+								 </p>
+								 <p>
+									 Rel pris
+								 </p>
+							 </div>
+						 </div>
+						 <hr>
+						 <!-- Products -->
+						 @{
+							 var groupedProducts = _BasketItems.GroupBy(p => p.name);
+						 }
+
+						 @foreach (var product in dto.products) {
+							 var productId = product.Key;
+							 var quantity = product.Value;
+
+							 var productDetails = _BasketItems.FirstOrDefault(p => p.Id == productId);
+
+							 if (productDetails != null) {
+								 <div class="reInline">
+									 <div class="reProducts">
+										 <p>@(productDetails.name ?? "N/A")</p>
+										 <p class="reDescription">
+											 @productDetails.description
+										 </p>
+									 </div>
+									 <div class="reProductInfo reInline">
+										 <p>
+											 @quantity
+										 </p>
+										 <p>
+											 @(productDetails.Price)Dkk
+										 </p>
+										 <p>
+										 </p>
+									 </div>
+								 </div>
+								 <hr>
+							 }
+						 }
+						 <br>
+						 <div class="reInline">
+							 <div class="reProducts">
+								 <p>Sub Total</p>
+							 </div>
+							 <div class="reProductInfo reInline">
+								 <p>
+
+								 </p>
+								 <p>
+
+								 </p>
+								 <p>
+								 </p>
+							 </div>
+						 </div>
+						 <div class="reInline">
+							 <div class="reProducts">
+								 <p>Tax</p>
+							 </div>
+							 <div class="reProductInfo reInline">
+								 <p>
+
+								 </p>
+								 <p>
+
+								 </p>
+								 <p>
+								 </p>
+							 </div>
+						 </div>
+						 <hr>
+						 <div class="reInline">
+							 <div class="reProducts">
+								 <p>Total: @dto.total</p>
+							 </div>
+							 <div class="reProductInfo reInline">
+								 <p>
+
+								 </p>
+								 <p>
+
+								 </p>
+								 <p>
+								 </p>
+							 </div>
+						 </div>
+						 <hr>
+
+					 </div>
+				 </div>
+        		    
+        		    <div id="bot">
+                		    <div class="contents">
+                			    <!--
+                			    @foreach (Product product in _BasketItems)
+                			    {
+                				    <GridItem
+                					    Id=@product.Id
+                					    Img=@product.Image
+                					    name=@product.name
+                					    Price=@product.Price
+                					    InStock=@product.InStock
+                					    InBasket="false"
+                					    />
                 			    }
-                
-                			               @foreach (var product in dto.products)
-                                           {
-                                               var productId = product.Key;
-                                               var quantity = product.Value;
-                               
-                                               var productDetails = _BasketItems.FirstOrDefault(p => p.Id == productId);
-                               
-                                               if (productDetails != null)
-                                               {
-                                                   <div class="reInline">
-                                                       <div class="reProducts">
-                                                           <p>@(productDetails.name ?? "N/A")</p>
-                                                           <p class="reDescription">
-                                                               @productDetails.description
-                                                           </p>
-                                                       </div>
-                                                       <div class="reProductInfo reInline">
-                                                           <p>
-                                                               @quantity
-                                                           </p>
-                                                           <p>
-                                                               @(productDetails.Price)Dkk
-                                                           </p>
-                                                           <p>
-                                                           </p>
-                                                       </div>
-                                                   </div>
-                                                   <hr>
-                                               }
-                                           }
-                			    <br>
-                			    <div class="reInline">
-                				    <div class="reProducts">
-                					    <p>Sub Total</p>
-                				    </div>
-                				    <div class="reProductInfo reInline">
-                					    <p>
-                                							    
-                					    </p>
-                					    <p>
-                							                    
-                					    </p>
-                					    <p>
-                					    </p>
-                				    </div>
-                			    </div>
-                			    				    <div class="reInline">
-                                					    <div class="reProducts">
-                                						    <p>Tax</p>
-                                					    </div>
-                                					    <div class="reProductInfo reInline">
-                                						    <p>
-                                							    
-                                						    </p>
-                						                    <p>
-                							                    
-                						                    </p>
-                                						    <p>
-                                						    </p>
-                                					    </div>
-                                				    </div>			    
-                			    <hr>
-                			    				    <div class="reInline">
-                                					    <div class="reProducts">
-                                						    <p>Total: @dto.total</p>
-                                					    </div>
-                                					    <div class="reProductInfo reInline">
-                                						    <p>
-                                							    
-                                						    </p>
-                						                    <p>
-                							                    
-                						                    </p>
-                                						    <p>
-                                						    </p>
-                                					    </div>
-                							        </div>		
-                			    <hr>
                 			    
-                		    </div>
-                	     </div>
-        	    
-        	    <div id="bot">
-                	    <div class="contents">
-                		    <!--
-                		    @foreach (Product product in _BasketItems)
-                		    {
-                			    <GridItem
-                				    Id=@product.Id
-                				    Img=@product.Image
-                				    name=@product.name
-                				    Price=@product.Price
-                				    InStock=@product.InStock
-                				    InBasket="false"
-                				    />
-                		    }
-                		    
-                		     -->
-                		    </div>
-        	    <button class="btn btn-primary" @onclick="PrevPage">Tilbage</button>
-        
-        		        </div><!--End Invoice Mid-->
-        
-            </div><!--End Invoice Mid-->
-        	
+                			     -->
+                			    </div>
+        		    <button class="btn btn-primary" @onclick="PrevPage">Tilbage</button>
+	        
+        			        </div><!--End Invoice Mid-->
+	        
+	            </div><!--End Invoice Mid-->
+        		
+		}
+		else
+		{
+			<div>No order found with ID: @orderId</div>
+			<button class="btn btn-primary" @onclick="PrevPage">Go Back</button>
+		}
 	}
-	else
-	{
-		<div>No order found with ID: @orderId</div>
-		<button class="btn btn-primary" @onclick="PrevPage">Go Back</button>
-	}
-}
-}
-else
-{
-	navMgr.NavigateTo("/login");
+} else {
+	NavigationManager.NavigateTo("/login");
 }
 
 
@@ -210,42 +199,29 @@ else
 	private ProductService instance2;
 	private bool isLoading = true;
 
-
-
-	protected override async Task OnInitializedAsync()
-	{
-		try
-		{
+	protected override async Task OnInitializedAsync() {
+		try {
 			AuthenticationState authState = await AuthState;
 			ClaimsPrincipal user = authState.User;
 			isLoggedIn = user.Identity != null;
 
 			if (!isLoggedIn) return;
 			userClaims = user.Claims;
-
-
-			instance = FormService.getInstance();
-			dto = await instance.GetFromLogic(orderId);
-			instance2 = ProductService.getInstance();
-			Console.WriteLine("Method await" + await instance2.GetProductsByOrderId(orderId));
-			List<Product> list = await instance2.GetProductsByOrderId(orderId);
-			_BasketItems = new List<Product>(list);
+			
+			dto = await FormService.GetOrder(orderId);
+			_BasketItems = await ProductService.GetProductsByOrderId(orderId);
+			Console.WriteLine("Method await" + _BasketItems);
 			StateHasChanged();
-		}
-		catch (Exception e)
-		{
+		} catch (Exception e) {
 			Console.WriteLine(e.Message);
 	// Handle the exception as needed
-		}
-		finally
-		{
+		} finally {
 			isLoading = false; // Set loading state to false after data retrieval attempt
 			StateHasChanged();
 		}
 	}
 
-	private async Task PrevPage()
-	{
-		navMgr.NavigateTo("/admin");
+	private async Task PrevPage() {
+		NavigationManager.NavigateTo("/admin");
 	}
 }
