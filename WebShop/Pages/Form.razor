@@ -11,48 +11,15 @@
         <div class="form-group">
             <form @onsubmit="ValidateForm">
                 <div class="form-row">
-                    <div class="form-pair">
-                        <label for="FirstName">Fornavn</label>
-                        <div class="form-input round">
-                            <input placeholder="Fornavn" type="text" @bind="FirstName" id="FirstName" name="FirstName">
-                        </div>
-                    </div>
-                    <div class="form-pair">
-                        <label for="LastName">Efternavn</label>
-                        <div class="form-input round">
-                            <input placeholder="Efternavn" type="text" @bind="LastName" id="LastName" name="LastName">
-                        </div>
-                    </div>
+                    <FormInput @bind-Prop=FirstName Name="FirstName" Text="Fornavn" />
+                    <FormInput @bind-Prop=LastName Name="LastName" Text="Efternavn" />
                 </div>
-                
                 <div class="form-row">
-                    <div class="form-pair">
-                        <label for="Address">Addresse</label>
-                        <div class="form-input round">
-                            <input placeholder="Addresse" type="text" @bind="Address" id="Address" name="Address">
-                        </div>
-                    </div>
-                    <div class="form-pair">
-                        <label for="ZipCode">Postnummer</label>
-                        <div class="form-input round">
-                            <input type="number" @bind="ZipCode" id="ZipCode" name="ZipCode" min="0">
-                        </div>
-                    </div>
+                    <FormInput @bind-Prop=Address Name="Address" Text="Addresse" />
+                    <FormInput @bind-Prop=ZipCode Name="ZipCode" Text="Postnummer" Min="0" Type="number" />
                 </div>
-
-
-                <div class="form-pair">
-                    <label for="PhoneNumber">Telefon nr.</label>
-                    <div class="form-input round">
-                        <input type="number" @bind="PhoneNumber" id="PhoneNumber" name="PhoneNumber" min="0">
-                    </div>
-                </div>
-                <div class="form-pair">
-                    <label for="Email">Email</label>
-                    <div class="form-input round">
-                        <input placeholder="Email" type="email" @bind="Email" id="Email" name="Email">
-                    </div>
-                </div>
+                <FormInput @bind-Prop=PhoneNumber Name="PhoneNumber" Text="Telefon nr." Min="0" Type="number" />
+                <FormInput @bind-Prop=Email Name="Email" Text="Email" />
 
                 <br>
                 <p class="validation-error">@ValidationMessage</p>
@@ -75,7 +42,6 @@
     public int PhoneNumber { get; set; }
     public string Email { get; set; }
     
-    public bool FormIsValid = false;
     public string ValidationMessage = "";
 
     private void GoBack() {

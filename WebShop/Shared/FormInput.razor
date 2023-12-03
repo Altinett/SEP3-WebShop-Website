@@ -1,32 +1,36 @@
 <div class="form-pair">
-    <label for="@Name">@Text:</label>
+    <label for="@Name">@Text@(Required ? "*" : "")</label>
     <div class="form-input round">
-        <input type="@Type" @bind="Value" id="@Name" name="@Name" @oninput="HandleInput">
+        <input 
+            type="@Type" 
+            @bind="Prop" 
+            id="@Name" 
+            placeholder="@Text" 
+            name="@Name" 
+            @oninput="HandleInput"
+            min="@Min"
+            max="@Max"
+        />
     </div>
 </div>
 
 
 @typeparam T
 @code {
-
-    [Parameter]
-    public T Value {
-        get => _value;
-        set {
-            _value = value;
-            ValueChanged.InvokeAsync(value);
-        }
-    }
-    [Parameter] public EventCallback<T> ValueChanged { get; set; }
-    private T _value;
+    // Two way binding
+    [Parameter] public T Prop { get; set; }
+    [Parameter] public EventCallback<T> PropChanged { get; set; }
     
     [Parameter] public string Name { get; set; }
     [Parameter] public string Text { get; set; }
+    [Parameter] public int Min { get; set; }
+    [Parameter] public int Max { get; set; }
+    [Parameter] public bool Required { get; set; } = true;
     [Parameter] public string? Type { get; set; } = "text";
-    [Parameter] public Action<T>? OnInput { get; set; }
 
-    private void HandleInput() {
-        OnInput?.Invoke(Value);
+    private async Task HandleInput(ChangeEventArgs e) {
+        Prop = (T)Convert.ChangeType(e.Value, typeof(T));
+        await PropChanged.InvokeAsync(Prop);
     }
     
 }
