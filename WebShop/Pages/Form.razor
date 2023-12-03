@@ -8,28 +8,27 @@
 
 <div class="form-container">
     <div class="form-content">
-        <div class="form-group">
-            <form @onsubmit="ValidateForm">
-                <div class="form-row">
-                    <FormInput @bind-Prop=FirstName Name="FirstName" Text="Fornavn" />
-                    <FormInput @bind-Prop=LastName Name="LastName" Text="Efternavn" />
-                </div>
-                <div class="form-row">
-                    <FormInput @bind-Prop=Address Name="Address" Text="Addresse" />
-                    <FormInput @bind-Prop=ZipCode Name="ZipCode" Text="Postnummer" Min="0" Type="number" />
-                </div>
-                <FormInput @bind-Prop=PhoneNumber Name="PhoneNumber" Text="Telefon nr." Min="0" Type="number" />
-                <FormInput @bind-Prop=Email Name="Email" Text="Email" />
+        <form class="form-group" @onsubmit="ValidateForm">
+            <div class="form-row">
+                <FormInput @bind-Prop=FirstName Name="FirstName" Text="Fornavn" />
+                <FormInput @bind-Prop=LastName Name="LastName" Text="Efternavn" />
+            </div>
+            <div class="form-row">
+                <FormInput @bind-Prop=Address Name="Address" Text="Addresse" />
+                <FormInput @bind-Prop=ZipCode Name="ZipCode" Text="Postnummer" Min="0" Type="number" />
+            </div>
+            <FormInput @bind-Prop=PhoneNumber Name="PhoneNumber" Text="Telefon nr." Min="0" Type="number" />
+            <FormInput @bind-Prop=Email Name="Email" Text="Email" />
 
-                <br>
-                <p class="validation-error">@ValidationMessage</p>
-                <!-- disable submit until "FormIsValid" is true -->
-                <div class="form-row">
-                	<div class="secondary-button round" @onclick="GoBack">Tilbage</div>
-                	<div class="primary-button round" @onclick="ValidateForm">Bekræft</div>
-                </div>
-            </form>
-        </div>
+            <br>
+            <p class="validation-error">@ValidationMessage</p>
+            
+            <div class="form-row">
+                <input type="submit" style="display: none;" />
+                <div class="secondary-button round" @onclick="GoBack">Tilbage</div>
+                <div class="primary-button round" @onclick="ValidateForm">Bekræft</div>
+            </div>
+        </form>
         <OrderSummary ShowCheckout="false" />
     </div>
 </div>

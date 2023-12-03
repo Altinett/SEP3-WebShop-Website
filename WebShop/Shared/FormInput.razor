@@ -23,13 +23,15 @@
     
     [Parameter] public string Name { get; set; }
     [Parameter] public string Text { get; set; }
-    [Parameter] public int Min { get; set; }
-    [Parameter] public int Max { get; set; }
+    [Parameter] public int Min { get; set; } = int.MinValue;
+    [Parameter] public int Max { get; set; } = int.MaxValue;
     [Parameter] public bool Required { get; set; } = true;
-    [Parameter] public string? Type { get; set; } = "text";
+    [Parameter] public string Type { get; set; } = "text";
 
-    private async Task HandleInput(ChangeEventArgs e) {
-        Prop = (T)Convert.ChangeType(e.Value, typeof(T));
+    private async Task HandleInput(ChangeEventArgs eventArgs) {
+        try {
+            Prop = (T)Convert.ChangeType(eventArgs.Value, typeof(T));
+        } catch (Exception exception) {}
         await PropChanged.InvokeAsync(Prop);
     }
     
