@@ -1,0 +1,5 @@
+.page-select-container {
+    display: grid;
+    column-span: 3;
+    grid-template-columns: repeat(9, 1fr);
+}

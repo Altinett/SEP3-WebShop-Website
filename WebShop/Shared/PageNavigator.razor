@@ -1,0 +1,48 @@
+@using WebShop.Services.HTTP
+@using BlazorWasm.Services.Http
+@using global::Shared
+@using WebShop.Pages
+@using BlazorWasm.Services
+
+@inject ISearchService SearchService
+
+<div class="page-select-container">
+    <div class="primary-icon-button" @onclick="PreviousPage">
+        <Icon Name="left"/>
+    </div>
+    
+    <div>
+        <span>@("" + page)</span>
+    </div>
+    
+    
+    <div class="primary-icon-button" @onclick="NextPage">
+        <Icon Name="right"/>
+    </div>
+</div>
+
+@code {
+    [Parameter] public Action OnPageChanged { get; set; }
+    private int page = 1;
+
+    protected override Task OnInitializedAsync()
+    {
+        page = SearchService.Page;
+        StateHasChanged();
+        return base.OnInitializedAsync();
+    }
+
+    public void PreviousPage()
+    {
+        SearchService.PreviousPage();
+        page = SearchService.Page;
+        OnPageChanged();
+    }
+    public void NextPage()
+    {
+        SearchService.NextPage();
+        page = SearchService.Page;
+        OnPageChanged();
+    }
+    
+}

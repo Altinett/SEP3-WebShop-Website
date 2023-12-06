@@ -10,6 +10,7 @@ public class SearchService : Subject, ISearchService {
     public string Query { get; set; } = "";
     public List<int> Categories { get; set; } = new();
     public List<Product> Products { get; set; } = new();
+    public int Page { get; set; } = 1;
     
     private readonly HttpClient Client = new();
     private readonly IProductService ProductService;
@@ -21,7 +22,8 @@ public class SearchService : Subject, ISearchService {
     public async Task<List<Product>> Search() {
         string uri = "http://localhost:8080/products?showFlagged=false" + 
                      "&query=" + Query + 
-                     "&categories=" + String.Join(",", Categories);
+                     "&categories=" + String.Join(",", Categories) + 
+                     "&page=" + Page;
         
         if (PreviousUri != uri) {
             HttpResponseMessage response = await Client.GetAsync(uri);
@@ -34,6 +36,21 @@ public class SearchService : Subject, ISearchService {
         emit("Search");
         return Products;
     }
+    
+    public void NextPage()
+    {
+        Page++;
+    }
+
+    public void PreviousPage()
+    {
+        if (Page == 1)
+        {
+            return;
+        } 
+        Page--;
+    }
+    
 
     public void OnSearch(Action<Object[]> callback) {
         on("Search", callback);

@@ -21,6 +21,7 @@
                     InStock=@product.InStock/>
             }
         </Grid>
+         <PageNavigator OnPageChanged="() => UpdateProducts()"/>
     </div>
 </div>
 
@@ -40,6 +41,8 @@
 
     private async Task UpdateProducts() {
         List<int> categories = new();
+        Console.WriteLine("brother what you dodod doin?");
+        
         if (!string.IsNullOrEmpty(CategoryId)) {
             int category = int.Parse(CategoryId);
             if (category != 0) {
@@ -50,11 +53,13 @@
             SearchService.Categories = categories;
         }
         
+        Products = await SearchService.Search();
+        /*
         if (Products.Count == 0) {
             Products = await SearchService.Search();
         } else {
             Products = SearchService.Products;
-        }
+        }*/
         StateHasChanged();
     }
 }
