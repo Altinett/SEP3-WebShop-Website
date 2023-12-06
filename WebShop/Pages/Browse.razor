@@ -7,21 +7,39 @@
 
 <div class="br-container">
     <div class="br-content">
-        <Grid>
-            @foreach (Product product in Products)
-            {
-                <GridItem
-                    context=@((object)product)
-                    Id=@product.Id
-                    Img=@product.Image
-                    name=@product.name
-                    amount=@product.amount
-                    description=@product.description
-                    price=@product.Price
-                    InStock=@product.InStock/>
-            }
-        </Grid>
-         <PageNavigator OnPageChanged="() => UpdateProducts()"/>
+        <div class="row">
+            <div class="form-group">
+                <FormInput @bind-Prop=Min Name="Min" Text="Minimum pris" Required="false"/>
+                <FormInput @bind-Prop=Max Name="Max" Text="Maximum pris" Required="false"/>
+                <div class="secondary-button round" @onclick="UpdateProducts">Filtrer</div>
+            </div>
+
+            <Grid>
+                @if (IsLoading)
+                {
+                    <div class="grid-state">Indlæser...</div>
+                }
+                else if (Products.Count == 0)
+                {
+                    <div class="grid-state">Ingen produkter</div>
+                } else {
+                    @foreach (Product product in Products)
+                    {
+                        <GridItem
+                            context=@((object)product)
+                            Id=@product.Id
+                            Img=@product.Image
+                            name=@product.name
+                            amount=@product.amount
+                            description=@product.description
+                            price=@product.Price
+                            InStock=@product.InStock/>
+                    }
+                }
+                
+            </Grid>
+        </div>
+        <PageNavigator OnPageChanged="() => UpdateProducts()"/>
     </div>
 </div>
 
@@ -30,6 +48,9 @@
 @code {
     [Parameter] public string CategoryId { get; set; } = "";
     private List<Product> Products = new();
+    public int Max;
+    public int Min;
+    public bool IsLoading = true;
 
     protected override async Task OnInitializedAsync() {
         try {
@@ -39,9 +60,14 @@
         }
     }
 
-    private async Task UpdateProducts() {
+    private async Task UpdateProducts()
+    {
+        IsLoading = true;
         List<int> categories = new();
         Console.WriteLine("brother what you dodod doin?");
+
+        SearchService.Min = Min;
+        SearchService.Max = Max;
         
         if (!string.IsNullOrEmpty(CategoryId)) {
             int category = int.Parse(CategoryId);
@@ -54,6 +80,7 @@
         }
         
         Products = await SearchService.Search();
+        IsLoading = false;
         /*
         if (Products.Count == 0) {
             Products = await SearchService.Search();

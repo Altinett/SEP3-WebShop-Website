@@ -11,6 +11,8 @@ public class SearchService : Subject, ISearchService {
     public List<int> Categories { get; set; } = new();
     public List<Product> Products { get; set; } = new();
     public int Page { get; set; } = 1;
+    public int? Min { get; set; } = null;
+    public int? Max { get; set; } = null;
     
     private readonly HttpClient Client = new();
     private readonly IProductService ProductService;
@@ -23,6 +25,8 @@ public class SearchService : Subject, ISearchService {
         string uri = "http://localhost:8080/products?showFlagged=false" + 
                      "&query=" + Query + 
                      "&categories=" + String.Join(",", Categories) + 
+                     (Max<=0  ? ("") : ("&max="+ Max))+
+                     "&min=" + Min +
                      "&page=" + Page;
         
         if (PreviousUri != uri) {

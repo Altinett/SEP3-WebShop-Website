@@ -5,6 +5,8 @@
 /* COMPONENTS */
 @import "components/grid.css";
 @import "components/navbar.css";
+@import "components/PageNavigator.css";
+
 
 /* PAGES */
 @import "pages/home.css";

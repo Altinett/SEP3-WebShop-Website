@@ -1,5 +1,10 @@
 .page-select-container {
-    display: grid;
-    column-span: 3;
-    grid-template-columns: repeat(9, 1fr);
+    display: flex;
+    height: min-content;
+    align-self: center;
+    padding: 1rem;
+}
+.page-select-container > div:nth-child(2) {
+    align-self: center;
+    padding: 0 1rem;
 }

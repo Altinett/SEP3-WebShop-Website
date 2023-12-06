@@ -7,6 +7,8 @@ public interface ISearchService {
 	List<int> Categories { get; set; }
 	List<Product> Products { get; set; }
 	int Page { get; set; }
+	int? Min { get; set; }
+	int? Max { get; set; }
 
 	void NextPage();
 	void PreviousPage();
