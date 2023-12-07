@@ -61,7 +61,7 @@
         List<int> categories = new();
         Console.WriteLine("brother what you dodod doin?");
 
-        if (Min > Max) {
+        if (Min > Max && Min != 0 && Max != 0) {
             (Min, Max) = (Max, Min);
         }
         SearchService.Min = Min;
