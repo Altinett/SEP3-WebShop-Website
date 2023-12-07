@@ -6,39 +6,32 @@
 
 
 <div class="br-container">
+    <div class="form-group">
+        <FormInput @bind-Prop=Min Name="Min" Text="Minimum pris" Required="false"/>
+        <FormInput @bind-Prop=Max Name="Max" Text="Maximum pris" Required="false"/>
+        <div class="secondary-button round" @onclick="UpdateProducts">Filtrer</div>
+    </div>
     <div class="br-content">
-        <div class="row">
-            <div class="form-group">
-                <FormInput @bind-Prop=Min Name="Min" Text="Minimum pris" Required="false"/>
-                <FormInput @bind-Prop=Max Name="Max" Text="Maximum pris" Required="false"/>
-                <div class="secondary-button round" @onclick="UpdateProducts">Filtrer</div>
-            </div>
-
-            <Grid>
-                @if (IsLoading)
+        <Grid>
+            @if (IsLoading) {
+                <div class="grid-state">Indlæser...</div>
+            } else if (Products.Count == 0) {
+                <div class="grid-state">Ingen produkter</div>
+            } else {
+                @foreach (Product product in Products)
                 {
-                    <div class="grid-state">Indlæser...</div>
+                    <GridItem
+                        context=@((object)product)
+                        Id=@product.Id
+                        Img=@product.Image
+                        name=@product.name
+                        amount=@product.amount
+                        description=@product.description
+                        price=@product.Price
+                        InStock=@product.InStock/>
                 }
-                else if (Products.Count == 0)
-                {
-                    <div class="grid-state">Ingen produkter</div>
-                } else {
-                    @foreach (Product product in Products)
-                    {
-                        <GridItem
-                            context=@((object)product)
-                            Id=@product.Id
-                            Img=@product.Image
-                            name=@product.name
-                            amount=@product.amount
-                            description=@product.description
-                            price=@product.Price
-                            InStock=@product.InStock/>
-                    }
-                }
-                
-            </Grid>
-        </div>
+            }
+        </Grid>
         <PageNavigator OnPageChanged="() => UpdateProducts()"/>
     </div>
 </div>
@@ -54,6 +47,8 @@
 
     protected override async Task OnInitializedAsync() {
         try {
+            Max = SearchService.Max;
+            Min = SearchService.Min;
             UpdateProducts();
         } catch (Exception e) {
             Console.WriteLine(e);
@@ -66,6 +61,9 @@
         List<int> categories = new();
         Console.WriteLine("brother what you dodod doin?");
 
+        if (Min > Max) {
+            (Min, Max) = (Max, Min);
+        }
         SearchService.Min = Min;
         SearchService.Max = Max;
         

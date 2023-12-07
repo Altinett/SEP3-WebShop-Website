@@ -1,27 +1,30 @@
 @page "/contact"
 @inject IJSRuntime JSRuntime
 
-<h3>Send en mail til os!</h3>
-
-<form class="emailform" @onsubmit="OpenDefaultEmailClient">
-    <label>Emne:</label>
-    <input @bind="Email.Subject" />
-    @if (subjectError) {
-        <div class="error">Emnet kan ikke være tom</div>
-    }
-
-    <label>Besked:</label>
-    <textarea @bind="Email.Body"></textarea>
-    @if (bodyError) {
-        <div class="error">Beskeden kan ikke være tom</div>
-    }
-
-    <button class="primary-button" type="submit">Send mail</button>
+<div class="ct-container">
+    <h3>Send en mail til os!</h3>
     
-    <h2>Telefon</h2>
-    <p>(+45) 85 83 85 83</p>
+    <form class="emailform" @onsubmit="OpenDefaultEmailClient">
+        <label>Emne:</label>
+        <input @bind="Email.Subject" />
+        @if (subjectError) {
+            <div class="error">Emnet kan ikke være tom</div>
+        }
     
-</form>
+        <label>Besked:</label>
+        <textarea @bind="Email.Body"></textarea>
+        @if (bodyError) {
+            <div class="error">Beskeden kan ikke være tom</div>
+        }
+    
+        <button class="primary-button" type="submit">Send mail</button>
+        
+        <h2>Telefon</h2>
+        <p>(+45) 85 83 85 83</p>
+        
+    </form>
+</div>
+
 
 @code {
     private EmailModel Email = new();

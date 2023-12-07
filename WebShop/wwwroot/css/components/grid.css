@@ -1,13 +1,10 @@
 /* GRID */
 .grid {
-    position: relative;
     display: grid;
     grid-template-columns: repeat(3, 1fr);
     gap: 1rem;
     width: 100%;
-    overflow: hidden;
-    overflow-y: auto;
-    height: 100%;
+    height: min-content;
     padding: 2rem;
 }
 
