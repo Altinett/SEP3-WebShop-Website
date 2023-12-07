@@ -79,6 +79,8 @@
 
     public void OnHomeClick() {
         NavigationManager.NavigateTo("/");
+        SearchService.Min = 0;
+        SearchService.Max = 0;
     }
     
     public void OnContactClick() {
