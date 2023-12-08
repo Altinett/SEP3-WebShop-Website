@@ -3,6 +3,7 @@ using System.Text;
 using BlazorWasm.Services;
 using Newtonsoft.Json;
 using Shared;
+using Shared.DTOs;
 using WebShop.Shared.DTOs;
 
 namespace WebShop.Pages;
@@ -21,11 +22,9 @@ public class FormService : IFormService
     public int CVC { get; set; }
     public int OrderId { get; set; }
     public int Total { get; set; }
+    public string OrderDate { get; set; }
 
-    private void getFormValues() {
-        
-    }
-    
+
     private IBasketService BasketService;
 
     public FormService(IBasketService basketService) {
@@ -64,6 +63,7 @@ public class FormService : IFormService
         string responseContent = await response.Content.ReadAsStringAsync();
         dynamic data = JsonConvert.DeserializeObject(responseContent);
         OrderId = data.orderId;
+        OrderDate = DateTimeOffset.FromUnixTimeMilliseconds((long)Convert.ToDouble(data.date)).LocalDateTime.ToString("yyyy-MM-dd HH:mm");
         
         if (!response.IsSuccessStatusCode) {
             throw new Exception(responseContent);

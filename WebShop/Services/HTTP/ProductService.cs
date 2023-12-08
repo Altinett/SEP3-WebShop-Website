@@ -67,7 +67,7 @@ public class ProductService : IProductService
         return responseContent;
     }
     
-    public async Task EditProduct(int id, string name, string Description, /*List<int> category_ids,*/ double Price, int Amount, IBrowserFile image, string savedImage)
+    public async Task EditProduct(int id, string name, string Description, double Price, int Amount, IBrowserFile image, string savedImage)
     {
         string base64Image;
         if (image == null)
@@ -80,7 +80,7 @@ public class ProductService : IProductService
         }
         
 
-        ProductEditingDto productEditingDto = new ProductEditingDto
+        ProductEditingDto productEditingDto = new()
         {
             id = id,
             name = name,

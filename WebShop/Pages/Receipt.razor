@@ -32,8 +32,8 @@
 	       
 		    <div class="reBox">
 			    <h2>Betalings Information</h2> 
-			    <p>Ordernr. : @FormService.OrderId</p>
-			    <p>Betalingsdato : DD/MM/YY</p>
+			    <p>Ordernr. : @OrderId</p>
+			    <p>Betalingsdato : @OrderDate</p>
 		    </div>
 	    </div>
 	    
@@ -120,12 +120,15 @@
 
 @code {
 	//TODO Lave funktunalitet til betalingsdato (eller hvad man kalder det).
-	[Parameter] public string FirstName { get; set; }
-	[Parameter] public string LastName { get; set; }
-	[Parameter] public string Address { get; set; }
-	[Parameter] public int ZipCode { get; set; }
-	[Parameter] public int PhoneNumber { get; set; }
-	[Parameter] public string Email { get; set; } 
+	public string FirstName { get; set; }
+	public string LastName { get; set; }
+	public string Address { get; set; }
+	public int ZipCode { get; set; }
+	public int PhoneNumber { get; set; }
+	public string Email { get; set; } 
+	public string OrderDate { get; set; }
+	public int OrderId { get; set; }
+	
 	 
 	private double TotalPrice { get; set; }
 	
@@ -137,6 +140,8 @@
 		ZipCode = FormService.ZipCode;
 		PhoneNumber = FormService.PhoneNumber;
 		Email = FormService.Email;
+		OrderDate = FormService.OrderDate;
+		OrderId = FormService.OrderId;
 		
 		TotalPrice = BasketService.GetBasketTotal();
 		StateHasChanged();

@@ -1,42 +1,25 @@
-.pdImage{
-    height: 400px;
-    border: 1px solid var(--border-color);
+.pd-container {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 2rem;
+    overflow: hidden;
+    overflow-y: auto;
 }
 
-.pdDivSide{
-    padding-top: 150px;
-    padding-right: 10px;
-    padding-left: 20px;
-}
-
-.pdStockText{
-    font-size: small;
-    opacity: 75%;
-}
-
-.pdDescription h2{
-    margin-bottom: 10px;
-}
-
-.pdButtonBuy{
-    padding-right: 20px;
-    padding-left: 20px;
-}
-
-.pdBackDiv{
-    /*background-color: #cccccc;*/
-}
-
-.pdSuperDiv{
+.pd-card {
     background-color: var(--bg);
-    padding: 15px;
+    padding: 1rem;
 }
 
-.pdDescription{
-    padding-top: 15px;
+.pd-card h1 {
+    outline: none;
+    border: none;
 }
 
-.pdPurpleLine{
+.pd-separator{
     height: .2rem;
     width: 80%;
     background-color: var(--accent);
@@ -44,15 +27,45 @@
     margin-top: .4rem;
 }
 
-.pdButton{
+.pd-button {
     width: fit-content;
 }
-
-.pdButton div{
+.pd-button div {
     padding-left: 5px;
 }
-
-.pdButton img,
-.pdButton svg {
+.pd-button img,
+.pd-button svg {
     width: 1.5rem;
+}
+
+.pd-button-buy {
+    padding-right: 20px;
+    padding-left: 20px;
+}
+
+.pd-image-container {
+    display: flex;
+    flex: 1 1 auto;
+}
+
+.pd-image {
+    height: 400px;
+    border: 1px solid var(--border-color);
+}
+
+.pd-product-actions {
+    padding: 0 1rem;
+    padding-top: 10rem;
+}
+
+.pd-stock {
+    font-size: small;
+    opacity: 75%;
+}
+
+.pd-description {
+    padding-top: 15px;
+    display: flex;
+    flex-direction: column;
+    gap: .5rem;
 }

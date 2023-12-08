@@ -1,7 +1,7 @@
 @page "/login"
 @using BlazorWasm.Services
-@inject IAuthService authService
-@inject NavigationManager navMgr
+@inject IAuthService AuthService
+@inject NavigationManager NavigationManager
 
 @layout EmptyLayout
 
@@ -45,8 +45,8 @@
     private async Task LoginAsync() {
         ErrorLabel = "";
         try {
-            await authService.LoginAsync(Username, Password);
-            navMgr.NavigateTo("/admin");
+            await AuthService.LoginAsync(Username, Password);
+            NavigationManager.NavigateTo("/admin");
         } catch (Exception e) {
             Console.WriteLine(e);
             ErrorLabel = $"Error: {e.Message}";

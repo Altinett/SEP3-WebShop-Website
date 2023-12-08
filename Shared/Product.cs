@@ -20,21 +20,21 @@ public class Product
 	public bool flagged { get; set; }
 
 	public Product() { }
-	public Product(int id, string img, string title, double price, bool inStock)
+	public Product(int id, string img, string name, double price, bool inStock)
 	{
 		Id = id;
 		Image = img;
-		name = title;
+		this.name = name;
 		Price = price;
 		InStock = inStock;
 	}
 	
 	//Constructor for the basket
-	public Product(int id, string img, string title, double price, bool inStock, int? amount, String description, int quantity)
+	public Product(int id, string img, string name, double price, bool inStock, int? amount, String description, int quantity)
 	{
 		Id = id;
 		Image = img;
-		name = title;
+		this.name = name;
 		Price = price;
 		InStock = inStock;
 		this.amount = amount;
@@ -44,10 +44,10 @@ public class Product
 
 	public Product(int id, string name, double price, int amount, List<int> categoryIds, string description)
 	{
-		this.Id = id;
+		Id = id;
 		Image = "https://i.ebayimg.com/images/g/h9UAAOSwpPNlLMxt/s-l500.jpg";
 		this.name = name;
-		this.Price = price;
+		Price = price;
 
 		if (amount > 0)
 			InStock = true;
