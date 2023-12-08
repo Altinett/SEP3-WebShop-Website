@@ -85,13 +85,13 @@ public class JwtAuthService : IAuthService
     
     public async Task<UserDto> GetFromLogic(string username, string password)
     {
-        UserDto user = new UserDto
+        UserDto user = new()
         {
             username = username,
             password = password
         };
         string postAsJson = JsonConvert.SerializeObject(user);
-        StringContent content = new StringContent(postAsJson, Encoding.UTF8, "application/json");
+        StringContent content = new (postAsJson, Encoding.UTF8, "application/json");
         HttpResponseMessage response = await client.PostAsync($"http://localhost:8080/users",content);
         string responseContent = await response.Content.ReadAsStringAsync();
         Console.WriteLine(responseContent);

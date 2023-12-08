@@ -14,6 +14,7 @@ public interface IFormService {
 	int CVC { get; set; }
 	int OrderId { get; set; }
 	int Total { get; set; }
+	string OrderDate { get; set; }
 	Task SendForm();
 	Task<PaymentDto> GetOrder(string id);
 }

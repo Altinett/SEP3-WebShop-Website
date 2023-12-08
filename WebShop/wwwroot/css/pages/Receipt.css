@@ -1,3 +1,8 @@
+#invoice-POS {
+    width: 100%;
+    height: 100%;
+}
+
 .reInline {
     display: flex;
 }
@@ -33,6 +38,11 @@
 .rePadding
 {
     padding: 5px;
+}
+.rePrint {
+    width: max-content;
+    display: flex;
+    gap: .5rem;
 }
 
 @media print {
