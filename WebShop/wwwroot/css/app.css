@@ -34,11 +34,8 @@ body, html {
 #app:has(> .accessibility) {
     font-size: 1.2rem;
     font-weight: bold;
-    background: #223;
-    --bg: #00001a !important;
-    --color: #fff !important;
-    --border-color: rgba(255, 255, 255, .15) !important;
     color: var(--color);
+    
 }
 #app:has(> .accessibility) .grid-item {
     font-size: 1.4rem;

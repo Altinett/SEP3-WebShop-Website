@@ -57,11 +57,9 @@
         return base.OnInitializedAsync();
     }
 
-    public async void OnSearch() {
+    public void OnSearch() {
         // Set current search query to input field value and emit the search event
         SearchService.Query = Query;
-        await SearchService.Search();
-        
         Reload();
     }
 
