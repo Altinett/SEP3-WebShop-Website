@@ -214,9 +214,8 @@
 			StateHasChanged();
 		} catch (Exception e) {
 			Console.WriteLine(e.Message);
-	// Handle the exception as needed
 		} finally {
-			isLoading = false; // Set loading state to false after data retrieval attempt
+			isLoading = false; 
 			StateHasChanged();
 		}
 	}

@@ -134,10 +134,6 @@ public class ProductService : IProductService
         List<Product> products = JsonConvert.DeserializeObject<List<Product>>(responseContent);
         Console.WriteLine(products);
         return products;
-        if (!response.IsSuccessStatusCode)
-        {
-            throw new Exception(responseContent);
-        }
         
     }
  

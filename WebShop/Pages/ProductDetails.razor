@@ -62,7 +62,7 @@
         if (Product != null) {
             int? amount =  BasketService.GetProductAmount(Product.Id);
             if (amount != null) {
-                Product.amount = amount;
+                Product.amount = amount.Value;
             }
         }
 

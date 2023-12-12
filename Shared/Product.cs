@@ -6,12 +6,10 @@ public class Product
 {
 	public int Id { get; set; }
 	public string Image { get; set; }
-	//public string Title { get; set; }
 	public string? name { get; set; }
 	public double Price { get; set; }
-	//public double price { get; set; }
 
-	public int? amount { get; set; }
+	public int amount { get; set; }
 	public List<int>? categoryIds { get; set; }
 	public string? description { get; set; }
 	public bool InStock { get; set; }
@@ -30,7 +28,7 @@ public class Product
 	}
 	
 	//Constructor for the basket
-	public Product(int id, string img, string name, double price, bool inStock, int? amount, String description, int quantity)
+	public Product(int id, string img, string name, double price, bool inStock, int amount, String description, int quantity)
 	{
 		Id = id;
 		Image = img;
@@ -74,7 +72,7 @@ public class Product
 		       $"Name: {name}\n" +
 		       $"Price: {Price}\n" +
 		       //$"Duplicate Price (might be an error): {price}\n" + // This line might need to be removed if 'price' is indeed a duplicate
-		       $"Amount: {amount?.ToString() ?? "Not specified"}\n" +
+		       $"Amount: {amount.ToString() ?? "Not specified"}\n" +
 		       $"Categories: {categoryIdsString}\n" +
 		       $"Description: {description}\n" +
 		       $"In Stock: {(InStock ? "Yes" : "No")}\n" + 
