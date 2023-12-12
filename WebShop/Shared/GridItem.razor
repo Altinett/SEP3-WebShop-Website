@@ -87,7 +87,7 @@
 
 	public void GoToDetails() {
 		if (!isButtonClick) {
-			product.amount = amount;
+			product.amount = amount.Value;
 			ProductService.LastReviewedProduct = product;
 			Nvm.NavigateTo("/product");
 		} else {
