@@ -46,7 +46,7 @@ public class ValidationService : IValidationService {
             Error("Email må ikke være tom");
         }
         if (!_emailRegex.IsMatch(email)) {
-            Error("Invalid email format");
+            Error("Forkert email format, eks: eksempel@eksempel.dk");
         }
         return email;
     }

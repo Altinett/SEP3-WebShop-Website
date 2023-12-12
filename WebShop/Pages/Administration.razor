@@ -215,21 +215,20 @@
     private void ValidateInput()
     {
         if (string.IsNullOrWhiteSpace(Name) || string.IsNullOrWhiteSpace(Description))
-            throw new ArgumentException("Name and description are required.");
+            throw new ArgumentException("Navn og beskrivelse er påkrævet");
         
         if (Price == null || Amount == null || Price <= 0 || Amount <= 0)
         {
-            throw new ArgumentException("Price and amount are required.");
+            throw new ArgumentException("Pris og mængde påkrævet");
         }
 
         if (category_ids == null || category_ids.Count == 0)
         {
-            Console.WriteLine("MHM");
-            throw new ArgumentException("Select at least one category.");
+            throw new ArgumentException("Vælg mindst en kategori");
         }
         
         if (Image == null)
-            throw new ArgumentException("Image is required.");
+            throw new ArgumentException("Billede er påkrævet");
     }
 
     private void ClearForm() {
@@ -253,12 +252,12 @@
             var product = await ProductService.GetProductById(FjernId);
 
             if (product == null) {
-                statusLabel = "Produktet findes ikke";
+                statusLabel = "Varen findes ikke";
             } else if (product.flagged) {
-                statusLabel = "Produktet er allerede slettet";
+                statusLabel = "Varen er allerede slettet";
             } else {
                 await ProductService.RemoveProduct(FjernId);
-                statusLabel = "Produkt fjernet";
+                statusLabel = "Vare fjernet";
             }
             FjernId = null;
         } catch (Exception e) {
