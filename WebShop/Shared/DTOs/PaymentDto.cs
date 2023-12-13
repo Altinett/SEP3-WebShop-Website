@@ -15,7 +15,7 @@ public class PaymentDto
     public string cardnumber { get; init; }
     public DateTime expirationdate { get; init; }
     public int cvc { get; init; }
-    public int total { get; init; }
+    public double total { get; init; }
     
     public string date { get; init; }
     

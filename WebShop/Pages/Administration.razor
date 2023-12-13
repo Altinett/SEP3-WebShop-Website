@@ -199,7 +199,7 @@
             ValidateInput();
             await ProductService.CreateProduct(Name, Description, category_ids, Price.Value, Amount.Value, Image);
             ClearForm();
-            statusLabel = "Product created successfully";
+            statusLabel = "Vare tilføjet";
         }
         catch (ArgumentException ex)
         {
