@@ -278,12 +278,12 @@
         Product product = await ProductService.GetProductById(Id);
 
         if (product == null) {
-            statusLabel = "Produktet findes ikke";
+            statusLabel = "Varen findes ikke";
             return;
         }
 
         if (product.flagged) {
-            statusLabel = "Produktet er fjernet og kan derfor ikke ændres";
+            statusLabel = "Varen er fjernet og kan derfor ikke ændres";
             return;
         }
         Name = product.name;
@@ -310,7 +310,7 @@
 
             await ProductService.EditProduct(Id, Name, Description, Price.Value, Amount.Value, Image, savedImage);
             isValidProduct = false;
-            statusLabel = "Produkt ændret";
+            statusLabel = "Vare ændret";
         } catch (Exception e) {
             Console.WriteLine(e);
             statusLabel = $"Error: {e.Message}";
